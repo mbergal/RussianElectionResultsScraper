@@ -31,7 +31,7 @@ namespace TestElectionResultsScraper
             Assert.AreEqual( "Республика Адыгея (Адыгея)", pageDocument.Children[0].Item2 );
             pageDocument = CreatePageDocument( "TestElectionResultsScraper.data.3.html" );
             Assert.AreEqual( null, pageDocument.Children );
-            Assert.AreEqual( null, pageDocument.ResultsRedirect );
+            Assert.AreEqual("http://www.vybory.izbirkom.ru/region/izbirkom?action=show&global=true&root=12000001&tvd=2012000183551&vrn=100100028713299&prver=0&pronetvd=null&region=1&sub_region=1&type=242&vibid=2012000183551", pageDocument.ResultsRedirect);
 
             }
 
