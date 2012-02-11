@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+    namespace="RussianElectionResultsScraper" assembly="RussianElectionResultsScraper">
+
+  <class name="VotingResult" table="VotingResult">
+
+    <id name="Id">
+      <column name="Id" sql-type="int" not-null="true"/>
+      <generator class="identity" />
+    </id>
+    <property name="Counter"/>
+    <property name="Value"/>
+
+  </class>
+
+</hibernate-mapping>
