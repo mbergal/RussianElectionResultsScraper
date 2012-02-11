@@ -2,12 +2,11 @@
 using System.IO;
 using System.IO.Compression;
 using NHibernate;
-using ServiceStack.DesignPatterns.Model;
 using log4net;
 
 namespace RussianElectionResultsScraper
 {
-    public class CachedPage : IHasId<string>
+    public class CachedPage 
         {
         public virtual string Id { get; set; }
         public virtual byte[] Content { get; set; }
