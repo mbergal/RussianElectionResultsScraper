@@ -5,6 +5,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RussianElectionResultsScrap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RussianElectionResultsScraper.Tests", "src\RussianElectionResultsScraper.Tests\RussianElectionResultsScraper.Tests.csproj", "{4A5EFAC4-CE23-4C06-B5B9-86933CC748D0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D88FD1B3-C557-4951-B707-63DD5C79352B}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,16 +41,6 @@ Global
 		{4A5EFAC4-CE23-4C06-B5B9-86933CC748D0}.Release|Mixed Platforms.Build.0 = Release|x86
 		{4A5EFAC4-CE23-4C06-B5B9-86933CC748D0}.Release|x86.ActiveCfg = Release|x86
 		{4A5EFAC4-CE23-4C06-B5B9-86933CC748D0}.Release|x86.Build.0 = Release|x86
-		{C45218F8-09E7-4F57-85BC-5D8D2AC736A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C45218F8-09E7-4F57-85BC-5D8D2AC736A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C45218F8-09E7-4F57-85BC-5D8D2AC736A3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{C45218F8-09E7-4F57-85BC-5D8D2AC736A3}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{C45218F8-09E7-4F57-85BC-5D8D2AC736A3}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{C45218F8-09E7-4F57-85BC-5D8D2AC736A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C45218F8-09E7-4F57-85BC-5D8D2AC736A3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C45218F8-09E7-4F57-85BC-5D8D2AC736A3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{C45218F8-09E7-4F57-85BC-5D8D2AC736A3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{C45218F8-09E7-4F57-85BC-5D8D2AC736A3}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
