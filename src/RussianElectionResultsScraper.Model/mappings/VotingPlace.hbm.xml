@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+    namespace="RussianElectionResultsScraper.Model" assembly="RussianElectionResultsScraper.Model">
+
+  <class name="VotingPlace" table="VotingPlace">
+
+    <id name="Id" column="Id">
+      <column name="Id" length="32"/>
+    </id>
+    <property name="Name"/>
+    <property name="FullName"/>
+    <property name="Uri"/>
+    <property name="Type"/>
+    <property name="NumberOfVotersInVoterList"/>
+    <property name="NumberOfBallotsReceivedByElectoralComission"/>
+    <property name="NumberOfBallotsIssuedToVotersWhoVotedEarly"/>
+    <property name="NumberOfBallotsIssuedToVoterAtPollStation"/>
+    <property name="NumberOfBallotsIssuedToVotersOutsideOfPollStation"/>
+    <property name="NumberOfCancelledBallots"/>
+    <property name="NumberOfBallotsInPortableBallotBoxes"/>
+    <property name="NumberOfBallotsInStationaryBallotBoxes"/>
+    <property name="NumberOfInvalidBallots"/>
+    <property name="NumberValidBallots"/>
+    <property name="NumberOfAbsenteePermitsReceivedByElectoralComission"/>
+    <property name="NumberOfAbsenteePermitsIssuedAtPollingStation"/>
+    <property name="NumberOfAbsenteeBallotsCastAtPollingStation"/>
+    <property name="NumberOfCanceledAbsenteePermits"/>
+    <property name="NumberOfAbsenteeBallotsIssuedByTerritorialElectionComission"/>
+    <property name="NumberOfLostAbsenteeBallots"/>
+    <property name="NumberOfLostBallots"/>
+    <property name="NumberOfBallotsNotCounterUponReceiving"/>
+    <property name="Attendance"/>
+    <property name="Path"/>
+    <many-to-one name="Parent" class="VotingPlace" column="ParentId"/>
+    <many-to-one name="Election" class="Election" column="ElectionId"/>
+
+    <set name="Children" >
+      <key column="ParentId">
+        <column name="ParentId" length="32"/>
+      </key>
+      <one-to-many class="VotingPlace" />
+    </set>
+    <set name="Results" cascade="all" lazy="false">
+      <key column="VotingPlaceId">
+        <column name="VotingPlaceId" length="32"/>
+      </key>
+      <one-to-many class="VotingResult"/>
+    </set>
+
+  </class>
+
+</hibernate-mapping>

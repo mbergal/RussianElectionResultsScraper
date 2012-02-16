@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+    namespace="RussianElectionResultsScraper.Model" assembly="RussianElectionResultsScraper.Model">
+
+  <class name="Election" table="Election">
+
+    <id name="Id">
+      <column name="Id" length="32"/>
+    </id>
+    <property name="Name"/>
+    <many-to-one name="Root" class="VotingPlace" column="RootId" unique="true"/>
+    <set name="Counters" cascade="all">
+      <key column="ElectionId"/>
+      <one-to-many class="CounterDescription" />
+    </set>
+
+  </class>
+
+</hibernate-mapping>

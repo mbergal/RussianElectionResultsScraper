@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using HtmlAgilityPack;
 using log4net;
+using System.Linq;
 
 namespace RussianElectionResultsScraper
 {
@@ -32,8 +33,11 @@ namespace RussianElectionResultsScraper
                 var htmlDoc = new HtmlDocument();
                 task.Result.Seek(0, SeekOrigin.Begin);
                 htmlDoc.Load(task.Result, Encoding.GetEncoding(1251));
+                var sw = new StringWriter();
+                htmlDoc.Save(sw );
                 var vibid = HttpUtility.ParseQueryString(uri)["vibid"];
                 var page = new ResultPage(vibid, uri, new PageDocument(htmlDoc));
+                    
                 return page;
                 }, CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion | TaskContinuationOptions.AttachedToParent, TaskScheduler.Current) ;
             return s;
@@ -177,6 +181,15 @@ namespace RussianElectionResultsScraper
         public IList<Tuple<string, string>>         Children { get; set; }
         public IDictionary<int, int>                CounterValues;
         public IDictionary<int, CounterDescription> CounterDescriptions { get; set; }
+        public IList<string>                        Hierarchy
+            {
+            get {
+                var h = this._doc.History.Select(x => x.text).ToList();
+                if ( h[0] != "ЦИК России" )
+                    h.Insert(0, "ЦИК России" );
+                return h;    
+                }
+            }
 
         public bool                                 IsRedirect
             {
@@ -187,6 +200,13 @@ namespace RussianElectionResultsScraper
             {
             get;
             set;
+            }
+
+        public string                               PageText
+            {
+            get {
+                return this._doc.PageText;
+                }
             }
         private readonly string                     _uri;
         private PageDocument                        _doc;

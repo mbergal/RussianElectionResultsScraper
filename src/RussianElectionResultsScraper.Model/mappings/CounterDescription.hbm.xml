@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+    namespace="RussianElectionResultsScraper.Model" assembly="RussianElectionResultsScraper.Model">
+
+  <class name="CounterDescription" table="CounterDescription">
+
+    <id name="Id">
+      <generator class="increment"/>
+    </id>
+    <property name="Counter"/>
+    <property name="Name" length="64"/>
+    <property name="ShortName" length="16"/>
+    <property name="HtmlColor" length="16">
+      <column name="Color"/>
+    </property>
+  </class>
+
+</hibernate-mapping>

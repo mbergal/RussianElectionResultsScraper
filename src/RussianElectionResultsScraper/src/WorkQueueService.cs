@@ -9,7 +9,7 @@ namespace RussianElectionResultsScraper
         {
         private static readonly ILog log = LogManager.GetLogger(typeof(WorkQueueService));
         private readonly BlockingCollection<WorkItem>   _workItemQueue = new BlockingCollection<WorkItem>();
-        private readonly IDictionary<string,WorkItem>   _workItemsByUri = new Dictionary<string,WorkItem>();
+        private readonly IDictionary<string,WorkItem>   _workItemsByUri = new ConcurrentDictionary<string, WorkItem>();
 
         public WorkQueueService()
             {
@@ -21,11 +21,22 @@ namespace RussianElectionResultsScraper
             _workItemsByUri.Add( workItem.Uri, workItem );
             }
 
+        public void Processed( WorkItem workItem )
+            {
+            _workItemsByUri.Remove(workItem.Uri);
+            if ( _workItemsByUri.Count == 0 )
+                this._workItemQueue.CompleteAdding();
+            }
+
         public IEnumerable<WorkItem>  GetConsumerEnumerable()
             {
             return _workItemQueue.GetConsumingEnumerable();
             }
 
-    }
+        public int Count()
+            {
+            return _workItemQueue.Count;
+            }
+        }
 
 }

@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
-    namespace="RussianElectionResultsScraper" assembly="RussianElectionResultsScraper">
+    namespace="RussianElectionResultsScraper.Model" assembly="RussianElectionResultsScraper.Model">
 
   <class name="VotingResult" table="VotingResult">
 
     <id name="Id">
       <column name="Id" sql-type="int" not-null="true"/>
-      <generator class="identity" />
+      <generator class="increment" />
     </id>
     <property name="Counter"/>
     <property name="Value"/>
