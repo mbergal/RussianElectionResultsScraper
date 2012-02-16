@@ -1,0 +1,97 @@
+﻿@{
+    Layout = null;
+}
+
+@using MvcApplication2.Models
+@model RegionsModel
+           
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.4.1/build/cssreset/cssreset-min.css">
+    <script src="../../Scripts/jquery-1.5.1.js"></script>
+    <script src="../../Scripts/jquery.scrollTo.js"></script>
+    <style>
+        body
+            {
+            }
+        #regions
+            {
+            position: fixed;
+            top: 0;
+            overflow-y: auto;
+            }
+            
+        #current
+            {
+            font-weight: bold;
+            }
+        
+        #graphs
+            {
+            margin-left: 300px;
+            }
+    </style>
+</head>
+<body>
+    <div>
+    <div id="regions">
+        <ul>
+            @foreach( var r in Model.regions )
+                {
+                if ( r == Model.currentRegion ) {
+                    <li id="current"> 
+                        <a id="@r" href="/@r">@r</a>
+                    </li>
+                    }
+                else
+                    {
+                    <li>
+                        <a id="@r" href="/@r" target="content">@r</a>
+                    </li>
+                    }
+                }
+        </ul>
+    </div>
+    <div id="graphs">
+        <h1>@Model.currentRegion</h1>
+        <img src="graph/polling-stations-by-attendance/@Model.currentRegion"></img>
+    </div>
+    
+    </div>
+    <script>
+        jQuery.event.add(window, "resize", resizeFrame);
+
+        function resizeFrame() {
+            var h = $(window).height();
+            var w = $(window).width();
+            $("#regions").css('height', h );
+        }
+
+        $().ready(function () {
+            resizeFrame();
+            $('#regions').scrollTo('#current');
+        });
+
+    // append scroll value to the URL
+    function my_href(href) {
+        var scroll;
+        // Netscape compliant
+        if (typeof (window.pageYOffset) == 'number')
+            scroll = window.pageYOffset;
+        // DOM compliant
+        else if (document.body && document.body.scrollTop)
+            scroll = document.body.scrollTop;
+        // IE6 standards compliant mode
+        else if (document.documentElement && document.documentElement.scrollTop)
+            scroll = document.documentElement.scrollTop;
+        // needed for IE6 (when vertical scroll bar is on the top)
+        else scroll = 0;
+        // set href location with scroll position parameter
+        window.location.href = href + '&scroll=' + scroll;
+    }        
+    </script>
+</body>
+</html>

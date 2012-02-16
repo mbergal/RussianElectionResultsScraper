@@ -1,0 +1,56 @@
+﻿using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Web.Mvc;
+using System.Web.UI;
+using System.Web.UI.DataVisualization.Charting;
+using NHibernate;
+using NHibernate.Linq;
+using RussianElectionResultsScraper.Model;
+using Dapper;
+
+
+namespace RussianElectionResultScraper.Web
+    {
+    public class GraphController : Controller
+        {
+        private readonly ISessionFactory _sessionFactory;
+        
+
+        public GraphController( ISessionFactory sessionFactory )
+            {
+            this._sessionFactory = sessionFactory;
+            }
+
+
+//        [OutputCache(Duration = int.MaxValue,NoStore = false,Location = OutputCacheLocation.ServerAndClient, VaryByParam = "*")]
+        public FileStreamResult  PollingStationsByAttendance(string region, int? width, int? height, bool? showGrid )
+            {
+            var path = _sessionFactory.GetCurrentSession().Get<VotingPlace>(region).Path + _sessionFactory.GetCurrentSession().Get<VotingPlace>(region).Id + ":";
+            var a = _sessionFactory.GetCurrentSession().Connection.Query<double>("select Attendance from VotingPlace where Path like @path and TYPE = 5", new { path = path + '%' } );
+            var g = new List<int>();
+            for (var i = 0; i <= 100; ++i  )
+                g.Add( 0 );
+
+            a.ForEach( x=>
+                           {
+                           g[(int)x]++;
+                           } );
+            var m = new MemoryStream();
+            var chart = new System.Web.UI.DataVisualization.Charting.Chart();
+            chart.Width = width ?? 600;
+            chart.Height = height ?? 400;
+            var s = new Series( "aaaa");
+            s.ChartType = SeriesChartType.Column;
+            for (int i = 0; i <= 100; ++i )
+                s.Points.AddXY(i, g[i] );
+            chart.Series.Add(s);
+            var ca = new ChartArea {AxisX = {IsStartedFromZero = true, Minimum = 0, Maximum = 100, Enabled = AxisEnabled.False}, AxisY = { Enabled = AxisEnabled.False } };
+            chart.ChartAreas.Add(ca);
+
+            chart.SaveImage( m );
+            m.Seek( 0, SeekOrigin.Begin) ;
+            return new FileStreamResult( m, "image/jpg");
+            }
+        }
+    }
