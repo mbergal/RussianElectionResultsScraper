@@ -43,6 +43,7 @@
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\..\packages\HtmlAgilityPack.1.4.3\lib\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL" />
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -65,8 +66,13 @@
     <Compile Include="TestConfiguration.cs" />
     <Compile Include="TestPageDocument.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestVotingPlace.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RussianElectionResultsScraper.Model\RussianElectionResultsScraper.Model.csproj">
+      <Project>{9B63118E-2711-4F95-B9FF-47E3142CC986}</Project>
+      <Name>RussianElectionResultsScraper.Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RussianElectionResultsScraper\RussianElectionResultsScraper.csproj">
       <Project>{96B2D557-27E3-480E-8281-E2271997920E}</Project>
       <Name>RussianElectionResultsScraper</Name>
