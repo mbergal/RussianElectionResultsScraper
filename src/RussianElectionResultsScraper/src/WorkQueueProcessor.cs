@@ -60,14 +60,13 @@ namespace RussianElectionResultsScraper
         void RunInternal()
             {
             this.Watch();
-            Parallel.ForEach( this._workQueueService.GetConsumerEnumerable(), new ParallelOptions() { MaxDegreeOfParallelism = 20 }, this.ProcessWorkItem );
+            Parallel.ForEach( this._workQueueService.GetConsumerPartitioner(), new ParallelOptions() { MaxDegreeOfParallelism = 1 }, this.ProcessWorkItem );
             }
 
         void ProcessWorkItem(WorkItem workItem)
             {
             new ProcessWorkItemCommand( _election, workItem, _pageParser, _sessionFactory, _pageCache, _workQueueService ).Execute();
             }
-
 
     }
 

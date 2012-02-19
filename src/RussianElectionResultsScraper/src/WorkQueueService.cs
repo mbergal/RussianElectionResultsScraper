@@ -17,26 +17,35 @@ namespace RussianElectionResultsScraper
 
         public void Add( WorkItem workItem )
             {
-            _workItemQueue.Add( workItem );
-            _workItemsByUri.Add( workItem.Uri, workItem );
+            lock (this)
+                {
+                _workItemQueue.Add(workItem);
+                _workItemsByUri.Add(workItem.Uri, workItem);
+                }
             }
 
         public void Processed( WorkItem workItem )
             {
-            _workItemsByUri.Remove(workItem.Uri);
-            if ( _workItemsByUri.Count == 0 )
-                this._workItemQueue.CompleteAdding();
+            lock (this)
+                {
+                _workItemsByUri.Remove(workItem.Uri);
+                // Bug right here
+                if (this.Count() == 0 && _workItemsByUri.Count == 0)
+                    this._workItemQueue.CompleteAdding();
+                }
             }
 
-        public IEnumerable<WorkItem>  GetConsumerEnumerable()
+        public Partitioner<WorkItem> GetConsumerPartitioner()
             {
-            return _workItemQueue.GetConsumingEnumerable();
+            return _workItemQueue.GetConsumingPartitioner();
             }
 
         public int Count()
             {
-            return _workItemQueue.Count;
+            lock( this )
+                return _workItemQueue.Count;
             }
+
         }
 
 }

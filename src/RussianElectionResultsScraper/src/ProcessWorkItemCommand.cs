@@ -13,7 +13,7 @@ namespace RussianElectionResultsScraper
     public class ProcessWorkItemCommand
         {
         private readonly WorkItem           _workItem;
-        private static readonly ILog        log = LogManager.GetLogger(typeof(Program));
+        private static readonly ILog        log = LogManager.GetLogger("ProcessWorkItemCommand");
         private readonly PageParser         _pageParser;
         private readonly ISessionFactory    _sessionFactory;
         private readonly IPageCache         _pageCache;
@@ -34,7 +34,9 @@ namespace RussianElectionResultsScraper
             {
             log.Info(string.Format("Processing work item \"{0}\"", this._workItem.Uri ), () =>
                 {
-                var workItemProcessingTask = new Task( delegate
+                    try
+                    {
+                        var workItemProcessingTask = new Task(delegate
                     {
                     int maxNumberOfAttempts = 10;
 
@@ -49,7 +51,7 @@ namespace RussianElectionResultsScraper
                                     {
                                     result = t.Result;
                                     if (result.IsRedirect)
-                                        ProcessRedirectPage(result, this._workItem.ParentVotingPlaceId);
+                                        ProcessRedirectPage(this._workItem, result );
                                     else
                                         ProcessResultPage(this._workItem, result);
                                     }, CancellationToken.None, TaskContinuationOptions.AttachedToParent | TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Current);
@@ -61,14 +63,15 @@ namespace RussianElectionResultsScraper
                         catch (Exception e)
                             {
                             if ( result != null )
-                                log.Error(string.Format("Exception parsing page {0}\n{1}", this._workItem.Uri, result.PageText), e);
+                                log.Warn(string.Format("Exception parsing page {0}\n{1}", this._workItem.Uri, result.PageText), e);
                             else
-                                log.Error(string.Format("Exception parsing page {0}\n", this._workItem.Uri), e);
+                                log.Warn(string.Format("Exception parsing page {0}\n", this._workItem.Uri), e);
 
                             
                             this._pageCache.Remove( this._workItem.Uri );
                             if (--maxNumberOfAttempts < 0)
                                 {
+                                log.Error( string.Format( "Could not process uri \"{0}\"", this._workItem.Uri ), e );
                                 break;
                                 System.Diagnostics.Debugger.Break();
                                 }
@@ -77,8 +80,17 @@ namespace RussianElectionResultsScraper
                         }
                     });
 
-                workItemProcessingTask.Start();
-                workItemProcessingTask.Wait();
+
+                    workItemProcessingTask.Start();
+                    workItemProcessingTask.Wait();
+                    this._workQueue.Processed(this._workItem);
+                }
+                catch (Exception e)
+                    {
+                        this._workQueue.Processed(this._workItem);    
+                    }
+                
+                
                 });
             }
 
@@ -91,6 +103,7 @@ namespace RussianElectionResultsScraper
                     {
                     if (this._workItem.UpdateCounters)
                         {
+                        session.Update( this._election );
                         result.CounterDescriptions.ForEach( x=>
                                                                 {
                                                                 var counterDescription = this._election.Counter(x.Key);
@@ -98,11 +111,17 @@ namespace RussianElectionResultsScraper
                                                                     {
                                                                     counterDescription = new Model.CounterDescription { Counter =  x.Key, Name = x.Value.counterName };
                                                                     this._election.Counters.Add( counterDescription );
-                                                                    }   
+                                                                    counterDescription.Election = this._election;
+                                                                    }
+                                                                else
+                                                                    {
+                                                                    counterDescription.Name = x.Value.counterName;
+                                                                    }
                                                                 });
                         
                         }
                     var vp = session.Get<VotingPlace>(result.Id) ?? new VotingPlace();
+                    vp.Election = this._election;
                     vp.Id = result.Id;
                     vp.Name = result.Name;
                     vp.Uri = result.Uri;
@@ -123,7 +142,8 @@ namespace RussianElectionResultsScraper
                             break;    
                         }
 
-                    var votingResults = result.CounterValues.Select(entry => new VotingResult() { Counter = entry.Key, VotingPlaceId = vp.Id, Value = entry.Value }).ToList();
+                    var votingResults = result.CounterValues.Select(entry => new VotingResult() { Counter = entry.Key, VotingPlace = vp, Value = entry.Value }).ToList();
+                    vp.Results.Clear();
                     foreach (var votingResult in votingResults)
                         {
                         vp.Results.Add( votingResult );    
@@ -137,18 +157,17 @@ namespace RussianElectionResultsScraper
 
                     if (workItem.Recursive && result.Children != null)
                         foreach (var a in result.Children)
-                            this._workQueue.Add(new WorkItem() { Uri = a.Item1, ParentVotingPlaceId = vp.Id });
+                            this._workQueue.Add(new WorkItem() { Uri = a.Item1, ParentVotingPlaceId = vp.Id, Recursive = workItem.Recursive });
 
-                    this._workQueue.Processed( workItem );
                     }
                 });
             }
 
-        private void ProcessRedirectPage(ResultPage result, string parentVotingPlaceId)
+        private void ProcessRedirectPage( WorkItem workItem, ResultPage result )
             {
             log.Info("ProcessRedirectPage: ", () =>
                 {
-                this._workQueue.Add(new WorkItem() { Uri = result.RedirectsTo, ParentVotingPlaceId = parentVotingPlaceId });
+                this._workQueue.Add(new WorkItem() { Uri = result.RedirectsTo, ParentVotingPlaceId = workItem.ParentVotingPlaceId, Recursive = workItem.Recursive } );
                 });
             }
 
