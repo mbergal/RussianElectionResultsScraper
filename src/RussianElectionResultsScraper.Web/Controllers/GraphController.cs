@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
@@ -52,5 +54,35 @@ namespace RussianElectionResultScraper.Web
             m.Seek( 0, SeekOrigin.Begin) ;
             return new FileStreamResult( m, "image/jpg");
             }
+
+        public FileStreamResult PollingStationResults(string votingPlaceId, int? width, int? height, bool? showGrid)
+            {
+                var  vp = _sessionFactory.GetCurrentSession().Get<VotingPlace>(votingPlaceId);
+                var m = new MemoryStream();
+                var chart = new Chart();
+                chart.Width = width ?? 600;
+                chart.Height = height ?? 400;
+                var s = new Series("aaaa");
+                s.IsXValueIndexed = true;
+                s.ChartType = SeriesChartType.Column;
+                s.MarkerStep = 1;
+                s["PointWidth"] = "1.0";
+                var results = vp.CandidateResults.ToArray();
+                for (int i = 0; i < results.Count(); ++i)
+                    {
+                    s.Points.AddXY(i, results[i].Percents);
+                    s.Points.Last().Color = vp.Election.Candidates[i].Color;
+                    }
+                chart.Series.Add(s);
+                var ca = new ChartArea() { AxisX = { Enabled = AxisEnabled.False, IsMarginVisible = false, Interval = Double.MinValue, IntervalOffset = 0, MaximumAutoSize = 100 }, AxisY = { Enabled = AxisEnabled.False } };
+                chart.ChartAreas.Add(ca);
+
+                chart.SaveImage(m);
+                m.Seek(0, SeekOrigin.Begin);
+                return new FileStreamResult(m, "image/jpg");
+            }
+
         }
+
+
     }

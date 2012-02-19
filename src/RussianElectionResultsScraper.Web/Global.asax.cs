@@ -42,6 +42,12 @@ namespace MvcApplication2
                 );
 
             routes.MapRoute(
+                "Graph/Polling Station Results",
+                "graph/polling-station-results/{votingPlaceId}.jpg",
+                new { controller = "Graph", action = "PollingStationResults", region = "" }
+                );
+
+            routes.MapRoute(
                 "Regions",
                 "regions",
                 new { controller = "Home", action = "Regions", region = "" }
