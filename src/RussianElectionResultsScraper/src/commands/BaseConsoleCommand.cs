@@ -8,6 +8,7 @@ using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using ManyConsole;
 using NHibernate;
+using NHibernate.Caches.SysCache2;
 using NHibernate.Dialect;
 using NHibernate.Driver;
 using NHibernate.SqlTypes;
@@ -26,7 +27,7 @@ namespace RussianElectionResultsScraper
             DOMConfigurator.Configure();
 
             _pageCacheSessionFactory = ConfigurePageCacheDatabase();
-            _electionResultsSessionFactory = ConfigureElectionResultsDatabase( true );
+            _electionResultsSessionFactory = ConfigureElectionResultsDatabase();
 
             return 0;
         }
@@ -43,23 +44,16 @@ namespace RussianElectionResultsScraper
                         .MsSql2008
                         .Dialect<MsSql2008Dialect>()
                         .ConnectionString(ConfigurationManager.ConnectionStrings[1].ConnectionString))
+                .Cache(c => c.UseQueryCache().ProviderClass(typeof(SysCacheProvider).AssemblyQualifiedName))
                 .BuildConfiguration();
 
             configuration.AddAssembly(typeof(VotingPlace).Assembly);
             return configuration;
             }
 
-        private ISessionFactory ConfigureElectionResultsDatabase( bool recreate )
+        private ISessionFactory ConfigureElectionResultsDatabase()
             {
             var configuration = this.BuildElectionResultsDatabaseConfiguration();
-            if (recreate)
-                {
-                List<string> lines = new List<string>();
-
-                var schemaExport = new SchemaExport(configuration);
-                schemaExport.Create(x => lines.Add(x), true);
-                schemaExport.Execute(true, false, false);
-                }
             return configuration.BuildSessionFactory();
             }
 
