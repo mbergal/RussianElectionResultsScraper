@@ -48,5 +48,21 @@
     </set>
 
   </class>
+  <database-object>
+    <create>
+      CREATE STATISTICS [_dta_stat_1161771196_1_5] ON [dbo].[VotingPlace]([Id], [Type])
+      CREATE STATISTICS [_dta_stat_1161771196_25_1_5] ON [dbo].[VotingPlace]([Path], [Id], [Type])
+      CREATE STATISTICS [_dta_stat_1097770968_4_2] ON [dbo].[VotingResult]([VotingPlaceId], [Counter])
+      CREATE NONCLUSTERED INDEX [_dta_index_VotingPlace_36_1161771196__K25_K1] ON [dbo].[VotingPlace]
+      (
+      [Path] ASC,
+      [Id] ASC
+      ) WITH ( SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF) ON [PRIMARY]
+
+    </create>
+    <drop>
+      
+    </drop>
+  </database-object>
 
 </hibernate-mapping>

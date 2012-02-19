@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Iesi.Collections.Generic;
 using System.Linq;
 
@@ -6,6 +7,11 @@ namespace RussianElectionResultsScraper.Model
     {
     public enum Type { CIK = 1, Region = 2, TIK = 3, OIK = 4, UIK = 5 };
 
+    public class CandidateResult
+        {
+        public int      Votes;
+        public decimal  Percents;
+        }
     public class VotingPlace 
         {
 
@@ -26,13 +32,34 @@ namespace RussianElectionResultsScraper.Model
             }
         public virtual Election           Election { get; set; }
         public virtual VotingPlace        Parent { get; set; }
-        public virtual ISet<VotingPlace>  Children { get; set; }
-        public virtual ISet<VotingResult> Results { get; set; }
+        public virtual Iesi.Collections.Generic.ISet<VotingPlace>  Children { get; set; }
+        public virtual Iesi.Collections.Generic.ISet<VotingResult> Results { get; set; }
 
         public virtual int?               Counter(int i)
             {
             var counter = this.Results.FirstOrDefault(x => x.Counter == i);
             return counter != null ? counter.Value : (int?) null;
+            }
+
+       public virtual VotingPlace          SetCounter( int counter, int value, string message = null )
+            {
+            var votingResult = this.Results.FirstOrDefault(x => x.Counter == counter );
+            if (votingResult != null)
+                {
+                votingResult.Value = value;
+                votingResult.Message = message;
+                }
+            else
+                this.Results.Add(new VotingResult() { Counter = counter, Value = value, Message = message });
+            return this;
+            }
+
+        public virtual IEnumerable<CandidateResult> CandidateResults
+            {
+            get
+                {
+                return this.Results.Where(x => x.Counter >= 19).Select( x=> new CandidateResult { Votes = x.Value, Percents = 100.00m * x.Value / this.NumberOfIssuedBallots });
+                }
             }
 
         /// <summary>
@@ -245,5 +272,28 @@ namespace RussianElectionResultsScraper.Model
                 }
             set { }
             }
+
+        public virtual int     NumberOfIssuedBallots
+            {
+            get {
+                try
+                    {
+                    return (int) (this.NumberOfBallotsIssuedToVotersWhoVotedEarly + this.NumberOfBallotsIssuedToVoterAtPollStation + this.NumberOfBallotsIssuedToVotersOutsideOfPollStation);
+                    }
+                catch (Exception)
+                    {
+                    return 0;
+                    }
+                }
+            }
+
+        public virtual void UpdateCountersFromChildren()
+            {
+            this.Election.Counters.ToList().ForEach(x =>
+                {
+                this.SetCounter(x.Counter, (int) this.Children.Select( y=>y.Counter(x.Counter)).Sum(), "Missing in original data"  );
+                });
+            }
+
         }
     }
