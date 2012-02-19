@@ -7,7 +7,8 @@ namespace RussianElectionResultsScraper.Model
         {
         public virtual int          Id { get; set; }
         public virtual int          Counter { get; set; }
-        public virtual string       VotingPlaceId { get; set; }
+        public virtual VotingPlace  VotingPlace { get; set; }
         public virtual int          Value { get; set; }
+        public virtual string       Message { get; set; }
         }
     }

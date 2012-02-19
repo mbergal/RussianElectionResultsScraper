@@ -10,7 +10,29 @@
     </id>
     <property name="Counter"/>
     <property name="Value"/>
-
+    <many-to-one name="VotingPlace" column="VotingPlaceId"/>
+    <property name="Message" length="255"/>
   </class>
+
+  <database-object>
+    <create>
+      CREATE NONCLUSTERED INDEX [_dta_index_VotingResult_36_557245040__K4_1_2_3] ON [dbo].[VotingResult]
+        ( [VotingPlaceId] ASC )
+      INCLUDE ( [Id],
+      [Counter],
+      [Value]) WITH (SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF) ON [PRIMARY]
+      CREATE NONCLUSTERED INDEX index3
+      ON [dbo].[VotingResult] ([Counter],[VotingPlaceId])
+      INCLUDE ([Value])
+
+    </create>
+    <drop>
+      DROP INDEX [_dta_index_VotingResult_36_557245040__K4_1_2_3] ON [dbo].[VotingResult]
+    </drop>
+    <dialect-scope name="NHibernate.Dialect.MsSql2000Dialect"/>
+    <dialect-scope name="NHibernate.Dialect.MsSql2005Dialect"/>
+    <dialect-scope name="NHibernate.Dialect.MsSql2008Dialect"/>
+  </database-object>
+
 
 </hibernate-mapping>
