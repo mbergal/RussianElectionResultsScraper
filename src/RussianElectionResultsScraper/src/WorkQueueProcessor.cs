@@ -20,10 +20,9 @@ namespace RussianElectionResultsScraper
         private readonly ConcurrentDictionary<Task,bool>   _workers;
         private int _numOfVotingPlaces;
         private int _numOfVotingResults;
-        private readonly Semaphore _connectionThrottler = new Semaphore( 10, 10 );
-        private Election _election;
+        private readonly Election _election;
 
-        public WorkQueueProcessor( Election election, WorkQueueService workQueueService, PageParser pageParser, ISessionFactory sessionFactoryFactory, IPageCache pageCache, Configuration configuration)
+        public WorkQueueProcessor( Election election, WorkQueueService workQueueService, PageParser pageParser, ISessionFactory sessionFactoryFactory, IPageCache pageCache, ElectionConfig electionConfig)
             {
             this._workQueueService = workQueueService;
             this._pageParser = pageParser;
