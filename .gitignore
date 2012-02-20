@@ -2,5 +2,6 @@
 *.user
 .Resharper
 packages
-bin
-obj
+bin/
+csx/
+obj/
