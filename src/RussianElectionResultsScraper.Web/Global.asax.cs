@@ -34,6 +34,8 @@ namespace MvcApplication2
         public static void RegisterRoutes(RouteCollection routes)
             {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            routes.IgnoreRoute("{file}.js");
+            routes.IgnoreRoute("{file}.ico");
 
             routes.MapRoute(
                 "Graph/Polling Stations By Attendance",
