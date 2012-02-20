@@ -3,11 +3,11 @@ using System.Drawing;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace RussianElectionResultsScraper.src
+namespace RussianElectionResultsScraper
 {
     [Serializable]
     [XmlRoot( "configuration" )]
-    public class Configuration
+    public class ElectionConfig
         {
         [XmlElement("id")]
         public string Id;
@@ -19,9 +19,9 @@ namespace RussianElectionResultsScraper.src
         [XmlArrayItem("counter")]
         public CounterConfiguration[] Counters;
 
-        public static Configuration Load( XmlReader xmlReader )
+        public static ElectionConfig Load( XmlReader xmlReader )
             {
-            return (Configuration) new XmlSerializer(typeof(Configuration)).Deserialize(xmlReader);
+            return (ElectionConfig) new XmlSerializer(typeof(ElectionConfig)).Deserialize(xmlReader);
             }
 
         public void Validate()
