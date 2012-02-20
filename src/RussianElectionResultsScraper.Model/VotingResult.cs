@@ -1,7 +1,4 @@
-﻿using System;
-using Iesi.Collections.Generic;
-
-namespace RussianElectionResultsScraper.Model
+﻿namespace RussianElectionResultsScraper.Model
     {
     public class VotingResult
         {
