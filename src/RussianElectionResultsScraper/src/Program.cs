@@ -17,9 +17,7 @@ namespace RussianElectionResultsScraper
     class Program
         {
         static int  Main(string[] args)
-
             {
-            Console.WriteLine( String.Join( ";", args ));
             var commands = GetCommands();
 
             // optionally, include ConsoleModeCommand if you want to allow the user to run
