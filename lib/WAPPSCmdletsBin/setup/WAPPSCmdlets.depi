@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<DependencyCheckerConfiguration version="2.0">
+  <title>Windows Azure PowerShell Cmdlets</title>
+  <dependencies>
+    <dependency 
+		hint="PowerShell2" 
+		name="Windows PowerShell 2.0" 
+		type="WebPI" />		
+
+    <dependency
+        hint="WindowsAzureToolsVS2010"
+        name="Windows Azure SDK for .NET - November 2011"
+        helpLink="http://go.microsoft.com/fwlink/?LinkID=231172"
+        disableSkip="true"
+        type="WebPI" />
+	
+    <dependency 
+		hint="System.Data.Services.client.dll;3.5.30729.5000" 
+		name="ADO.NET Data Services Update for .NET Framework 3.5 SP1" 
+		description="ADO.NET Data Services Update for .NET Framework 3.5 SP1 is required" 
+		helpLink="http://www.microsoft.com/downloads/en/details.aspx?FamilyID=4B710B89-8576-46CF-A4BF-331A9306D555" 
+		type="GAC" />
+		
+	<dependency 
+        hint="HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Windows Identity Foundation\Setup\v3~.5.(Default),HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Identity Foundation\Setup\v3~.5.(Default);6.1.7600.0" 
+        name="Windows Identity Foundation Runtime" 
+        description="Windows Identity Foundation Runtime" 
+        helpLink="http://support.microsoft.com/kb/974405" 
+       type="Registry" />
+		
+  </dependencies>
+  
+  <setupCommands>
+    <setup command="scripts\tasks\installPSCmdlets.cmd" name="Install the Windows Azure PowerShell Cmdlets" 
+	description="Install the Windows Azure PowerShell Cmdlets" />
+  </setupCommands>
+</DependencyCheckerConfiguration>

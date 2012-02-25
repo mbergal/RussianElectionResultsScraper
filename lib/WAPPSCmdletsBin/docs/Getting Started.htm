@@ -1,0 +1,242 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+		<title>Windows Azure PowerShell Cmdlets - Getting Started</title>
+        <!-- Global CSS -->
+		<link rel="Stylesheet" type="text/css" media="all" href="styles/master.css" />
+		<link rel="Stylesheet" type="text/css" media="all" href="styles/Menu.css" />
+		<link rel="Stylesheet" type="text/css" media="all" href="styles/topnav.css" />
+		<link rel="Stylesheet" type="text/css" media="all" href="styles/body.css" />
+		<link rel="Stylesheet" type="text/css" media="all" href="styles/tier2-page.css" />
+		<link rel="Stylesheet" type="text/css" media="all" href="styles/sticky-footer.css" />
+		<link rel="Stylesheet" type="text/css" media="all" href="styles/campaign.master.css" />
+		<link rel="Stylesheet" type="text/css" media="all" href="styles/docstyle.css" />
+		<script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
+		<script type="text/javascript" src="scripts/jquery.query-2.1.6.js"></script>
+
+		<!--[if gte IE 7]> 
+			<link href="styles/ie7.css" rel="Stylesheet" media="all" />
+		<![endif]-->
+		<!--[if lte IE 6]> 
+			<script type="text/javascript" src="scripts/jquery.supersleight.plugin.js"></script>
+			<script type="text/javascript" src="scripts/azure.ie6.js"></script>
+			<link href="styles/ie6.css" rel="Stylesheet" media="all" />
+		<![endif]-->
+		<!--WebTrends tag-->
+
+		<script type="text/javascript" src="http://js.microsoft.com/library/svy/broker.js"></script>
+
+		<script type="text/javascript" src="scripts/azure.js"></script>	
+
+		<style type="text/css">
+			.ctl00_TopNavMenu_0
+			{
+				background-color: white;
+				visibility: hidden;
+				display: none;
+				position: absolute;
+				left: 0px;
+				top: 0px;
+			}
+			.ctl00_TopNavMenu_1
+			{
+				text-decoration: none;
+			}
+			.ctl00_TopNavMenu_2
+			{
+			}
+		</style>
+  	</head>
+<body>
+	<a name="top"></a>
+	<div id="outerWrapper">
+		<div id="wrapper" class="landingPage">
+            <div id="whiteBkgdStrip">
+            </div>
+            <div class="header">
+                <div class="mainHomepageTitle">		
+					<div class="mainHomepageSubTitle">
+						Windows Azure PowerShell Cmdlets
+					</div>
+				</div>
+				<div class="nav-menu-header">
+									<div class="AspNet-Menu-Horizontal" id="ctl00_TopNavMenu">
+					<ul class="AspNet-Menu">
+								
+						<li class="AspNet-Menu-Leaf">
+							<a href="Overview.htm" title="Overview" class="AspNet-Menu-Link" >
+												OVERVIEW
+							</a>
+						</li>
+										<li class="AspNet-Menu-Leaf AspNet-Menu-Selected">
+							<a href="#" title="Getting Started" class="AspNet-Menu-Link AspNet-Menu-Selected">
+							
+												GETTING STARTED
+							</a>
+						</li>
+								
+						<li class="AspNet-Menu-Leaf">
+							<a href="Using the Cmdlets.htm" title="Using the Cmdlets" class="AspNet-Menu-Link" >
+												USING THE CMDLETS
+							</a>
+						</li>
+				                    </ul>
+                </div>
+				</div>
+            </div>			
+            <div class="contentWrapper">
+			
+<!-- START SECURITY MESSAGE -->
+  <div id="securityMessage">
+    <img src="images/Exclamation.png" class="exclamation"/>
+    <!--[if gte IE 9]>
+      This page requires the execution of JavaScript for navigating the contents
+      and copy code snippets. If you are viewing this page in Internet Explorer
+      locally on your computer, please click <strong>Allow blocked content</strong> on the security 
+      message at the bottom of this window.
+      <br /><br />
+      <img src="images/SecurityMessageIE9.png" id="securityMessageImage" />
+    <![endif]-->
+    <!--[if lte IE 8]>
+      This page requires the execution of JavaScript for navigating the contents
+      and copy code snippets. If you are viewing this page in Internet Explorer
+      locally on your computer, please click the security message at the top of this window
+      and click Yes in the resulting dialog.
+      <br /><br />
+      <img src="images/SecurityMessage.png" id="securityMessageImage" />
+    <![endif]-->
+  </div>
+  <script type="text/javascript">
+    document.getElementById("securityMessage").style.visibility = "hidden";
+  </script>
+<!-- END SECURITY MESSAGE -->
+
+<div class="genericInnerWrapper">
+				<h1>Windows Azure PowerShell Cmdlets</h1>
+				
+				<div class="hr">
+					<img src="images/hr-gradient-right-side.jpg" />
+				</div>
+				<div class="docContent">
+					
+    <div style="display:none; height:0; width:0;">
+      <img id="copyImage" style="display:none; height:0; width:0;" alt="Copy image" src="..\docs\Readme.html\html\../local/copycode.gif" />
+      <img id="copyHoverImage" style="display:none; height:0; width:0;" alt="CopyHover image" src="..\docs\Readme.html\html\../local/copycodeHighlight.gif" />
+    </div>
+    <div id="mainSection">
+      <div id="mainBody">
+        <a name="_Toc226544218" href="#">
+          <span />
+        </a>
+        <a name="_Toc312023830" href="#">
+          <span />
+        </a>
+        <p>
+          <b>Installing the Windows Azure PowerShell Cmdlets </b>
+        </p>
+        <p>To get started using the Windows Azure PowerShell Cmdlets, complete the following steps: </p>
+        <ol>
+          <li>Run the <b>StartHere.cmd</b> command script located in the directory where you extracted the package.</li>
+          <li>The <b>StartHere.cmd</b> script will launch the Dependency Checker tool. The Dependency Checker verifies your machine to ensure that it is properly configured with all of the necessary dependencies to use the Windows Azure Services PowerShell Cmdlets.</li>
+          <li>The first step involves checking your machine for the software and configuration. If you do not have the required configuration or dependencies then, in most cases, you will be provided with a link to install them using the Web Platform Installer.<p><img src="..\docs\Readme.html\html\images\c300667c-4698-4e9e-be97-333e0a34f7ab.png" /></p><p><b>Figure 1</b> - <i>Checking for dependencies</i></p></li>
+          <br />
+          <li>After the dependency check is complete, press the <b>Next</b> button to proceed with the installation. A console window is shown to select the installation method. Enter “1” to install the cmdlets as a PowerShell snap-in or “2” to install them as a PowerShell module.<div class="alert"><table width="100%" cellspacing="0" cellpadding="0"><tr><th align="left"><img class="note" src="..\docs\Readme.html\html\../local/note.gif" />Note:</th></tr><tr><td><a name="_GoBack" href="#"><span /></a>  To uninstall the Windows Azure PowerShell Cmdlets use the <i>uninstallPSCmdlets.cmd</i> script located in the <i>setup</i> folder.</td></tr></table><p /></div><p><img src="..\docs\Readme.html\html\images\3afbc723-0776-44a7-bd7b-9a06ef716b7c.png" /></p><p><b>Figure 2</b> - <i>Choosing an installation mode</i></p></li>
+          <br />
+          <li>The console window shows results differently depending on the choice you make in the previous step. </li>
+          <li>If you choose to install the Windows Azure PowerShell Cmdlets as a PowerShell snap-in, the output in the console window should be as follows.<p><img src="..\docs\Readme.html\html\images\62d434c2-2ea7-40ea-88f2-53d8368ac056.png" /></p><p><b>Figure 3</b> - <i>Installing the cmdlets as a PowerShell snap-in</i></p></li>
+          <br />
+          <li>When installing the Windows Azure PowerShell Cmdlets as a PowerShell module, the output should appear as shown below.<p><img src="..\docs\Readme.html\html\images\529ed3d6-e3d6-42fb-992d-db29e9c9f1cb.png" /></p><p><b>Figure 4</b> - <i>Installing the cmdlets as a PowerShell module</i></p></li>
+          <br />
+          <li>Wait until the cmdlets project installed and then press any key to close the console window. </li>
+        </ol>
+        <br />
+        <a name="_Toc312023831" href="#">
+          <span />
+        </a>
+        <p>
+          <b>Listing Installed Cmdlets</b>
+        </p>
+        <p>The Windows Azure PowerShell Cmdlets perform most operations related to the administration and management of Windows Azure services and storage.</p>
+        <p>You can use a PowerShell script to list the set of PowerShell cmdlets available:</p>
+        <ol>
+          <li>Open a PowerShell console from <b>Start | All Programs | Accessories | Windows PowerShell | Windows PowerShell</b>. <p><img src="..\docs\Readme.html\html\images\07ea189f-78eb-4a7d-9149-649f400d81f4.png" /></p><p><b>Figure 5</b> - <i>Opening the PowerShell console</i></p></li>
+          <br />
+          <li>Add the <b>WAPPSCmdlets</b> snap-in to your session by typing the following command:<div class="code"><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th>PowerShell</th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="..\docs\Readme.html\html\../local/copycode.gif" /> Copy Code
+                  </span></th></tr><tr><td colspan="2"><pre>Add-PSSnapin WAPPSCmdlets</pre></td></tr></table></span></div><br /><p>or load the corresponding module by typing the following command:</p><div class="code"><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th>PowerShell</th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="..\docs\Readme.html\html\../local/copycode.gif" /> Copy Code
+                  </span></th></tr><tr><td colspan="2"><pre>Import-Module WAPPSCmdlets</pre></td></tr></table></span></div><br /></li>
+          <li>To retrieve a list of all the available cmdlets in the package, type the following command:<div class="code"><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th>PowerShell</th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="..\docs\Readme.html\html\../local/copycode.gif" /> Copy Code
+                  </span></th></tr><tr><td colspan="2"><pre>Get-Command -Module WAPPSCmdlets</pre></td></tr></table></span></div><p><img src="..\docs\Readme.html\html\images\fdc5aeca-a81b-4319-912b-fe55253d75ae.png" /></p><p><b>Figure 6</b> - <i>Listing available cmdlets</i></p></li>
+        </ol>
+        <br />
+        <a name="_Toc312023832" href="#">
+          <span />
+        </a>
+        <p>
+          <b>Displaying Cmdlet Help</b>
+        </p>
+        <p>When using individual cmdlets, you will probably need to know detailed information about how to use each cmdlet.</p>
+        <p>To get help information about a particular cmdlet, follow these steps:</p>
+        <ol>
+          <li>Open a PowerShell console window from <b>Start | All Programs | Accessories | Windows PowerShell | Windows PowerShell</b>. </li>
+          <li>Add the <b>WAPPSCmdlets </b>snap-in by typing the following command:<div class="code"><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th>PowerShell</th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="..\docs\Readme.html\html\../local/copycode.gif" /> Copy Code
+                  </span></th></tr><tr><td colspan="2"><pre>Add-PSSnapin WAPPSCmdlets</pre></td></tr></table></span></div><br /><p>or load the corresponding module by typing the following command:</p><div class="code"><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th>PowerShell</th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="..\docs\Readme.html\html\../local/copycode.gif" /> Copy Code
+                  </span></th></tr><tr><td colspan="2"><pre>Import-Module WAPPSCmdlets</pre></td></tr></table></span></div><br /></li>
+          <li>To retrieve help information about a specific cmdlet, use the <b>Get-Help</b> command. For example, to see the help topic for the <b>New-Deployment</b> cmdlet, type:<div class="code"><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th>PowerShell</th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="..\docs\Readme.html\html\../local/copycode.gif" /> Copy Code
+                  </span></th></tr><tr><td colspan="2"><pre>Get-Help New-Deployment</pre></td></tr></table></span></div></li>
+          <br />
+          <p>
+            <img src="..\docs\Readme.html\html\images\1bd2f286-3202-4896-b21e-8a8ecd5791d1.png" />
+          </p>
+          <p>
+            <b>Figure 7</b> - <i>Retrieving help information for the New-Deployment cmdlet</i></p>
+          <br />
+        </ol>
+        <div class="alert">
+          <table width="100%" cellspacing="0" cellpadding="0">
+            <tr>
+              <th align="left">
+                <img class="note" src="..\docs\Readme.html\html\../local/note.gif" />Note:</th>
+            </tr>
+            <tr>
+              <td><b> </b>To get detailed information about a particular cmdlet you can specify the <b>–Detailed</b> or <b>–Full</b> options in <b>Get-Help</b>. This will give additional information about parameters, usage examples, etc.<br />For example:<b> </b><br /> Get-Help Move-Deployment –Detailed</td>
+            </tr>
+          </table>
+          <p />
+        </div>
+        <br />
+      </div>
+    </div>
+  
+				</div>
+							<br />
+				<a class="site-arrowlink1" href="Using the Cmdlets.htm" title="Using the Cmdlets">
+					Using the Cmdlets
+				</a>
+							
+</div>
+
+			</div> 
+		</div>
+	</div>
+
+	<div class="footer">
+		<div class="microsoftLink">
+			<a href="http://www.microsoft.com/" title="Microsoft">
+                <img alt="Microsoft" src="images/ms-logo-footer.png" /></a>
+			<span>&copy; 2012 Microsoft</span>
+		</div>
+		<div class="leftSideLinks">
+			<span>Windows Azure PowerShell Cmdlets</span>
+            &nbsp;&nbsp;&nbsp;
+			<a href="mailto:azcfeed@microsoft.com">Contact Us</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+			<a href="EULA.htm" target="_parent">Terms of Use</a><br />
+		</div>
+	</div>
+	
+	<embed id="dcDetectorMoz" type="application/dc-plugin" style="height:0px;width:0px"></embed>
+	<object id="dcDetectorIE" classid="CLSID:4A5C71B6-C5C0-41EB-8917-16014CDF375B" style="height:0px;width:0px"></object>
+	<script type="text/javascript" src="scripts/deplinks.js"></script>
+</body>
+</html>
+

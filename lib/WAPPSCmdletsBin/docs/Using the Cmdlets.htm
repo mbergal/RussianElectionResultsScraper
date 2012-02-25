@@ -1,0 +1,1631 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+		<title>Windows Azure PowerShell Cmdlets - Using the Cmdlets</title>
+        <!-- Global CSS -->
+		<link rel="Stylesheet" type="text/css" media="all" href="styles/master.css" />
+		<link rel="Stylesheet" type="text/css" media="all" href="styles/Menu.css" />
+		<link rel="Stylesheet" type="text/css" media="all" href="styles/topnav.css" />
+		<link rel="Stylesheet" type="text/css" media="all" href="styles/body.css" />
+		<link rel="Stylesheet" type="text/css" media="all" href="styles/tier2-page.css" />
+		<link rel="Stylesheet" type="text/css" media="all" href="styles/sticky-footer.css" />
+		<link rel="Stylesheet" type="text/css" media="all" href="styles/campaign.master.css" />
+		<link rel="Stylesheet" type="text/css" media="all" href="styles/docstyle.css" />
+		<script type="text/javascript" src="scripts/jquery-1.3.2.min.js"></script>
+		<script type="text/javascript" src="scripts/jquery.query-2.1.6.js"></script>
+
+		<!--[if gte IE 7]> 
+			<link href="styles/ie7.css" rel="Stylesheet" media="all" />
+		<![endif]-->
+		<!--[if lte IE 6]> 
+			<script type="text/javascript" src="scripts/jquery.supersleight.plugin.js"></script>
+			<script type="text/javascript" src="scripts/azure.ie6.js"></script>
+			<link href="styles/ie6.css" rel="Stylesheet" media="all" />
+		<![endif]-->
+		<!--WebTrends tag-->
+
+		<script type="text/javascript" src="http://js.microsoft.com/library/svy/broker.js"></script>
+
+		<script type="text/javascript" src="scripts/azure.js"></script>	
+
+		<style type="text/css">
+			.ctl00_TopNavMenu_0
+			{
+				background-color: white;
+				visibility: hidden;
+				display: none;
+				position: absolute;
+				left: 0px;
+				top: 0px;
+			}
+			.ctl00_TopNavMenu_1
+			{
+				text-decoration: none;
+			}
+			.ctl00_TopNavMenu_2
+			{
+			}
+		</style>
+  	</head>
+<body>
+	<a name="top"></a>
+	<div id="outerWrapper">
+		<div id="wrapper" class="landingPage">
+            <div id="whiteBkgdStrip">
+            </div>
+            <div class="header">
+                <div class="mainHomepageTitle">		
+					<div class="mainHomepageSubTitle">
+						Windows Azure PowerShell Cmdlets
+					</div>
+				</div>
+				<div class="nav-menu-header">
+									<div class="AspNet-Menu-Horizontal" id="ctl00_TopNavMenu">
+					<ul class="AspNet-Menu">
+								
+						<li class="AspNet-Menu-Leaf">
+							<a href="Overview.htm" title="Overview" class="AspNet-Menu-Link" >
+												OVERVIEW
+							</a>
+						</li>
+								
+						<li class="AspNet-Menu-Leaf">
+							<a href="Getting Started.htm" title="Getting Started" class="AspNet-Menu-Link" >
+												GETTING STARTED
+							</a>
+						</li>
+										<li class="AspNet-Menu-Leaf AspNet-Menu-Selected">
+							<a href="#" title="Using the Cmdlets" class="AspNet-Menu-Link AspNet-Menu-Selected">
+							
+												USING THE CMDLETS
+							</a>
+						</li>
+				                    </ul>
+                </div>
+				</div>
+            </div>			
+            <div class="contentWrapper">
+			
+<!-- START SECURITY MESSAGE -->
+  <div id="securityMessage">
+    <img src="images/Exclamation.png" class="exclamation"/>
+    <!--[if gte IE 9]>
+      This page requires the execution of JavaScript for navigating the contents
+      and copy code snippets. If you are viewing this page in Internet Explorer
+      locally on your computer, please click <strong>Allow blocked content</strong> on the security 
+      message at the bottom of this window.
+      <br /><br />
+      <img src="images/SecurityMessageIE9.png" id="securityMessageImage" />
+    <![endif]-->
+    <!--[if lte IE 8]>
+      This page requires the execution of JavaScript for navigating the contents
+      and copy code snippets. If you are viewing this page in Internet Explorer
+      locally on your computer, please click the security message at the top of this window
+      and click Yes in the resulting dialog.
+      <br /><br />
+      <img src="images/SecurityMessage.png" id="securityMessageImage" />
+    <![endif]-->
+  </div>
+  <script type="text/javascript">
+    document.getElementById("securityMessage").style.visibility = "hidden";
+  </script>
+<!-- END SECURITY MESSAGE -->
+
+<div class="genericInnerWrapper">
+				<h1>Windows Azure PowerShell Cmdlets</h1>
+				
+				<div class="hr">
+					<img src="images/hr-gradient-right-side.jpg" />
+				</div>
+				<div class="docContent">
+					
+    <div style="display:none; height:0; width:0;">
+      <img id="copyImage" style="display:none; height:0; width:0;" alt="Copy image" src="..\docs\Readme.html\html\../local/copycode.gif" />
+      <img id="copyHoverImage" style="display:none; height:0; width:0;" alt="CopyHover image" src="..\docs\Readme.html\html\../local/copycodeHighlight.gif" />
+    </div>
+    <div id="mainSection">
+      <div id="mainBody">
+        <p>The Windows Azure PowerShell cmdlets can be used to run unattended scripts to configure and manage Windows Azure services. The cmdlets provided in this package include the following:</p>
+        <div class="alert">
+          <table width="100%" cellspacing="0" cellpadding="0">
+            <tr>
+              <th align="left">
+                <img class="note" src="..\docs\Readme.html\html\../local/note.gif" />Note:</th>
+            </tr>
+            <tr>
+              <td> Cmdlets introduced in this release are identified with the label <b>(new)</b>.</td>
+            </tr>
+          </table>
+          <p />
+        </div>
+        <br />
+        <a name="_Toc312023834" href="#">
+          <span />
+        </a>
+        <h2 class="subheading">Windows Azure</h2>
+        <p><b>Subscription Data</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Set-Subscription <b>(new)</b></p>
+            </td>
+            <td>
+              <p>Configures common subscription settings for the PowerShell session such as subscription ID, management certificate, and storage account credentials. </p>
+              <p>Multiple named subscriptions are supported.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-Subscription <b>(new)</b></p>
+            </td>
+            <td>
+              <p>Lists settings for one or more subscriptions.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Select-Subscription <b>(new)</b></p>
+            </td>
+            <td>
+              <p>Selects the active subscription. The configuration settings for the active subscription are used unless overridden by command line parameters.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Import-Subscription <b>(new)</b></p>
+            </td>
+            <td>
+              <p>Imports the configuration settings from a .publishsettings file downloaded from the Windows Azure Management Portal.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Hosted Services</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-HostedProperties</p>
+            </td>
+            <td>
+              <p>Lists the properties for the specified hosted account.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>New-HostedService</p>
+            </td>
+            <td>
+              <p>Creates a new hosted service.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-HostedService</p>
+            </td>
+            <td>
+              <p>Retrieves a specified hosted service or all hosted services in the specified subscription.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-HostedServices</p>
+            </td>
+            <td>
+              <p>Lists all hosted services in the specified subscription. This cmdlet is deprecated. Use Get-HostedService instead.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Set-HostedService</p>
+            </td>
+            <td>
+              <p>Sets the label and description of the specified hosted service.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Remove-HostedService</p>
+            </td>
+            <td>
+              <p>Removes the specified hosted service.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Deployments</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-Deployment</p>
+            </td>
+            <td>
+              <p>Retrieves details for a specified deployment.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Move-Deployment</p>
+            </td>
+            <td>
+              <p>Swaps the deployments in the Production and Staging slots.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>New-Deployment</p>
+            </td>
+            <td>
+              <p>Creates a new deployment. Note that there should not be a deployment of the same name or in the same slot when executing this command.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Remove-Deployment</p>
+            </td>
+            <td>
+              <p>Deletes the specified deployment. Note that the deployment should be in suspended state.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Update-Deployment</p>
+            </td>
+            <td>
+              <p>Initiates an in-place upgrade of the specified deployment.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Set-DeploymentConfiguration</p>
+            </td>
+            <td>
+              <p>Changes the deployment's configuration.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Set-DeploymentStatus</p>
+            </td>
+            <td>
+              <p>Changes the deployment status to <i>Running</i> or <i>Suspended</i>.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Set-WalkUpgradeDomain</p>
+            </td>
+            <td>
+              <p>Walks the specified upgrade domain.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Role Instances</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Set-RoleInstanceCount <b>(new)</b></p>
+            </td>
+            <td>
+              <p>Sets the instance count for the specified role.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-RoleInstanceCount</p>
+            </td>
+            <td>
+              <p>Returns the count of instances for the specified role.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-RoleInstanceStatus</p>
+            </td>
+            <td>
+              <p>Returns the status of the specified role instance.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Reset-RoleInstance</p>
+            </td>
+            <td>
+              <p>Reboots or reimages the specified role instance.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Affinity Groups</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-AffinityGroup</p>
+            </td>
+            <td>
+              <p>Retrieves the properties for a single affinity group or all the affinity groups in the subscription.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-AffinityGroups</p>
+            </td>
+            <td>
+              <p>Lists all affinity groups in the subscription. This cmdlet is deprecated. Use Get-AffinityGroup instead.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>New-AffinityGroup</p>
+            </td>
+            <td>
+              <p>Creates a new affinity group in a specified data center location.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Remove-AffinityGroup</p>
+            </td>
+            <td>
+              <p>Deletes an affinity group in the specified subscription.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Set-AffinityGroup</p>
+            </td>
+            <td>
+              <p>Updates the label and/or the description of an affinity group.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Service Certificates</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-Certificates</p>
+            </td>
+            <td>
+              <p>Lists the certificates for the specified hosted service. This cmdlet is deprecated. Use Get-Certificate instead.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-Certificate</p>
+            </td>
+            <td>
+              <p>Retrieves a specified service certificate or all the certificates for the specified hosted service.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Add-Certificate</p>
+            </td>
+            <td>
+              <p>Uploads a service certificate.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Remove-Certificate</p>
+            </td>
+            <td>
+              <p>Deletes the specified service certificate.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Storage Services</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-StorageKeys</p>
+            </td>
+            <td>
+              <p>Displays the primary and secondary keys for the storage account.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-StorageProperties</p>
+            </td>
+            <td>
+              <p>Lists the properties of the specified storage account.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>New-StorageKey</p>
+            </td>
+            <td>
+              <p>Regenerates the primary or secondary storage key for the specified storage account.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-StorageAccount</p>
+            </td>
+            <td>
+              <p>Lists all storage services in the specified subscription.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>New-StorageAccount</p>
+            </td>
+            <td>
+              <p>Creates a new storage account in a subscription.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Remove-StorageAccount</p>
+            </td>
+            <td>
+              <p>Deletes the specified storage account from a subscription.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Set-StorageAccount</p>
+            </td>
+            <td>
+              <p>Updates the label and/or the description for a storage account.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Operating Systems</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-OSVersions</p>
+            </td>
+            <td>
+              <p>Lists the versions of the guest operating system that are currently available in Windows Azure.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <h2 class="subheading">Windows Azure Traffic Manager</h2>
+        <p><b>Profiles</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>New-TrafficManagerProfile <b>(new)</b></p>
+            </td>
+            <td>
+              <p>Creates a new profile for a domain name owned by the specified subscription.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-TrafficManagerProfile <b>(new)</b></p>
+            </td>
+            <td>
+              <p>Returns profile details optionally including all its definition versions.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Set-TrafficManagerProfile <b>(new)</b></p>
+            </td>
+            <td>
+              <p>Updates an existing profile, allowing it to be enabled or disabled, and optionally specifying which definition version to enable.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Remove-TrafficManagerProfile <b>(new)</b></p>
+            </td>
+            <td>
+              <p>Deletes a profile and all its definitions.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Definitions</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>New-TrafficManagerDefinition <b>(new)</b></p>
+            </td>
+            <td>
+              <p>Creates a new definition for a given profile.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-TrafficManagerDefinition <b>(new)</b></p>
+            </td>
+            <td>
+              <p>Returns a profile definition.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Endpoints</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>New-TrafficManagerEndpoint <b>(new)</b></p>
+            </td>
+            <td>
+              <p>Creates a new endpoint object and returns it.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Add-TrafficManagerEndpoint <b>(new)</b></p>
+            </td>
+            <td>
+              <p>Adds a new endpoint to the active definition in an existing profile.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Set-TrafficManagerEndpoint <b>(new)</b></p>
+            </td>
+            <td>
+              <p>Enables or disables an endpoint in a profile definition.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Remove-TrafficManagerEndpoint <b>(new)</b></p>
+            </td>
+            <td>
+              <p>Removes an endpoint from the active definition in an existing profile.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Monitors</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>New-TrafficManagerMonitor <b>(new)</b></p>
+            </td>
+            <td>
+              <p>Creates a new monitor object and returns it.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <h2 class="subheading">Windows Azure Storage</h2>
+        <p><b>Blob Storage</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Add-Blob <b>(new)</b></p>
+            </td>
+            <td>
+              <p>Uploads a blob to the specified container in Windows Azure blob storage.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Clear-Container</p>
+            </td>
+            <td>
+              <p>Removes blobs from one or more containers in Windows Azure blob storage.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-Container</p>
+            </td>
+            <td>
+              <p>Gets the blob containers in the specified storage account.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Save-Container</p>
+            </td>
+            <td>
+              <p>Downloads blobs from one or more containers in Windows Azure blob storage and saves them to local disk.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Window Azure Storage Analytics</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-StorageAnalyticsLogs</p>
+            </td>
+            <td>
+              <p>Downloads the analytics logs for the specified service.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-StorageAnalyticsMetrics</p>
+            </td>
+            <td>
+              <p>Downloads the Windows Azure Storage Analytics metrics for the specified service.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-StorageServicePropertiesForAnalytics</p>
+            </td>
+            <td>
+              <p>Gets Windows Azure Storage Analytics properties for a storage account.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Set-StorageServicePropertiesForAnalytics</p>
+            </td>
+            <td>
+              <p>Sets Windows Azure Storage Analytics properties for a storage account.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <h2 class="subheading">SQL Azure</h2>
+        <p><b>SQL Azure Servers</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-SqlAzureServer</p>
+            </td>
+            <td>
+              <p>Enumerates SQL Azure servers that are provisioned for a subscription.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>New-SqlAzureServer</p>
+            </td>
+            <td>
+              <p>Adds a new SQL Azure server to a subscription.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Remove-SqlAzureServer</p>
+            </td>
+            <td>
+              <p>Deletes a SQL Azure server from a subscription.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Set-SqlAzurePassword</p>
+            </td>
+            <td>
+              <p>Sets the administrative password of a SQL Azure server.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>SQL Azure Firewall Rules</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-SqlAzureFirewallRules</p>
+            </td>
+            <td>
+              <p>Retrieves a list of all the firewall rules for a SQL Azure server.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>New-SqlAzureFirewallRule</p>
+            </td>
+            <td>
+              <p>Updates an existing firewall rule or adds a new firewall rule for a SQL Azure server.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Remove-SqlAzureFirewallRule</p>
+            </td>
+            <td>
+              <p>Deletes a firewall rule from a SQL Azure server.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <h2 class="subheading">Windows Azure Diagnostics</h2>
+        <p><b>Configuration</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-CommonConfigurationLogs</p>
+            </td>
+            <td>
+              <p>Gets the common configuration values for all logging buffers.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-DiagnosticConfiguration</p>
+            </td>
+            <td>
+              <p>Gets the configuration for the specified diagnostic buffer (DiagnosticInfrastructureLogs, Directories, Logs, PerformanceCounters, WindowsEventLogs).</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Set-CommonConfigurationLogs</p>
+            </td>
+            <td>
+              <p>Sets the common configuration values for all logging buffers.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Infrastructure Logs (WADDiagnosticInfrastructureLogsTable)</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Clear-InfrastructureLog</p>
+            </td>
+            <td>
+              <p>Removes Windows Azure Diagnostic Infrastructure log data from a storage account.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-InfrastructureLog</p>
+            </td>
+            <td>
+              <p>Downloads Windows Azure Diagnostic Infrastructure log data from a storage account.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Set-InfrastructureLog</p>
+            </td>
+            <td>
+              <p>Sets the buffer configuration for the logs generated by the underlying diagnostics infrastructure. The diagnostic infrastructure logs are useful for troubleshooting the diagnostics system itself.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Performance Logs (WADPerformanceCountersTable)</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-PerfmonLogs</p>
+            </td>
+            <td>
+              <p>Downloads Windows Azure Diagnostics performance data from a storage account.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Clear-PerfmonLogs</p>
+            </td>
+            <td>
+              <p>Removes Windows Azure Diagnostics performance data from a storage account.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>New-PerformanceCounter <b>(new)</b></p>
+            </td>
+            <td>
+              <p>Creates an object that represents the configuration for performance counter data sources.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Set-PerformanceCounter</p>
+            </td>
+            <td>
+              <p>Sets the buffer configuration for performance counter data.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Windows Event Logs (WADWindowsEventLogsTable)</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Clear-WAEventLog</p>
+            </td>
+            <td>
+              <p>Removes Windows Event log data from a storage account.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-WAEventLog</p>
+            </td>
+            <td>
+              <p>Downloads Windows Event log data from a storage account.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Set-WAEventLog</p>
+            </td>
+            <td>
+              <p>Sets the buffer configuration for Windows event logs.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Windows Azure Trace Logs (WADLogsTable)</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Clear-WindowsAzureLog</p>
+            </td>
+            <td>
+              <p>Removes Windows Azure trace log data from a storage account.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-WindowsAzureLog</p>
+            </td>
+            <td>
+              <p>Downloads Windows Azure trace log data from a storage account.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Set-WindowsAzureLog</p>
+            </td>
+            <td>
+              <p>Sets the buffer configuration for Windows Azure trace logs.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>File Based Logs (Directories)</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Set-FileBasedLog</p>
+            </td>
+            <td>
+              <p>Sets the buffer configuration for file-based logs.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Monitoring</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-DiagnosticAwareRoleInstances</p>
+            </td>
+            <td>
+              <p>Returns a list of IDs of active role instances that have a diagnostic monitor running.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-DiagnosticAwareRoles</p>
+            </td>
+            <td>
+              <p>Lists the set of roles which have successfully started at least one diagnostic monitor.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Log and Performance Data Transfers</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-ActiveTransfers</p>
+            </td>
+            <td>
+              <p>Returns the set of active transfers, with associated transfer information.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Start-OnDemandTransfer</p>
+            </td>
+            <td>
+              <p>Starts an on-demand transfer of the specified diagnostics data buffer.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Stop-ActiveTransfer</p>
+            </td>
+            <td>
+              <p>Stops an active on-demand transfer with the specified transfer Id.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <h2 class="subheading">Access Control Service</h2>
+        <p><b>Identity Providers</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Add-IdentityProvider</p>
+            </td>
+            <td>
+              <p>Adds an identity provider with which to authenticate into a relying party application.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-IdentityProvider</p>
+            </td>
+            <td>
+              <p>Retrieves the identity provider with the specified name.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Remove-IdentityProvider</p>
+            </td>
+            <td>
+              <p>Removes the specified identity provider.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Management</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-AcsManagementToken</p>
+            </td>
+            <td>
+              <p>Retrieves an ACS management simple web token (SWT).</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Relying Parties</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Add-RelyingParty</p>
+            </td>
+            <td>
+              <p>Configures a relying party application.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-RelyingParty</p>
+            </td>
+            <td>
+              <p>Retrieves the relying party with the specified name.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Remove-RelyingParty</p>
+            </td>
+            <td>
+              <p>Removes the specified relying party.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Rules</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Add-DefaultPassthroughRules</p>
+            </td>
+            <td>
+              <p>Generates rules in a rule group that pass through the claims available from an identity provider to your relying party application.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Add-Rule</p>
+            </td>
+            <td>
+              <p>Specifies how an input claim is transformed into an output claim that is delivered to your relying party application.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Add-RuleGroup</p>
+            </td>
+            <td>
+              <p>Creates a rule group.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-Rule</p>
+            </td>
+            <td>
+              <p>Retrieves the rule with the specified Id.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-RuleGroup</p>
+            </td>
+            <td>
+              <p>Retrieves the rule group with the specified name.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Remove-Rule</p>
+            </td>
+            <td>
+              <p>Removes the specified rule.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Remove-RuleGroup</p>
+            </td>
+            <td>
+              <p>Removes the specified rule group.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Service Identities</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Add-ServiceIdentity</p>
+            </td>
+            <td>
+              <p>Creates a service identity.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-ServiceIdentity</p>
+            </td>
+            <td>
+              <p>Retrieves the service identity with the specified name.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Remove-ServiceIdentity</p>
+            </td>
+            <td>
+              <p>Removes the specified service identity.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Service Identity Keys</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Add-ServiceIdentityKey</p>
+            </td>
+            <td>
+              <p>Creates a service identity key for the specified service identity.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-ServiceIdentityKey</p>
+            </td>
+            <td>
+              <p>Retrieves the service identity key with the specified Id.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Remove-ServiceIdentityKey</p>
+            </td>
+            <td>
+              <p>Removes the specified service identity key.</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Service Keys</b></p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Name</p>
+            </th>
+            <th>
+              <p>Description</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Add-TokenEncryptionKey</p>
+            </td>
+            <td>
+              <p>Adds a new token encryption certificate.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Add-TokenSigningKey</p>
+            </td>
+            <td>
+              <p>Adds a new token-signing certificate or key.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Get-ServiceKey</p>
+            </td>
+            <td>
+              <p>Retrieves the service key with the specified name.</p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p>Remove-ServiceKey</p>
+            </td>
+            <td>
+              <p>Removes the specified service key.</p>
+            </td>
+          </tr>
+        </table>
+        <p>
+          <b>
+          </b>
+        </p>
+        <p>
+          <b>Using the Windows Azure Hosted Services Cmdlets</b>
+        </p>
+        <p>This section demonstrates how to use the PowerShell cmdlets to deploy a new package to a hosted service, retrieve information about the new deployment, and finally delete the deployment.</p>
+        <ol>
+          <li>The first step is to obtain a valid X.509 certificate with a key size of at least 2048 bits that can be used for authentication with the Windows Azure Management API. <p>One option for issuing a self-signed certificate that can be used for this purpose is to use <b>makecert.exe</b> (which ships with the Windows SDK) and use the following command to create the certificate file. </p><div class="code"><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th>Command Line</th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="..\docs\Readme.html\html\../local/copycode.gif" /> Copy Code
+                  </span></th></tr><tr><td colspan="2"><pre>makecert -r -pe -a sha1 -n "CN=Windows Azure Authentication Certificate" -ss My -len 2048 -sp "Microsoft Enhanced RSA and AES Cryptographic Provider" -sy 24 testcert.cer</pre></td></tr></table></span></div></li>
+          <br />
+          <li>Next, upload the certificate file, <b>testcert.cer</b> in the example above, to the Management Portal, by selecting the <b>Management Certificates</b> option under <b>Hosted Services, Storage Accounts &amp; CDN</b>. Uploading the certificate file allows Windows Azure to authenticate any requests to the Management API from the holder of the certificate.</li>
+          <li>Now, start PowerShell, if it is not already running, by selecting <b>Windows PowerShell</b> from the <b>Start</b> menu.</li>
+          <li>In the Windows PowerShell console, enter the following command to add the Windows Azure PowerShell cmdlets to the current session, if you have not already done so.<p>To load the cmdlets as a snap-in:</p><div class="code"><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th>PowerShell</th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="..\docs\Readme.html\html\../local/copycode.gif" /> Copy Code
+                  </span></th></tr><tr><td colspan="2"><pre>Add-PSSnapin WAPPSCmdlets</pre></td></tr></table></span></div></li>
+          <br />
+          <p>To load the cmdlets as a module:</p>
+          <div class="code">
+            <span codeLanguage="other">
+              <table width="100%" cellspacing="0" cellpadding="0">
+                <tr>
+                  <th>PowerShell</th>
+                  <th>
+                    <span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0">
+                      <img class="copyCodeImage" name="ccImage" align="absmiddle" src="..\docs\Readme.html\html\../local/copycode.gif" /> Copy Code
+                  </span>
+                  </th>
+                </tr>
+                <tr>
+                  <td colspan="2">
+                    <pre>Import-Module WAPPSCmdlets</pre>
+                  </td>
+                </tr>
+              </table>
+            </span>
+          </div>
+          <br />
+          <li>Now, deploy a new package using the <b>New-Deployment</b> cmdlet. The following command creates a new deployment named <i>TestDeploy</i> in the staging slot. You can obtain the subscription ID of your account and the API certificate thumbprint from the Windows Azure Management Portal.<div class="code"><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th>PowerShell</th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="..\docs\Readme.html\html\../local/copycode.gif" /> Copy Code
+                  </span></th></tr><tr><td colspan="2"><pre>New-Deployment -subscriptionId %SubscriptionId% -certificate (get-item cert:\CurrentUser\MY\%thumbprintInUpperCase%) -serviceName %serviceName% -slot staging -package http://%storageServiceName%.blob.core.windows.net/%container%/testPackage.cspkg -configuration config\TestServiceConfiguration.cscfg -name TestDeploy -label TestLabelStaging -storageservicename %StorageServiceName%</pre></td></tr></table></span></div></li>
+          <br />
+          <div class="alert">
+            <table width="100%" cellspacing="0" cellpadding="0">
+              <tr>
+                <th align="left">
+                  <img class="note" src="..\docs\Readme.html\html\../local/note.gif" />Note:</th>
+              </tr>
+              <tr>
+                <td>If the storage account name is the same as the hosted service name, the StorageServiceName parameter can be omitted.</td>
+              </tr>
+            </table>
+            <p />
+          </div>
+          <br />
+          <li>Run the following command to retrieve the deployment created in the previous step.<div class="code"><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th>PowerShell</th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="..\docs\Readme.html\html\../local/copycode.gif" /> Copy Code
+                  </span></th></tr><tr><td colspan="2"><pre>Get-HostedServices -subscriptionId %SubscriptionId% -certificate (get-item cert:\CurrentUser\MY\%thumbprintInUpperCase%) | where {$_.ServiceName -eq "%serviceName%"} | Get-Deployment staging</pre></td></tr></table></span></div></li>
+          <br />
+          <li>Finally, delete the deployment created previously in the Staging slot using the <b>Remove-Deployment</b> cmdlet. <div class="code"><span codeLanguage="other"><table width="100%" cellspacing="0" cellpadding="0"><tr><th>PowerShell</th><th><span class="copyCode" onclick="CopyCode(this)" onkeypress="CopyCode_CheckKey(this)" onmouseover="ChangeCopyCodeIcon(this)" onfocusin="ChangeCopyCodeIcon(this)" onmouseout="ChangeCopyCodeIcon(this)" onfocusout="ChangeCopyCodeIcon(this)" tabindex="0"><img class="copyCodeImage" name="ccImage" align="absmiddle" src="..\docs\Readme.html\html\../local/copycode.gif" /> Copy Code
+                  </span></th></tr><tr><td colspan="2"><pre>Get-HostedService "%serviceName%" -subscriptionId %SubscriptionId% -certificate (get-item cert:\CurrentUser\MY\%thumbprintInUpperCase%) | Get-Deployment staging | Remove-Deployment</pre></td></tr></table></span></div></li>
+          <br />
+        </ol>
+        <h2 class="subheading">Upgrading from Previous Releases</h2>
+        <p>This document describes changes made to the Windows Azure PowerShell Cmdlets that can potentially affect scripts created using earlier releases.</p>
+        <a name="_Toc312023835" href="#">
+          <span />
+        </a>
+        <h3 class="subheading">Changes in version 2.2</h3>
+        <p>New Windows Azure Traffic Manager cmdlets</p>
+        <p>Added <b>Add-Blob</b> cmdlet to upload a blob to the specified container in Windows Azure blob storage.</p>
+        <p>Added <b>Set-RoleInstanceCount</b> cmdlet to set the instance count for a role running in a deployment.</p>
+        <p>Removed dependency on Windows Identity Foundation SDK</p>
+        <p>Added <b>Set-Subscription, Select-Subcription</b>, <b>Get-Subscription</b>, and <b>Import-Subscription</b> to configure common subscription parameters in the PowerShell session.</p>
+        <p>Added <b>New-PerformanceCounter</b> cmdlet to create an object that represents the configuration for performance counter data sources.</p>
+        <p>New parameters <b>–From/FromUtc</b> and <b>–To/ToUtc</b> in <b>Clear-Container</b> to select which blobs to delete based on their “last modified” date</p>
+        <p>Improved handling of pipeline parameters for <b>XXX-AffinityGroup</b> cmdlets</p>
+        <p><b>Get-AffinityGroup</b> now returns list of affinity groups if the <b>–Name</b> parameter is omitted. The <b>Get-AffinityGroups</b> cmdlet is now deprecated.</p>
+        <p><b>Get-Certificate</b> now returns list of certificates if the <b>–Thumbprint</b> and  <b>–ThumbprintAlgorithm</b> parameters are omitted. The <b>Get-Certificates</b> cmdlet is now deprecated.</p>
+        <p><b>Get-HostedService</b> now returns list of hosted services if the <b>–ServiceName</b> parameter is omitted. The <b>Get-HostedServices</b> cmdlet is now deprecated.</p>
+        <p><b>Get-PerfmonLog</b> has been modified from taking a file name to a directory path. The cmdlet will now download a .blg per instance.</p>
+        <br />
+        <a name="_Toc312023836" href="#">
+          <span />
+        </a>
+        <h3 class="subheading">Changes in version 2.1</h3>
+        <p>New parameter <b>-UseIpAddressDetection</b> added to <b>New-SqlAzureFirewallRule</b> to create rule using the requester's IP address</p>
+        <br />
+        <a name="_Toc312023837" href="#">
+          <span />
+        </a>
+        <h3 class="subheading">Changes in version 2.0</h3>
+        <p><b>Updated PowerShell snap-in/module name</b></p>
+        <p>This release merges the <b>Windows Azure PowerShell Cmdlets</b> and the <b>ACS Cmdlets for the Windows Azure AppFabric Access Control Service</b>—previously available as separate packages—into a single module. To reflect this change, the PowerShell module / snap-in has now been renamed to <b>WAPPSCmdlets</b>.</p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Earlier Releases</p>
+            </th>
+            <th>
+              <p>Current Version</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><i>Import-Module AzureManagementToolsSnapIn</i></p>
+            </td>
+            <td>
+              <p><i>Import-Module WAPPSCmdlets</i></p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><i>Import-Module AcsManagementToolsSnapIn</i></p>
+            </td>
+            <td>
+              <p><i>Import-Module WAPPSCmdlets</i></p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Changed Cmdlet Names</b></p>
+        <p>Some cmdlet names have been renamed for consistency. The previous cmdlet names are still available but are deprecated. It is recommended that all scripts be updated to use the new names.</p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Earlier Releases</p>
+            </th>
+            <th>
+              <p>Current Version</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><i>Set-Deployment</i></p>
+            </td>
+            <td>
+              <p><i>Update-Deployment</i></p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><i>Set-WindowsEventLog</i></p>
+            </td>
+            <td>
+              <p><i>Set-WAEventLog</i></p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><i>Get-StorageProperties</i></p>
+            </td>
+            <td>
+              <p><i>Get-StorageAccountProperties</i></p>
+            </td>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><i>Get-StorageServices</i></p>
+            </td>
+            <td>
+              <p><i>Get-StorageAccount</i></p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Changed Parameter Names</b></p>
+        <p>Some parameter names have been renamed for consistency. The previous parameter names are still available but are deprecated. It is recommended that all scripts be updated to use the new names.</p>
+        <table style="">
+          <tr valign="top">
+            <th>
+              <p>Earlier Releases</p>
+            </th>
+            <th>
+              <p>Current Version</p>
+            </th>
+          </tr>
+          <tr valign="top">
+            <td>
+              <p><i>StorageServiceName</i></p>
+            </td>
+            <td>
+              <p>StorageAccountName</p>
+              <p>(See New-Deployment, Set-Deployment / Update-Deployment)</p>
+            </td>
+          </tr>
+        </table>
+        <br />
+        <p><b>Updated Namespaces in the Cmdlets Solution</b></p>
+        <p>The namespaces in the cmdlets solution have undergone substantial change. While this should not typically affect any existing scripts, it should be taken into account in the rare event that classes in the cmdlets project are being instantiated directly.</p>
+        <br />
+      </div>
+    </div>
+  
+				</div>
+							
+</div>
+
+			</div> 
+		</div>
+	</div>
+
+	<div class="footer">
+		<div class="microsoftLink">
+			<a href="http://www.microsoft.com/" title="Microsoft">
+                <img alt="Microsoft" src="images/ms-logo-footer.png" /></a>
+			<span>&copy; 2012 Microsoft</span>
+		</div>
+		<div class="leftSideLinks">
+			<span>Windows Azure PowerShell Cmdlets</span>
+            &nbsp;&nbsp;&nbsp;
+			<a href="mailto:azcfeed@microsoft.com">Contact Us</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+			<a href="EULA.htm" target="_parent">Terms of Use</a><br />
+		</div>
+	</div>
+	
+	<embed id="dcDetectorMoz" type="application/dc-plugin" style="height:0px;width:0px"></embed>
+	<object id="dcDetectorIE" classid="CLSID:4A5C71B6-C5C0-41EB-8917-16014CDF375B" style="height:0px;width:0px"></object>
+	<script type="text/javascript" src="scripts/deplinks.js"></script>
+</body>
+</html>
+
