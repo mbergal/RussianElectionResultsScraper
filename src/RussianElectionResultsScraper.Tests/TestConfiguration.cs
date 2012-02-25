@@ -4,6 +4,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using NUnit.Framework;
+using RussianElectionResultsScraper;
 using RussianElectionResultsScraper.src;
 
 namespace TestElectionResultsScraper
@@ -20,7 +21,7 @@ namespace TestElectionResultsScraper
                     new XElement( "counters",
                         new XElement("counter", new XAttribute("id", 1), new XAttribute("name", "counter name"), new XAttribute("shortname", "counter short name" ), new XAttribute( "color", "#EEEEEE")))));
             StringWriter sw=new StringWriter();
-            var c = new Configuration(); 
+            var c = new ElectionConfig(); 
             c.Counters = new[] { new CounterConfiguration()
                                      {
                                      Counter = 1,
@@ -28,8 +29,8 @@ namespace TestElectionResultsScraper
                                      ShortName = "Counter Short Name",
                                      Color = Color.Blue
                                      } };
-            new XmlSerializer(typeof(Configuration)).Serialize(sw, c);
-            var cc = Configuration.Load( new XmlNodeReader( x.ToXmlDocument() ) );
+            new XmlSerializer(typeof(ElectionConfig)).Serialize(sw, c);
+            var cc = ElectionConfig.Load( new XmlNodeReader( x.ToXmlDocument() ) );
             Assert.AreEqual( "Some Name", cc.Name );
             Assert.AreEqual( 1, cc.Counters.Length );
             Assert.AreEqual( 1, cc.Counters[0].Counter );
