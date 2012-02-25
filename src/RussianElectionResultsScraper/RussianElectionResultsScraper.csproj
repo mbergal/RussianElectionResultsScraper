@@ -18,7 +18,7 @@
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -29,7 +29,7 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -93,11 +93,13 @@
     <Compile Include="src\commands\InitDatabaseCommand.cs" />
     <Compile Include="src\commands\RepairCommand.cs" />
     <Compile Include="src\commands\ScrapeCommand.cs" />
-    <Compile Include="src\Configuration.cs" />
+    <Compile Include="src\commands\UpdateConfigCommand.cs" />
+    <Compile Include="src\ElectionConfig.cs" />
     <Compile Include="src\Model.cs" />
     <Compile Include="src\ProcessWorkItemCommand.cs" />
     <Compile Include="src\utils\BlockingCollectionEx.cs" />
     <Compile Include="src\utils\ConnectionThrottling.cs" />
+    <Compile Include="src\utils\FixedSqlServerCeDriver.cs" />
     <Compile Include="src\utils\Logging.cs" />
     <Compile Include="src\PageDocument.cs" />
     <Compile Include="src\PageParser.cs" />
