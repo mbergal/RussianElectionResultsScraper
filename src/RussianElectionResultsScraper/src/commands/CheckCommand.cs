@@ -50,12 +50,12 @@ namespace RussianElectionResultsScraper
         private static void MarkNonMatchingParentAndChildCounters(ISession session, IEnumerable<ChecksumMismatch> mismatches)
             {
             var notMatchingChildAndParentCounters =
-                mismatches.Where(x => x.SumValue != null && x.Value != null && x.SumValue != x.Value);
+                mismatches.Where(x => x.SumValue != null && x.Value != null && x.SumValue != x.Value && x.SumVotingPlaceId != null );
             using (var transaction = session.BeginTransaction())
                 {
                 notMatchingChildAndParentCounters.ForEach(x =>
                                                               {
-                                                              var vr = session.Get<VotingResult>(x.VotingPlaceId);
+                                                              var vr = session.Get<VotingResult>(x.Id);
                                                               var vp = vr.VotingPlace;
                                                               vr.Message =
                                                                   string.Format(

@@ -1,14 +1,9 @@
-﻿using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using System.Xml;
-using Iesi.Collections.Generic;
-using NDesk.Options;
 using NHibernate;
 using RussianElectionResultsScraper.Model;
-using RussianElectionResultsScraper.src;
 using log4net;
 using System.Linq;
 
@@ -20,7 +15,6 @@ namespace RussianElectionResultsScraper
         private static readonly ILog errorLog = LogManager.GetLogger("ScrapeParser.Errors");
         private string _root = "http://www.vybory.izbirkom.ru/region/region/izbirkom?action=show&root=1&tvd=100100028713304&vrn=100100028713299&region=0&global=1&sub_region=0&prver=0&pronetvd=null&vibid=100100028713304&type=242";
         private string _parentUrl;
-        private string _configFile;
         private bool   _recursive = false;
 
         public ScrapeCommand()
@@ -28,7 +22,7 @@ namespace RussianElectionResultsScraper
                 this.IsCommand("scrape", "Run scraper");
                 this.HasOption("u|url:", "<root-url>", url => this._root = url);
                 this.HasOption("p|parentUrl:", "<parent-url>", url => this._parentUrl = url);
-                this.HasRequiredOption("c|config=", "<config-file>", configFile => this._configFile = configFile);
+                this.HasConfigOption();
                 this.HasOption("r|recursive", "<config-file>", recursive => this._recursive = recursive != null);
                 }
 
@@ -54,27 +48,21 @@ namespace RussianElectionResultsScraper
             return 0;
             }
 
-        private Configuration LoadConfiguration()
-            {
-            var configuration = Configuration.Load(new XmlTextReader(new StreamReader(this._configFile)));
-            configuration.Validate();
-            return configuration;
-            }
-
-        private Election SaveElection( Configuration configuration )
+        private Election SaveElection( ElectionConfig electionConfig )
             {
             Election election;
             using (ISession session = this._electionResultsSessionFactory.OpenSession())
             using (ITransaction transaction = session.BeginTransaction())
                 {
-                election = session.Get<Election>(configuration.Id) ?? new Election() {Id = configuration.Id};
-                election.Counters.AddAll( configuration.Counters.Select(x => new Model.CounterDescription()
-                                                                                                   {
-                                                                                                       Counter = x.Counter,
-                                                                                                       Name = x.Name,
-                                                                                                       ShortName = x.ShortName,
-                                                                                                       Color = x.Color
-                                                                                                   }).ToList());
+                election = session.Get<Election>(electionConfig.Id) ?? new Election() {Id = electionConfig.Id};
+                election.Name = electionConfig.Name;
+                election.Update( electionConfig.Counters.Select(x => new Model.CounterDescription
+                                                                         {
+                                                                         Counter = x.Counter,
+                                                                         Name = x.Name,
+                                                                         ShortName = x.ShortName,
+                                                                         Color = x.Color
+                                                                         } ).ToList());
                 session.Save(election);
                 transaction.Commit();
                 }

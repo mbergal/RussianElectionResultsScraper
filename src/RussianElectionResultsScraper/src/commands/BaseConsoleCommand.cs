@@ -3,7 +3,9 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlServerCe;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Xml;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using ManyConsole;
@@ -11,6 +13,7 @@ using NHibernate;
 using NHibernate.Caches.SysCache2;
 using NHibernate.Dialect;
 using NHibernate.Driver;
+using NHibernate.Linq;
 using NHibernate.SqlTypes;
 using NHibernate.Tool.hbm2ddl;
 using RussianElectionResultsScraper.Model;
@@ -22,15 +25,23 @@ namespace RussianElectionResultsScraper
     
     public abstract class BaseConsoleCommand : ConsoleCommand
         {
+        protected string _configFile;
+
         public override int Run(string[] args)
-        {
+            {
             DOMConfigurator.Configure();
 
             _pageCacheSessionFactory = ConfigurePageCacheDatabase();
             _electionResultsSessionFactory = ConfigureElectionResultsDatabase();
 
             return 0;
-        }
+            }
+
+        public void HasConfigOption()
+            {
+            this.HasRequiredOption("c|config=", "<config-file>", configFile => this._configFile = configFile);
+            }
+                
 
         private ISessionFactory ConfigurePageCacheDatabase()
             {
@@ -43,7 +54,7 @@ namespace RussianElectionResultsScraper
                 .Database(MsSqlConfiguration
                         .MsSql2008
                         .Dialect<MsSql2008Dialect>()
-                        .ConnectionString(ConfigurationManager.ConnectionStrings[1].ConnectionString))
+                        .ConnectionString(ConfigurationManager.ConnectionStrings[ "Elections" ].ConnectionString))
                 .Cache(c => c.UseQueryCache().ProviderClass(typeof(SysCacheProvider).AssemblyQualifiedName))
                 .BuildConfiguration();
 
@@ -79,35 +90,65 @@ namespace RussianElectionResultsScraper
 
             if (newDatabase || recreate)
                 {
-                List<string> lines = new List<string>();
+                var lines = new List<string>();
 
                 var schemaExport = new SchemaExport(configuration);
-                schemaExport.Create(x => lines.Add(x), true);
+                schemaExport.Create(lines.Add, true);
                 schemaExport.Execute(true, false, false);
                 }
             return configuration.BuildSessionFactory();
             }
 
+        public ElectionConfig LoadConfiguration()
+            {
+            var configuration = ElectionConfig.Load(new XmlTextReader(new StreamReader(this._configFile)));
+            configuration.Validate();
+            return configuration;
+            }
+
+
+        public Election SaveElection(ElectionConfig electionConfig)
+            {
+            Election election;
+            using (ISession session = this._electionResultsSessionFactory.OpenSession())
+            using (ITransaction transaction = session.BeginTransaction())
+                {
+                election = session.Get<Election>(electionConfig.Id) ?? new Election() { Id = electionConfig.Id };
+                election.Name = electionConfig.Name;
+                election.Update(electionConfig.Counters.Select( x=>new Model.CounterDescription
+                                                                       { 
+                                                                        Color = x.Color,
+                                                                        Counter = x.Counter,
+                                                                        ShortName = x.ShortName,
+                                                                        Name = x.Name
+                                                                        }));
+                session.Save(election);
+                transaction.Commit();
+                }
+            return election;
+        }
+
         protected ISessionFactory _pageCacheSessionFactory;
         protected ISessionFactory _electionResultsSessionFactory;
         }
 
-     public class FixedSqlServerCeDriver : SqlServerCeDriver
+    public class FixedSqlServerCeDriver : SqlServerCeDriver
+    {
+        protected override void InitializeParameter(IDbDataParameter dbParam, string name, SqlType sqlType)
         {
-            protected override void InitializeParameter(IDbDataParameter dbParam, string name, SqlType sqlType)
+            base.InitializeParameter(dbParam, name, sqlType);
+
+            if (sqlType is BinarySqlType)
             {
-                base.InitializeParameter(dbParam, name, sqlType);
 
-                if (sqlType is BinarySqlType)
-                {
+                PropertyInfo dbParamSqlDbTypeProperty = dbParam.GetType().GetProperty("SqlDbType");
 
-                    PropertyInfo dbParamSqlDbTypeProperty = dbParam.GetType().GetProperty("SqlDbType");
-
-                    dbParamSqlDbTypeProperty.SetValue(dbParam, SqlDbType.Image, null);
-
-                }
-
+                dbParamSqlDbTypeProperty.SetValue(dbParam, SqlDbType.Image, null);
             }
 
         }
+
+    }
+
+
     }

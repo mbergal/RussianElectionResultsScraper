@@ -106,17 +106,8 @@ namespace RussianElectionResultsScraper
                         session.Update( this._election );
                         result.CounterDescriptions.ForEach( x=>
                                                                 {
-                                                                var counterDescription = this._election.Counter(x.Key);
-                                                                if ( counterDescription == null )
-                                                                    {
-                                                                    counterDescription = new Model.CounterDescription { Counter =  x.Key, Name = x.Value.counterName };
-                                                                    this._election.Counters.Add( counterDescription );
-                                                                    counterDescription.Election = this._election;
-                                                                    }
-                                                                else
-                                                                    {
-                                                                    counterDescription.Name = x.Value.counterName;
-                                                                    }
+                                                                var counterDescription = this._election.Counter( x.Key);
+                                                                this._election.SetCounter( counter: x.Key, name: x.Value.counterName);
                                                                 });
                         
                         }
