@@ -1,10 +1,11 @@
+Framework( "4.0" )
+
 $scriptDirectory = Split-Path -parent $MyInvocation.MyCommand.ScriptBlock.File
 $utilsPath = (Resolve-Path (Join-Path $scriptDirectory "src\build\utils.psm1"))
 
 Import-Module $utilsPath -Force -ErrorAction Stop -Global
 
-
-#$psake.config.verboseError = $true
+$psake.verboseError = $true
 
 Load-ConfigFiles $scriptDirectory 'azure'
 
@@ -138,7 +139,7 @@ function PackageApplicationForCloud ( [Parameter(Mandatory=$true)][string]$solut
     $xml = New-Object XML
     $xml.Load( $serviceConfigurationFile )
     $connectionStringSetting = Select-Xml -Xml $xml -XPath '//d:Role/d:ConfigurationSettings/d:Setting[@name="ConnectionString"]' -Namespace @{ d="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" }
-    $connectionStringSetting.Node.value = "tcp:$cloudSqlServer,1433;Database=$cloudSqlServerDatabase;User ID=$cloudSqlServerUserID;Password=$Env:AZURESQLSERVERPASSWORD;Trusted_Connection=False;Encrypt=True;"
+    $connectionStringSetting.Node.value = "Server=tcp:$cloudSqlServer,1433;Database=$cloudSqlServerDatabase;User ID=$cloudSqlServerUserID;Password=$Env:AZURESQLSERVERPASSWORD;Trusted_Connection=False;Encrypt=True;"
     $xml.Save( $serviceConfigurationFile )
     }
     
