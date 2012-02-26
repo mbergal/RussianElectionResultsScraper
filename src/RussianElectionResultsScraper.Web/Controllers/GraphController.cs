@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Web;
+using System.Web.Caching;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.DataVisualization.Charting;
@@ -10,6 +12,7 @@ using NHibernate;
 using NHibernate.Linq;
 using RussianElectionResultsScraper.Model;
 using Dapper;
+using log4net;
 
 
 namespace RussianElectionResultScraper.Web
@@ -17,6 +20,7 @@ namespace RussianElectionResultScraper.Web
     public class GraphController : Controller
         {
         private readonly ISessionFactory _sessionFactory;
+        private ILog log = LogManager.GetLogger("GraphController");
         
 
         public GraphController( ISessionFactory sessionFactory )
@@ -25,9 +29,10 @@ namespace RussianElectionResultScraper.Web
             }
 
 
-//        [OutputCache(Duration = int.MaxValue,NoStore = false,Location = OutputCacheLocation.ServerAndClient, VaryByParam = "*")]
+        [OutputCache(Duration = int.MaxValue, NoStore = false, Location = OutputCacheLocation.ServerAndClient, VaryByParam = "*", VaryByCustom = "LastUpdateTimestamp") ]
         public FileStreamResult  PollingStationsByAttendance(string region, int? width, int? height, bool? showGrid )
             {
+            log.Info("PollingStationsByAttendance");
             var path = _sessionFactory.GetCurrentSession().Get<VotingPlace>(region).Path + _sessionFactory.GetCurrentSession().Get<VotingPlace>(region).Id + ":";
             var a = _sessionFactory.GetCurrentSession().Connection.Query<double>("select Attendance from VotingPlace where Path like @path and TYPE = 5", new { path = path + '%' } );
             var g = new List<int>();
@@ -47,7 +52,15 @@ namespace RussianElectionResultScraper.Web
             for (int i = 0; i <= 100; ++i )
                 s.Points.AddXY(i, g[i] );
             chart.Series.Add(s);
-            var ca = new ChartArea {AxisX = {IsStartedFromZero = true, Minimum = 0, Maximum = 100, Enabled = AxisEnabled.False}, AxisY = { Enabled = AxisEnabled.False } };
+            var ca = new ChartArea 
+                {
+                AxisX = {IsStartedFromZero = true, Minimum = 0, Maximum = 100, Enabled = AxisEnabled.False}, 
+                AxisY =
+                    {
+                    Enabled = showGrid ?? false ? AxisEnabled.True : AxisEnabled.False,
+                    Title = "Количество УИК"
+                    } 
+                };
             chart.ChartAreas.Add(ca);
 
             chart.SaveImage( m );
@@ -72,9 +85,22 @@ namespace RussianElectionResultScraper.Web
                     {
                     s.Points.AddXY(i, results[i].Percents);
                     s.Points.Last().Color = vp.Election.Candidates[i].Color;
+
                     }
                 chart.Series.Add(s);
-                var ca = new ChartArea() { AxisX = { Enabled = AxisEnabled.False, IsMarginVisible = false, Interval = Double.MinValue, IntervalOffset = 0, MaximumAutoSize = 100 }, AxisY = { Enabled = AxisEnabled.False } };
+                var ca = new ChartArea() 
+                    { 
+                        AxisX = { Enabled = AxisEnabled.False, IsMarginVisible = false, Interval = Double.MinValue, IntervalOffset = 0, MaximumAutoSize = 100 },
+                        AxisY =
+                            {
+                                Enabled = showGrid ?? false ? AxisEnabled.True : AxisEnabled.False, 
+                                Title = "Процентов голосов",
+                                LabelStyle =
+                                    {
+                                    Format = "{0} %"    
+                                    }
+                            } 
+                    };
                 chart.ChartAreas.Add(ca);
 
                 chart.SaveImage(m);
