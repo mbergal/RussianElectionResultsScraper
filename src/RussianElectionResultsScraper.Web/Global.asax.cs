@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -8,16 +11,20 @@ using Castle.Facilities.TypedFactory;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using Castle.Windsor.Installer;
+using MvcApplication2.Infrastructure;
 using NHibernate;
 using NHibernate.ByteCode.Castle;
 using NHibernate.Cfg.Loquacious;
 using NHibernate.Dialect;
+using NHibernate.Linq;
 using RussianElectionResultScraper.Web.Infrastructure.SessionManagement;
 using RussianElectionResultsScraper.Model;
 using log4net;
 using log4net.Config;
 using Configuration = NHibernate.Cfg.Configuration;
 using Environment = NHibernate.Cfg.Environment;
+using System.Linq;
 
 namespace MvcApplication2
 {
@@ -26,13 +33,18 @@ namespace MvcApplication2
 
     public class MvcApplication : System.Web.HttpApplication
     {
-        private static ILog logger = LogManager.GetLogger(typeof(MvcApplication));
+        private readonly IWindsorContainer container = new WindsorContainer();
+        private static readonly ILog logger = LogManager.GetLogger("Application.Global");
+
+        public MvcApplication()
+            {
+            }
+        
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
-        {
+            {
             XmlConfigurator.Configure();
-            logger.Info( "!!!!!" );
             filters.Add(new HandleErrorAttribute());
-        }
+            }
 
         public static void RegisterRoutes(RouteCollection routes)
             {
@@ -76,6 +88,52 @@ namespace MvcApplication2
 
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+            InitializeContainer();
+
+            this.WatchDatabase();
+            }
+
+        protected void Applicatoin_End()
+            {
+            container.Dispose();
+            }
+
+        private void InitializeContainer()
+            {
+            container.Install( FromAssembly.This() );
+			var controllerFactory = new WindsorControllerFactory(container.Kernel);
+			ControllerBuilder.Current.SetControllerFactory(controllerFactory);
+            }
+
+        private void WatchDatabase()
+            {
+            new Task( () => TaskEx.Delay( 5000, CancellationToken.None).ContinueWith(t =>
+                                                                                        {
+                                                                                        this.UpdateLastTimestamp();
+                                                                                        this.WatchDatabase();
+                                                                                        }, CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.Current)).Start();
+            }
+
+        private void UpdateLastTimestamp()
+            {
+            using (var session = container.GetService<ISessionFactory>().OpenSession())
+                {
+                logger.Info("UpdateLastTimestamp");
+                var maxTimestamp = session.Query<Election>().Select(x => x.LastUpdateTimeStamp).Max();
+                this.Application["LastUpdateTimeStamp"] = maxTimestamp;
+                }
+            }
+
+        public override string GetVaryByCustomString(HttpContext context, string arg)
+            {
+            if (arg == "LastUpdateTimestamp")
+                {
+                object o = HttpContext.Current.Application["LastUpdateTimeStamp"];
+                if (o == null)
+                    HttpContext.Current.Application["LastUpdateTimeStamp"] = DateTime.Now;
+                return o.ToString();
+                }
+            return base.GetVaryByCustomString(context, arg);
             }
     }
 
