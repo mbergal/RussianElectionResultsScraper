@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -8,13 +10,14 @@ using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using NHibernate;
 using NHibernate.ByteCode.Castle;
-using NHibernate.Cfg;
 using NHibernate.Cfg.Loquacious;
 using NHibernate.Dialect;
 using RussianElectionResultScraper.Web.Infrastructure.SessionManagement;
 using RussianElectionResultsScraper.Model;
 using log4net;
 using log4net.Config;
+using Configuration = NHibernate.Cfg.Configuration;
+using Environment = NHibernate.Cfg.Environment;
 
 namespace MvcApplication2
 {
@@ -91,9 +94,20 @@ namespace MvcApplication2
         private ISessionFactory BuildSessionFactory()
             {
             var configuration = new Configuration();
+            string connectionString;
+            if ( Microsoft.WindowsAzure.ServiceRuntime.RoleEnvironment.IsAvailable  )
+                {
+                connectionString = Microsoft.WindowsAzure.ServiceRuntime.RoleEnvironment.GetConfigurationSettingValue("ConnectionString");
+                if ( connectionString == null )
+                    throw new Exception("Please specify database connection string in the role instance setting 'Connection String'");
+                }
+            else
+                connectionString = ConfigurationManager.ConnectionStrings[ "Elections"].ConnectionString;
+
             configuration.DataBaseIntegration(db =>
                 {
                 db.Dialect<MsSql2008Dialect>();
+                db.ConnectionString = connectionString;
                 db.ConnectionStringName = "Elections";
                 });
             configuration.Properties[Environment.CurrentSessionContextClass] = typeof(LazySessionContext).AssemblyQualifiedName;
