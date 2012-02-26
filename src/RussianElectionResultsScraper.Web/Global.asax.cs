@@ -57,6 +57,10 @@ namespace MvcApplication2
 
 
             routes.MapRoute(
+                "Controller/Action",
+                "{controller}/{action}");
+
+            routes.MapRoute(
                 "Default", // Route name
                 "{votingPlaceId}", // URL with parameters
                 new { controller = "Home", action = "Index", votingPlaceId = "" } // Parameter defaults
