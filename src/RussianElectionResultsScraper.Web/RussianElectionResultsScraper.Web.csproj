@@ -147,6 +147,7 @@
     <Compile Include="Controllers\GraphController.cs" />
     <Compile Include="Infrastructure\Installers\ControllerInstaller.cs" />
     <Compile Include="Infrastructure\SessionManagement\LazySessionContext.cs" />
+    <Compile Include="Infrastructure\TaskEx.cs" />
     <Compile Include="Infrastructure\WindsorControllerFactory.cs" />
     <Compile Include="Massive.cs" />
     <Compile Include="Controllers\HomeController.cs" />
