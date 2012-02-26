@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Configuration;
+using System.Web.Mvc;
 using System.Linq;
 using MvcApplication2.Models;
 using NHibernate;
@@ -28,6 +29,11 @@ namespace RussianElectionResultScraper.Web
             var regions = main.Children;
 
             return View(new HomeModel( main, regions ) );
+            }
+
+        public ActionResult  Footer()
+            {
+            return View();
             }
         }
     }
