@@ -11,7 +11,10 @@ Load-ConfigFiles $scriptDirectory 'azure'
 
 Properties {
     $solutionFileName = 'RussianElectionResultsScraper.sln'
+    $cloudDatabaseName = 'erp'
     $localDatabaseName = Get-LocalDatabaseName
+    $dacpac = "$scriptDirectory\src\RussianElectionResultsScraper\data\$localDatabaseName.dacpac"
+    $uploadedDacPac = "http://mbergal.blob.core.windows.net/backups/erp.dacpac"
     $packageOutputDirectory = "$scriptDirectory\src\RussianElectionResultsScraper.Azure\bin\Debug\app.publish"
     $cloudServiceConfigurationFile = "$packageOutputDirectory\ServiceConfiguration.Cloud.cscfg" 
     $cloudServicePackage = "$packageOutputDirectory\RussianElectionResultsScraper.Azure.cspkg"
@@ -24,34 +27,35 @@ Task Build {
     }
 
 Task ExportDb {
-    LoadNecessaryAssemblies
+    LoadNecessaryAssemblies | Out-Null
     $localSqlServerConnection = Get-LocalSqlServerConnection
     $localSqlServerConnection.Connect()
     
-	$dacpac = "$scriptDirectory\src\RussianElectionResultsScraper\data\$localDatabaseName.dacpac"
+	
 	$dacStore = New-Object -TypeName Microsoft.SqlServer.Management.Dac.DacStore $localSqlServerConnection
 	$dacStore.Export( $localDatabaseName, $dacpac )
 	}
 	
 Task UploadDb {
-    LoadNecessaryAssemblies
-    $credentials = New-Object -TypeName Microsoft.WindowsAzure.StorageCredentialsAccountAndKey( $Env:AZURESECURITYID, $Env:AZURESTORAGEACCESSKEY )
-    $account = New-Object -TypeName Microsoft.WindowsAzure.CloudStorageAccount( $credentials, $true )
-    $database = Get-LocalDatabaseName
-    
-    $blobClient = [Microsoft.WindowsAzure.StorageClient.CloudStorageAccountStorageClientExtensions]::CreateCloudBlobClient( $account )
-    $blobClient.Timeout = New-TimeSpan -Minutes 10
-    $blobContainer = $blobClient.GetContainerReference("backups")
-    $cloudBlob = $blobContainer.GetBlobReference("$database.dacpac");
-    
-    using_ ( $fileStream = [System.IO.File]::OpenRead( ( join-path ( join-path ( Split-Path -parent $MyInvocation.MyCommand.ScriptBlock.File ) "data" ) ( $database + ".dacpac" ) ) )) {
-        $cloudBlob.UploadFromStream($fileStream);
-        }     
+    UploadDbToCloudBlobStorage `
+        -DacPac $dacpac `
+        -ContainerName 'backups' `
+        -StorageAccount $Env:AZURESECURITYID `
+        -StorageKey $Env:AZURESTORAGEACCESSKEY `
+        -TimeoutInMinutes 10
     }
       
-Task RestoreDbOnAzure {
-    LoadNecessaryAssemblies
-    DacIESvcCli.exe -Import -Database erp -Server kswo10weza.database.windows.net -U "$Env:AZURESECURITYID" -P "$Env:AZUREDATABASEPASSWORD" -EDITION web -SIZE 1 -BLOBURL http://mbergal.blob.core.windows.net/backups/erp.dacpac -BLOBACCESSKEY "$Env:AZURESTORAGEACCESSKEY" -ACCESSKEYTYPE storage|more
+Task RestoreDb {
+
+    RestoreDbInCloud `
+        -CloudSqlServer $Env:AZURESQLSERVER `
+        -CloudSqlServerDatabase $cloudDatabaseName `
+        -CloudSqlServerUserID $Env:AZURESECURITYID `
+        -CloudSqlServerPassword $Env:AZURESQLSERVERPASSWORD `
+        -Edition web `
+        -Size 5 `
+        -DacStorageUrl $uploadedDacPac `
+        -DacStorageAccessKey $Env:AZURESTORAGEACCESSKEY
     }
     
    
@@ -96,7 +100,7 @@ function Get-LocalDatabaseName()
     {
     LoadNecessaryAssemblies
     $serverConnection = Get-LocalSqlServerConnection
-	using_( $serverConnection ) {
+    return using_( $serverConnection ) {
         $serverConnection.Connect()
 	    return $serverConnection.ExecuteScalar( "select db_name()" )
         }
@@ -104,12 +108,13 @@ function Get-LocalDatabaseName()
 
 function LoadNecessaryAssemblies()
     {
-    [Reflection.Assembly]::LoadWithPartialName( "Microsoft.SqlServer.Management.Dac, Version=11.0.0.0" )
-    [Reflection.Assembly]::LoadWithPartialName( "Microsoft.SqlServer.Management.Dac, Version=11.0.0.0" ) 
+    [Reflection.Assembly]::LoadWithPartialName( "Microsoft.SqlServer.Management.Dac, Version=11.0.0.0" )  | Out-Null
+    [Reflection.Assembly]::LoadWithPartialName( "Microsoft.SqlServer.Management.Dac, Version=11.0.0.0" )  | Out-Null
     [Reflection.Assembly]::LoadWithPartialName( "Microsoft.SqlServer.ConnectionInfo, Version=11.0.0.0" )  | Out-Null
+    [Reflection.Assembly]::LoadWithPartialName( "Microsoft.SQLServer.Smo" ) 
     [Reflection.Assembly]::LoadWithPartialName( "System.Configuration, Version=4.0.0.0" ) | Out-Null
-    [Reflection.Assembly]::LoadFile( "$scriptDirectory\lib\Windows Azure SDK 1.6\Microsoft.WindowsAzure.Diagnostics.dll"  )
-    [Reflection.Assembly]::LoadFile( "$scriptDirectory\lib\Windows Azure SDK 1.6\Microsoft.WindowsAzure.StorageClient.dll" ) | Out-Null
+#    [Reflection.Assembly]::LoadFile( "$scriptDirectory\lib\Windows Azure SDK 1.6\Microsoft.WindowsAzure.Diagnostics.dll"  ) | Out-Null
+#    [Reflection.Assembly]::LoadFile( "$scriptDirectory\lib\Windows Azure SDK 1.6\Microsoft.WindowsAzure.StorageClient.dll" ) | Out-Null
     [Reflection.Assembly]::LoadWithPartialName( "Microsoft.SqlServer.Management.Dac, Version=11.0.0.0" ) | Out-Null
     [Reflection.Assembly]::LoadWithPartialName( "Microsoft.SqlServer.ConnectionInfo, Version=11.0.0.0" ) | Out-Null
     [Reflection.Assembly]::LoadWithPartialName( "System.Configuration, Version=4.0.0.0" ) | Out-Null
@@ -123,6 +128,61 @@ function BuildSolution( [string]$solution,
     {
     LoadNecessaryAssemblies
     Exec { msbuild $solutionFileName /t:$target /p:Configuration=$configuration }
+    }
+
+function UploadDbToCloudBlobStorage( [Parameter(Mandatory=$true)][string]$dacpac, 
+                                     [Parameter(Mandatory=$true)][string]$containerName, 
+                                     [Parameter(Mandatory=$true)][string]$storageAccount, 
+                                     [Parameter(Mandatory=$true)][string]$storageKey,
+                                     [Parameter(Mandatory=$true)][int]$timeOutInMinutes
+                                     )
+    {
+    LoadNecessaryAssemblies
+    $credentials = New-Object -TypeName Microsoft.WindowsAzure.StorageCredentialsAccountAndKey( $storageAccount, $storageKey )
+    $account = New-Object -TypeName Microsoft.WindowsAzure.CloudStorageAccount( $credentials, $true )
+    $database = Get-LocalDatabaseName
+    
+    $blobClient = [Microsoft.WindowsAzure.StorageClient.CloudStorageAccountStorageClientExtensions]::CreateCloudBlobClient( $account )
+    $blobClient.Timeout = New-TimeSpan -Minutes $timeOutInMinutes
+    $blobContainer = $blobClient.GetContainerReference( $containerName )
+    $cloudBlob = $blobContainer.GetBlobReference("$database.dacpac");
+    
+    using_ ( $fileStream = [System.IO.File]::OpenRead( $dacpac  ) ) {
+        $cloudBlob.UploadFromStream($fileStream);
+        }         
+    }
+
+function RestoreDbInCloud( [Parameter(Mandatory=$true)][string]$cloudSqlServer,
+                           [Parameter(Mandatory=$true)][string]$cloudSqlServerUserID,
+                           [Parameter(Mandatory=$true)][string]$cloudSqlServerDatabase,
+                           [Parameter(Mandatory=$true)][string]$cloudSqlServerPassword,
+                           [Parameter(Mandatory=$true)][string]$edition,
+                           [Parameter(Mandatory=$true)][int]$size,
+                           [Parameter(Mandatory=$true)][string]$dacstorageurl,
+                           [Parameter(Mandatory=$true)][string]$dacstorageaccesskey
+                           ) {
+    LoadNecessaryAssemblies
+    
+	$serverConnection = New-Object -TypeName Microsoft.SqlServer.Management.Common.ServerConnection
+    $serverConnection.ConnectionString = "Server=$cloudSqlServer;Database=$cloudSqlServeDatabase;User ID=$cloudSqlServerUserID;Password=$cloudSqlServerPassword";
+    $serverConnection.Connect();
+    $server = New-Object -TypeName Microsoft.SqlServer.Management.Smo.Server( $serverConnection )
+    $db = $server.Databases.Item( $cloudSqlServerDatabase )
+    if ( $db -ne $null ) {
+        $db.Drop()
+        }
+    Exec { 
+        & "$scriptDirectory\tools\DacIESvcCli\DacIESvcCli.exe" `
+            -Import `
+            -Database $cloudSqlServerDatabase `
+            -Server $cloudSqlServer `
+            -U $cloudSqlServerUserID `
+            -P $cloudSqlServerPassword `
+            -EDITION $edition `
+            -SIZE $size `
+            -BLOBURL $dacstorageurl `
+            -BLOBACCESSKEY $dacstorageaccesskey `
+            -ACCESSKEYTYPE storage  }
     }
 
 function PackageApplicationForCloud ( [Parameter(Mandatory=$true)][string]$solution,
