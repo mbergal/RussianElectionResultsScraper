@@ -14,7 +14,7 @@ namespace RussianElectionResultsScraper
         public override int Run(string[] args)
             {
             var schemaExport = new SchemaExport( this.BuildElectionResultsDatabaseConfiguration() );
-            schemaExport.Create( Console.WriteLine, true);
+            schemaExport.Execute( Console.WriteLine, false, false );
             return 0;
             }
 
