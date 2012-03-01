@@ -19,22 +19,29 @@ namespace TestElectionResultsScraper
                 new XElement( "configuration",
                     new XElement( "name", "Some Name" ),
                     new XElement( "counters",
-                        new XElement("counter", new XAttribute("id", 1), new XAttribute("name", "counter name"), new XAttribute("shortname", "counter short name" ), new XAttribute( "color", "#EEEEEE")))));
-            StringWriter sw=new StringWriter();
-            var c = new ElectionConfig(); 
-            c.Counters = new[] { new CounterConfiguration()
-                                     {
+                        new XElement("counter", new XAttribute("counter", "1"), new XAttribute("name", "counter name"), new XAttribute("shortname", "counter short name" ), new XAttribute( "color", "#EEEEEE"), new XAttribute( "candidate", "true" )))));
+            var sw=new StringWriter();
+            var c = new ElectionConfig
+                        {
+                        Counters = new[]
+                                        {
+                                        new CounterConfiguration()
+                                            {
                                                 Counter = "1",
-                                     Name = "Counter Name",
-                                     ShortName = "Counter Short Name",
-                                     Color = Color.Blue
-                                     } };
+                                                Name = "Counter Name",
+                                                ShortName = "Counter Short Name",
+                                                Color = Color.Blue,
+                                                IsCandidate = true
+                                            }
+                                        }
+                        };
             new XmlSerializer(typeof(ElectionConfig)).Serialize(sw, c);
             var cc = ElectionConfig.Load( new XmlNodeReader( x.ToXmlDocument() ) );
             Assert.AreEqual( "Some Name", cc.Name );
             Assert.AreEqual( 1, cc.Counters.Length );
             Assert.AreEqual( "1", cc.Counters[0].Counter );
             Assert.AreEqual( "counter name", cc.Counters[0].Name );
+            Assert.AreEqual( true, cc.Counters[0].IsCandidate );
             Assert.AreEqual( "counter short name", cc.Counters[0].ShortName );
             Assert.AreEqual( Color.FromArgb( 0xEE, 0xEE, 0xEE ), cc.Counters[0].Color );
             }

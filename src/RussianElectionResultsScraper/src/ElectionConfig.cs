@@ -40,6 +40,9 @@ namespace RussianElectionResultsScraper
         [XmlAttribute("shortname")]
         public string   ShortName;
 
+        [XmlAttribute("candidate")]
+        public bool IsCandidate;
+                
         [XmlIgnore]
         public Color    Color;
 
