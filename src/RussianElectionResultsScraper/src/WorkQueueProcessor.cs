@@ -17,7 +17,6 @@ namespace RussianElectionResultsScraper
         private readonly PageParser _pageParser;
         private readonly ISessionFactory _sessionFactory;
         private readonly IPageCache      _pageCache;
-        private readonly ConcurrentDictionary<Task,bool>   _workers;
         private int _numOfVotingPlaces;
         private int _numOfVotingResults;
         private readonly Election _election;
@@ -28,7 +27,6 @@ namespace RussianElectionResultsScraper
             this._pageParser = pageParser;
             this._sessionFactory = sessionFactoryFactory;
             this._pageCache = pageCache;
-            this._workers = new ConcurrentDictionary<Task, bool>();
             this._election = election;
             this._numOfVotingPlaces = 0;
             this._numOfVotingResults = 0;
@@ -45,7 +43,6 @@ namespace RussianElectionResultsScraper
                 {
                 using (ISession session = this._sessionFactory.OpenSession())
                     {
-                    Console.WriteLine("Workers: {0}", this._workers.Count );
                     Console.WriteLine("Queue: {0}", this._workQueueService.Count());
                     Console.WriteLine("Voting Places:  {0}", this._numOfVotingPlaces );
                     Console.WriteLine("Voting Results: {0}", this._numOfVotingResults );
@@ -59,7 +56,7 @@ namespace RussianElectionResultsScraper
         void RunInternal()
             {
             this.Watch();
-            Parallel.ForEach( this._workQueueService.GetConsumerPartitioner(), new ParallelOptions() { MaxDegreeOfParallelism = 1 }, this.ProcessWorkItem );
+            Parallel.ForEach( this._workQueueService.GetConsumerPartitioner(), new ParallelOptions() { MaxDegreeOfParallelism = 6 }, this.ProcessWorkItem );
             }
 
         void ProcessWorkItem(WorkItem workItem)
