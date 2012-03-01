@@ -10,6 +10,7 @@
     </id>
     <property name="Counter" length="3"/>
     <property name="Value"/>
+    <property name="Percents"/>
     <many-to-one name="VotingPlace" column="VotingPlaceId"/>
     <property name="Message" length="255"/>
   </class>
