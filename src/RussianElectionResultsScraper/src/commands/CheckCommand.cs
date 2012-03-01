@@ -23,12 +23,12 @@ namespace RussianElectionResultsScraper
 
         public class ChecksumMismatch
             {
-		    public string SumVotingPlaceId;
-		    public int?    SumCounter;
+		    public string  SumVotingPlaceId;
+            public string  SumCounter;
 		    public int?    SumValue;
             public int?    Id;
 		    public string  VotingPlaceId;
-		    public int     Counter;
+		    public string  Counter;
             public int     Value;
             }
 
@@ -41,7 +41,9 @@ namespace RussianElectionResultsScraper
                 session.Connection.Execute( "update VotingResult set Message = null where Message is not null "); 
                 var mismatches = session.Connection.Query<ChecksumMismatch>( Assembly.GetExecutingAssembly().LoadTextResource( "RussianElectionResultsScraper.src.commands.sql.check-counters-sums.sql") ).ToList();
                 UpdateMissingParentCounters( session, mismatches );
-                MarkMissingChildCounters( session, mismatches );
+                mismatches = session.Connection.Query<ChecksumMismatch>(Assembly.GetExecutingAssembly().LoadTextResource("RussianElectionResultsScraper.src.commands.sql.check-counters-sums.sql")).ToList();
+                MarkMissingChildCounters(session, mismatches);
+                mismatches = session.Connection.Query<ChecksumMismatch>(Assembly.GetExecutingAssembly().LoadTextResource("RussianElectionResultsScraper.src.commands.sql.check-counters-sums.sql")).ToList();
                 MarkNonMatchingParentAndChildCounters(session, mismatches);
                 }
             return 0;
