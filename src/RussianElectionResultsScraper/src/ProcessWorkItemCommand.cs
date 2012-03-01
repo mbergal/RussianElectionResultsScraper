@@ -111,7 +111,14 @@ namespace RussianElectionResultsScraper
                                                                 });
                         
                         }
-                    var vp = session.Get<VotingPlace>(result.Id) ?? new VotingPlace();
+                    var vp = session.Get<VotingPlace>(result.Id);
+                    if ( vp != null )
+                        {
+                        if ( vp.Election != this._election )
+                            throw new Exception( string.Format( "Id conflict: {0} in {1} and {3}", result.Id, this._election.Id, vp.Election.Id ) );
+                        }
+                    else 
+                        vp = new VotingPlace();
                     vp.Election = this._election;
                     vp.Id = result.Id;
                     vp.Name = result.Name;
