@@ -65,21 +65,30 @@ namespace MvcApplication2
                 );
 
             routes.MapRoute(
+                "Graph/Candidate Results By Atendance",
+                "graph/candidate-results-by-attendance/{votingPlaceId}.jpg",
+                new { controller = "Graph", action = "CandidateResultsByAttendance", region = "" }
+                );
+
+
+            routes.MapRoute(
                 "Regions",
                 "regions",
                 new { controller = "Home", action = "Regions", region = "" }
                 );
 
+            routes.MapRoute(
+                "Places", // Route name
+                "election/{electionId}/place/{votingPlaceId}", // URL with parameters
+                new { controller = "Home", action = "Place", votingPlaceId = "" } // Parameter defaults
+                );
 
             routes.MapRoute(
                 "Controller/Action",
-                "{controller}/{action}");
-
-            routes.MapRoute(
-                "Default", // Route name
-                "{votingPlaceId}", // URL with parameters
-                new { controller = "Home", action = "Index", votingPlaceId = "" } // Parameter defaults
+                "{controller}/{action}",
+                new { controller = "Home", action = "Index" }  // Parameter defaults);
                 );
+
             }
 
         protected void Application_Start()

@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="https://ruelectstats.cloudapp.net:8172/MsDeploy.axd" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="RussianElectionResultsScraper.Web_IN_0_Web" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="True" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="ruelectstats - Production" publishMethod="MSDeploy" replaceMatchingFiles="True" userName="mbergal" savePWD="False" userPWD="" SelectedForPublish="True" />
+</publishData>

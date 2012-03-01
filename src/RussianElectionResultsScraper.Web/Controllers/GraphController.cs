@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -20,9 +21,10 @@ namespace RussianElectionResultScraper.Web
     public class GraphController : Controller
         {
         private readonly ISessionFactory _sessionFactory;
-        private ILog log = LogManager.GetLogger("GraphController");
+        private readonly ILog log = LogManager.GetLogger("GraphController");
+        private const int defaultWidth = 600;
+        private const int defaultHeight = 400;
         
-
         public GraphController( ISessionFactory sessionFactory )
             {
             this._sessionFactory = sessionFactory;
@@ -32,7 +34,7 @@ namespace RussianElectionResultScraper.Web
         [OutputCache(Duration = int.MaxValue, NoStore = false, Location = OutputCacheLocation.ServerAndClient, VaryByParam = "*", VaryByCustom = "LastUpdateTimestamp") ]
         public FileStreamResult  PollingStationsByAttendance(string region, int? width, int? height, bool? showGrid )
             {
-            log.Info("PollingStationsByAttendance");
+            log.Info( string.Format( "PollingStationsByAttendance: region={0}, width={1}, height={2}, showGrid={3}", region, width, height, showGrid ) );
             var path = _sessionFactory.GetCurrentSession().Get<VotingPlace>(region).Path + _sessionFactory.GetCurrentSession().Get<VotingPlace>(region).Id + ":";
             var a = _sessionFactory.GetCurrentSession().Connection.Query<double>("select Attendance from VotingPlace where Path like @path and TYPE = 5", new { path = path + '%' } );
             var g = new List<int>();
@@ -54,7 +56,19 @@ namespace RussianElectionResultScraper.Web
             chart.Series.Add(s);
             var ca = new ChartArea 
                 {
-                AxisX = {IsStartedFromZero = true, Minimum = 0, Maximum = 100, Enabled = AxisEnabled.False}, 
+                AxisX =
+                    {
+                    IsStartedFromZero = true,
+                    Minimum = 0,
+                    Maximum = 100,
+                    Interval = 10,
+                    Title = "Явка",
+                    Enabled = showGrid ?? false ? AxisEnabled.True : AxisEnabled.False,
+                    LabelStyle =
+                        {
+                        Format = "{0} %"
+                        }
+                    }, 
                 AxisY =
                     {
                     Enabled = showGrid ?? false ? AxisEnabled.True : AxisEnabled.False,
@@ -68,13 +82,13 @@ namespace RussianElectionResultScraper.Web
             return new FileStreamResult( m, "image/jpg");
             }
 
+        [OutputCache(Duration = int.MaxValue, NoStore = false, Location = OutputCacheLocation.ServerAndClient, VaryByParam = "*", VaryByCustom = "LastUpdateTimestamp")]
         public FileStreamResult PollingStationResults(string votingPlaceId, int? width, int? height, bool? showGrid)
             {
-                var  vp = _sessionFactory.GetCurrentSession().Get<VotingPlace>(votingPlaceId);
+                log.Info( string.Format( "PollingStationResults: votingPlaceId={0}, width={1}, height={2}, showGrid={3}", votingPlaceId, width, height, showGrid ) );
+                var vp = _sessionFactory.GetCurrentSession().Get<VotingPlace>(votingPlaceId);
                 var m = new MemoryStream();
-                var chart = new Chart();
-                chart.Width = width ?? 600;
-                chart.Height = height ?? 400;
+                var chart = new Chart {Width = width ?? 600, Height = height ?? 400};
                 var s = new Series("aaaa");
                 s.IsXValueIndexed = true;
                 s.ChartType = SeriesChartType.Column;
@@ -108,7 +122,89 @@ namespace RussianElectionResultScraper.Web
                 return new FileStreamResult(m, "image/jpg");
             }
 
+
+        [OutputCache(Duration = int.MaxValue, NoStore = false, Location = OutputCacheLocation.ServerAndClient, VaryByParam = "*", VaryByCustom = "LastUpdateTimestamp")]
+        public FileStreamResult CandidateResultsByAttendance(string votingPlaceId, int? width, int? height, bool? showGrid)
+            {
+            var vp = _sessionFactory.GetCurrentSession().Get<VotingPlace>(votingPlaceId);
+            var election = vp.Election;
+            IEnumerable<CandidateResultsByAttendanceRecord> a;
+            using (var session = _sessionFactory.OpenStatelessSession())
+                {
+                a = session.Connection.Query<CandidateResultsByAttendanceRecord>("select vp.Id Id, vp.Attendance Attendance, vr.Counter, vr.Value, vr.Percents from VotingResult vr inner join VotingPlace vp on vr.VotingPlaceId = vp.Id where vp.Path like @path and vp.Type = @type and vr.Counter in ( select Counter from CounterDescription where electionId = @electionId and IsCandidate = 1 )", 
+                    new
+                        {
+                        path = vp.Path + vp.Id + ":%", 
+                        electionId = election.Id,
+                        type = (int)vp.Type < 3 ? 3 : 5
+                        });    
+                }
+            
+
+            var chart = new Chart { Width = width ?? 600, Height = height ?? 400 };
+            chart.Legends.Add(new Legend() { Name = "aaaaaaaa", LegendStyle = LegendStyle.Table });
+            var ca = new ChartArea()
+                {
+                AxisX =
+                    {
+                    IsStartedFromZero = true,
+                    Minimum = 0,
+                    Maximum = 100,
+                    Interval = 10,
+                    Title = "Явка",
+                    Enabled = showGrid ?? false ? AxisEnabled.True : AxisEnabled.False,
+                    LabelStyle =
+                        {
+                        Format = "{0} %"
+                        }
+                    },
+                AxisY =
+                    {
+                    Enabled = showGrid ?? false ? AxisEnabled.True : AxisEnabled.False,
+                    Title = "Отданные голоса",
+                    Minimum = 0,
+                    Maximum = 100,
+                    Interval = 10,
+                    LabelStyle =
+                        {
+                        Format = "{0} %"
+                        }
+                    },
+                };
+
+            chart.ChartAreas.Add(ca);
+            var serieses = new Dictionary<string, Series>();
+            election.Candidates.ForEach( x=>
+                                             {
+                                             var series = new Series(x.ShortName)
+                                                              {
+                                                              MarkerColor = election.Counter(x.Counter).Color,
+                                                              ChartType = SeriesChartType.Point,
+                                                              MarkerStyle = MarkerStyle.Triangle
+                                                              };
+
+                                             serieses.Add( x.Counter, series );
+                                             chart.Series.Add(series);
+                                             } );
+            foreach (var r in a)
+                {
+                serieses[ r.Counter ].Points.AddXY( r.Attendance, r.Percents );
+                }
+            var m = new MemoryStream();
+            chart.SaveImage(m);
+            m.Seek(0, SeekOrigin.Begin);
+            return new FileStreamResult(m, "image/jpg");
+            }
+
         }
 
+    public class CandidateResultsByAttendanceRecord
+        {
+        public string Id;
+        public double Attendance;
+        public string Counter;
+        public int Value;
+        public decimal Percents;
+        };
 
     }

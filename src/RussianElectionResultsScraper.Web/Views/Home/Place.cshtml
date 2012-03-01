@@ -1,0 +1,280 @@
+﻿@{
+    ViewBag.Title = string.Format( "Ruelectstats.com - {0}: {1}", @Model.ElectionName, @Model.currentRegion.Name );
+}
+
+@using System.Drawing
+@using RussianElectionResultScraper.Web
+@using MvcApplication2.Models
+
+
+@model VotingResultModel
+           
+    <style>
+
+        #current
+            {
+            font-weight: bold;
+            }
+
+        #container {
+            margin: auto;
+            width:100%;
+            min-width: 990px; 
+            }       
+
+
+        #container #voting-place-breadcrumbs {
+            font-size: 20px;
+            font-weight: normal;
+            letter-spacing: -1px;
+            text-shadow: 1px 1px 0 white;            
+            margin-bottom: 15px;
+            }
+
+        #container #voting-place-breadcrumbs a:hover, 
+        #container #voting-place-breadcrumbs a:active,
+        #container #voting-place-breadcrumbs a:link,
+        #container #voting-place-breadcrumbs a:visited {
+            color:#4183C4;
+            text-decoration: none;
+            }
+            
+        #container #columns {
+            width: 100%;
+        }            
+
+        #container #left-column .results-decorator {
+            background-color: #EEE;
+            padding:3px;
+        }
+        
+        #container #columns #right-column h3
+            {
+            font-weight: bold;
+            }
+
+        div#regions {
+            width: 100%;
+        }
+
+                    
+        table.results {
+        }
+        
+        table.results td 
+            {
+            background: #F8F8F8;
+            border-bottom: 1px solid #EEE;
+            padding: 7px 3px;
+            color: #484848;
+            vertical-align: middle;
+            }
+
+        table.results th {
+            text-align: left;
+            font-weight: bold;  
+            padding: 6px 3px;
+            color: #555;
+            text-shadow: 0 1px 0 white;
+            border-bottom: 1px solid #D8D8D8;
+            background-color: #FAFAFA;
+            background-image: -webkit-linear-gradient(#FAFAFA,#EAEAEA);
+        }            
+        
+        table.results th#place-header {
+            width:20%;
+        }
+
+        table.results th#attendance-graph-header {
+            width:76px;
+        }
+        
+        tr 
+            {
+            vertical-align: top;
+            }
+            
+        tr.alt td
+            {
+            /*background-color: #dbdada;*/
+            }
+        tr.over td
+            {
+            background-color: #fec072 !important;
+            cursor: pointer;
+            }
+        .main td 
+            {
+            font-size: 16px;
+            font-weight: bold;
+            }
+            
+        .tooltip 
+            {
+	        display:none;
+	        background:transparent url(/Content/themes/base/images/tooltip/black_arrow.png);
+	        font-size:12px;
+	        height:70px;
+	        width:160px;
+	        padding:25px;
+	        color:#fff;	
+            }            
+            
+        h3 {
+            text-align: center;
+        }
+                    
+    </style>
+
+<body>
+    <div id="container">
+        <div id="election_name">
+            @Model.currentRegion.ElectionName
+        </div>
+        @{ 
+         var breadcrumbs = @Model.Breadcrumbs;
+         var candidates = @Model.Candidates; 
+        }
+
+        <h2 id="voting-place-breadcrumbs">
+            @foreach (var b in breadcrumbs) 
+                { 
+                <a style="" href="/@b.Id">@b.Name </a>
+                if (b != breadcrumbs.Last())
+                    { 
+                    <span>/</span>
+                    }
+                }
+        </h2>
+@*        <h1>@Model.currentRegion.Name</h1>*@
+        <table id="columns" >
+            <tr >
+                <td id="left-column" width="100%">
+                    <div class="results-decorator">
+                        <table class="stripeMe results">
+                            <tr>
+                                <th id="place-header">Регион</th>
+                                <th id="attendance-header">Явка</th>
+                                <th id="attendance-graph-header">Явка/<br>#УИК</th>
+                        @foreach (var candidate in candidates)
+                            {
+                            <th>@candidate.ShortName
+                                <div style="height:10px;width:30px;background-color: @ColorTranslator.ToHtml(@candidate.Color)"></div>
+                            </th>
+                            }
+                        <th style="width:76px">&nbsp;</th>
+                    </tr>
+                    <tr class="main">
+                        <td>
+                            @Model.currentRegion.Name
+                        </td>
+                        <td>
+                            <span title="@Model.currentRegion.NumberOfVotersInVoterList">@Model.currentRegion.Attendance</span>
+                        </td>
+                        <td>
+                            
+                            @foreach (var cr in @Model.currentRegion.CandidateResults)
+                                {
+                                <td style="overflow: hidden; text-overflow: ellipsis">
+                                    <div>@string.Format("{0:N2}", @cr.Percents)%</div>
+@*                                    <div>@string.Format("{0:N0}", @cr.Votes)</div>*@
+                                </td>
+                                }
+                        </td>
+                        <td >
+                            <a target="_blank" href="@Model.currentRegion.CECUrl">ЦИК</a>
+                        </td>
+
+                    </tr>
+                    @if (Model.ShowBreakdown)
+                        {
+                        foreach (var r in Model.regions)
+                            {
+                            var candidateResults = r.CandidateResults;
+                            <tr>
+                                <td  style="white-space: normal">
+                                    <a class="hastooltip" href="/election/@r.ElectionId/place/@r.Id">@r.Name</a><div class="tooltip" style="display: none">Id: @r.Id</div>
+                                </td>
+                                <td>
+                                    <span title="@r.NumberOfVotersInVoterList">@r.Attendance</span>
+                                </td>
+                                <td>
+                                    <img style="border: 1px solid silver" src="/graph/polling-stations-by-attendance/@(r.Id).jpg?width=60&height=50" width="60" height="50"/>
+                                </td>
+                                @foreach (var cr in candidateResults)
+                                    {
+                                    <td>
+                                        <div>@string.Format("{0:N2}", @cr.Percents)%</div>
+<!--                                        <div>@string.Format("{0:N0}", @cr.Votes)</div> -->
+                                    </td>
+                                    }
+                                <td>
+                                    <img style="border: 1px solid silver" src="/graph/polling-station-results/@(r.Id).jpg?width=60&height=50" width="60" height="50"/>
+                                </td>
+                            </tr>
+                            }
+                        }
+                    @if (Model.ShowDetails)
+                        {
+                        <table>
+                            @foreach (var counter in Model.currentRegion.Results)
+                                {
+                                <tr>
+                                    <td>@counter.Counter</td>
+                                    <td>@counter.Description</td>
+                                    <td>@counter.Value</td>
+                                </tr>
+                                
+                                }
+                        </table>
+                        }
+                </table>
+                </div>
+                </td>
+                <td style="vertical-align: top" width="400" id="right-column">
+                        <h3>Количество УИК по явке</h3>
+                        <img src="/graph/polling-stations-by-attendance/@(Model.currentRegion.Id).jpg?width=400&height=400&showGrid=true" width="400" height="400"></img>
+                        <h3>Yabla</h3>
+                        <img src="/graph/polling-station-results/@(Model.currentRegion.Id).jpg?width=400&height=400&showGrid=true" width="400" height="400"></img>
+                        <h3>Yabla</h3>
+                        <img src="/graph/candidate-results-by-attendance/@(Model.currentRegion.Id).jpg?width=400&height=400&showGrid=true" width="400" height="400"></img>
+                
+                </td>
+            </tr>
+        </table>
+
+    <div style="clear: both"></div>
+    </div>
+    <script type="text/javascript">
+        $().ready(function () {
+            $(".hastooltip").tooltip();
+            $('.stripeMe tr:even').addClass('alt');
+            $('.stripeMe tr').mouseover(function () {
+                $(this).addClass('over');
+            });
+            $('.stripeMe tr').mouseout(function () {
+                $(this).removeClass('over');
+            })
+
+        });
+//        function resizeFrame() {
+//            var h = $(window).height();
+//            var w = $(window).width();
+//            $("#regions").css('height', h);
+//        }
+//
+//        $().ready(function () {
+//            resizeFrame();
+//        });
+//
+//
+//        $().ready(function () {
+//        });
+
+        function load(anchor) 
+        {
+            $('#content').load(anchor.href + ' #content');
+            return false;
+        }
+
+    </script>

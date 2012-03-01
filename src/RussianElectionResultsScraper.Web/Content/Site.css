@@ -1,16 +1,54 @@
-body
-{
-    font-size: .85em;
-    font-family: "Trebuchet MS", Verdana, Helvetica, Sans-Serif;
-    color: #232323;
-    background-color: #fff;
+body, td
+    {
+    font-family: helvetica,arial,freesans,clean,sans-serif;
+    font-size: 13px;
+    }
+
+
+#content {
+    margin: 20px;
+}
+#header {
+    color: black;
+    font-family: helvetica, arial;
+    font-size: 20px;
+    padding: 10px;
 }
 
-header,
-footer,
-nav,
-section {
-    display: block;
+#elections {
+    margin-top: 50px;
+}
+#elections .election 
+{
+    border: 1px solid #B3D0F0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    vertical-align: middle;
+    padding-left: 10px;
+}
+
+#elections .election a {
+    vertical-align: middle;
+}
+
+#election_name {
+    font-size: 15px;
+    text-align: center;
+}
+
+
+.results {
+    table-layout: fixed; 
+    width: 100%; 
+    white-space: nowrap; 
+    border: 1px solid silver;
+    background-color:#F8F8F8;
+    width: 100%;
+}
+
+.results td, .results th {
+    overflow: hidden; 
+    text-overflow: ellipsis;
 }
 
 /* Styles for basic forms

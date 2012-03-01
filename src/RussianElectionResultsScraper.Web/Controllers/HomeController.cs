@@ -17,7 +17,12 @@ namespace RussianElectionResultScraper.Web
             this._sessionFactory = sessionFactory;
             }
 
-        public ActionResult  Index( string votingPlaceId )
+        public ActionResult Index()
+            {
+            return View( new IndexModel( _sessionFactory.GetCurrentSession().Query<Election>() ) );
+            }
+
+        public ActionResult  Place( string votingPlaceId )
             {
             VotingPlace main;
             if (string.IsNullOrEmpty(votingPlaceId))
@@ -28,7 +33,7 @@ namespace RussianElectionResultScraper.Web
 
             var regions = main.Children;
 
-            return View(new HomeModel( main, regions ) );
+            return View( new VotingResultModel( main, regions ) );
             }
 
         public ActionResult  Footer()
