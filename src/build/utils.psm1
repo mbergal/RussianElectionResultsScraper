@@ -62,7 +62,7 @@ function using_
     param($obj, [scriptblock]$sb)
 
     try {
-        & $sb
+        return & $sb
     } finally {
         if ($obj -is [IDisposable]) {
             $obj.Dispose()
