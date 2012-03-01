@@ -24,7 +24,7 @@ namespace TestElectionResultsScraper
             var c = new ElectionConfig(); 
             c.Counters = new[] { new CounterConfiguration()
                                      {
-                                     Counter = 1,
+                                                Counter = "1",
                                      Name = "Counter Name",
                                      ShortName = "Counter Short Name",
                                      Color = Color.Blue
@@ -33,7 +33,7 @@ namespace TestElectionResultsScraper
             var cc = ElectionConfig.Load( new XmlNodeReader( x.ToXmlDocument() ) );
             Assert.AreEqual( "Some Name", cc.Name );
             Assert.AreEqual( 1, cc.Counters.Length );
-            Assert.AreEqual( 1, cc.Counters[0].Counter );
+            Assert.AreEqual( "1", cc.Counters[0].Counter );
             Assert.AreEqual( "counter name", cc.Counters[0].Name );
             Assert.AreEqual( "counter short name", cc.Counters[0].ShortName );
             Assert.AreEqual( Color.FromArgb( 0xEE, 0xEE, 0xEE ), cc.Counters[0].Color );

@@ -32,7 +32,7 @@ namespace RussianElectionResultsScraper
     public class CounterConfiguration
         {
         [XmlAttribute("counter")]
-        public int      Counter;
+        public string      Counter;
 
         [XmlAttribute("name")]
         public string   Name;

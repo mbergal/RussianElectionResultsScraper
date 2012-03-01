@@ -8,7 +8,7 @@
       <column name="Id" sql-type="int" not-null="true"/>
       <generator class="increment" />
     </id>
-    <property name="Counter"/>
+    <property name="Counter" length="3"/>
     <property name="Value"/>
     <many-to-one name="VotingPlace" column="VotingPlaceId"/>
     <property name="Message" length="255"/>

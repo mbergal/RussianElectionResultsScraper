@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlServerCe;
@@ -120,6 +121,7 @@ namespace RussianElectionResultsScraper
                                                                         Color = x.Color,
                                                                         Counter = x.Counter,
                                                                         ShortName = x.ShortName,
+                                                                        IsCandidate = x.IsCandidate,
                                                                         Name = x.Name
                                                                         }));
                 session.Save(election);

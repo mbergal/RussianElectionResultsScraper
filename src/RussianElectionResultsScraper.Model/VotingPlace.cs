@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Iesi.Collections.Generic;
 using System.Linq;
+using log4net;
 
 namespace RussianElectionResultsScraper.Model
     {
@@ -14,6 +15,7 @@ namespace RussianElectionResultsScraper.Model
         }
     public class VotingPlace 
         {
+        private static readonly ILog log = LogManager.GetLogger( "VotingPlace" );
 
         public VotingPlace()
             {
@@ -35,13 +37,13 @@ namespace RussianElectionResultsScraper.Model
         public virtual Iesi.Collections.Generic.ISet<VotingPlace>  Children { get; set; }
         public virtual Iesi.Collections.Generic.ISet<VotingResult> Results { get; set; }
 
-        public virtual int?               Counter(int i)
+        public virtual int?               Counter(string i)
             {
             var counter = this.Results.FirstOrDefault(x => x.Counter == i);
             return counter != null ? counter.Value : (int?) null;
             }
 
-       public virtual VotingPlace          SetCounter( int counter, int value, string message = null )
+       public virtual VotingPlace          SetCounter( string counter, int value, string message = null )
             {
             var votingResult = this.Results.FirstOrDefault(x => x.Counter == counter );
             if (votingResult != null)
@@ -58,7 +60,9 @@ namespace RussianElectionResultsScraper.Model
             {
             get
                 {
-                return this.Results.Where(x => x.Counter >= 19).Select( x=> new CandidateResult { Votes = x.Value, Percents = 100.00m * x.Value / this.NumberOfIssuedBallots });
+                return this.Results
+                    .Where(x => this.Election.Counter( x.Counter ).IsCandidate )
+                    .Select(x => new CandidateResult { Votes = x.Value, Percents = (decimal)x.Percents } );
                 }
             }
 
@@ -68,7 +72,7 @@ namespace RussianElectionResultsScraper.Model
         public virtual int? NumberOfVotersInVoterList
             {
             get {
-                return this.Counter(1);
+                return this.Counter( "1" );
                 }
             set {}
             }
@@ -79,7 +83,7 @@ namespace RussianElectionResultsScraper.Model
         public virtual int? NumberOfBallotsReceivedByElectoralComission 
             {
             get {
-                return this.Counter(2);
+                return this.Counter( "2" );
                 }
             set { }
             }
@@ -90,7 +94,7 @@ namespace RussianElectionResultsScraper.Model
         public virtual int? NumberOfBallotsIssuedToVotersWhoVotedEarly 
             {
             get {
-                return this.Counter(3);
+                return this.Counter( "3" );
                 }
             set { }
             }
@@ -101,7 +105,7 @@ namespace RussianElectionResultsScraper.Model
         public virtual int? NumberOfBallotsIssuedToVoterAtPollStation 
             {
             get {
-                return this.Counter(4);
+                return this.Counter( "4" );
                 }
             set { }
             }
@@ -111,7 +115,7 @@ namespace RussianElectionResultsScraper.Model
         public virtual int? NumberOfBallotsIssuedToVotersOutsideOfPollStation 
             {
             get {
-                return this.Counter(5);
+                return this.Counter( "5" );
                 }
             set { }
             }
@@ -121,7 +125,7 @@ namespace RussianElectionResultsScraper.Model
         public virtual int? NumberOfCancelledBallots  
             {
             get {
-                return this.Counter(6);
+                return this.Counter( "6" );
                 }
             set { }
             }
@@ -132,7 +136,7 @@ namespace RussianElectionResultsScraper.Model
         public virtual int? NumberOfBallotsInPortableBallotBoxes 
             {
             get {
-                return this.Counter(7);
+                return this.Counter( "7" );
                 }
             set { }
             }
@@ -142,7 +146,7 @@ namespace RussianElectionResultsScraper.Model
         public virtual int? NumberOfBallotsInStationaryBallotBoxes 
             {
             get {
-                return this.Counter(8);
+                return this.Counter( "8" );
                 }
             set { }
             }
@@ -153,7 +157,7 @@ namespace RussianElectionResultsScraper.Model
         public virtual int? NumberOfInvalidBallots 
             {
             get {
-                return this.Counter(9);
+                return this.Counter( "9" );
                 }
             set { }
             }
@@ -164,7 +168,7 @@ namespace RussianElectionResultsScraper.Model
         public virtual int? NumberValidBallots 
             {
             get {
-                return this.Counter(10);
+                return this.Counter( "10" );
                 }
             set { }
             }
@@ -175,7 +179,7 @@ namespace RussianElectionResultsScraper.Model
         public virtual int? NumberOfAbsenteePermitsReceivedByElectoralComission 
             {
             get {
-                return this.Counter(11);
+                return this.Counter( "11" );
                 }
             set { }
             }
@@ -185,7 +189,7 @@ namespace RussianElectionResultsScraper.Model
         public virtual int? NumberOfAbsenteePermitsIssuedAtPollingStation 
             {
             get {
-                return this.Counter(12);
+                return this.Counter( "12" );
                 }
             set { }
             }
@@ -196,7 +200,7 @@ namespace RussianElectionResultsScraper.Model
         public virtual int? NumberOfAbsenteeBallotsCastAtPollingStation 
             {
             get {
-                return this.Counter(13);
+                return this.Counter( "13" );
                 }
             set { }
             }
@@ -207,7 +211,7 @@ namespace RussianElectionResultsScraper.Model
         public virtual int? NumberOfCanceledAbsenteePermits 
             {
             get {
-                return this.Counter(14);
+                return this.Counter( "14" );
                 }
             set { }
             }
@@ -218,7 +222,7 @@ namespace RussianElectionResultsScraper.Model
         public virtual int? NumberOfAbsenteeBallotsIssuedByTerritorialElectionComission 
             {
             get {
-                return this.Counter(15);
+                return this.Counter( "15" );
                 }
             set { }
             }
@@ -230,7 +234,7 @@ namespace RussianElectionResultsScraper.Model
             {
             get
                 {
-                return this.Counter(16);
+                return this.Counter( "16" );
                 }
             set { }
             }
@@ -242,7 +246,7 @@ namespace RussianElectionResultsScraper.Model
             {
             get
                 {
-                return this.Counter(17);
+                return this.Counter( "17" );
                 }
             set { }
             }
@@ -253,7 +257,7 @@ namespace RussianElectionResultsScraper.Model
             {
             get
                 {
-                return this.Counter(18);
+                return this.Counter( "18" );
                 }
             set { }
             }
@@ -265,8 +269,9 @@ namespace RussianElectionResultsScraper.Model
                     {
                     return (double)(100.00 * (this.NumberOfBallotsIssuedToVotersWhoVotedEarly + this.NumberOfBallotsIssuedToVoterAtPollStation + this.NumberOfBallotsIssuedToVotersOutsideOfPollStation ) / this.NumberOfVotersInVoterList);
                     }
-                catch (Exception)
+                catch (Exception e)
                     {
+                    log.Warn( string.Format( "Error calculating attendance for \"{0}/{1}\"", this.Election.Id, this.Id ), e );
                     return 0;
                     }
                 }

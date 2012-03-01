@@ -23,12 +23,12 @@ namespace RussianElectionResultsScraper.Model
             this.LastUpdateTimeStamp = DateTime.Now;
             }
 
-        public virtual CounterDescription       Counter(int counter)
+        public virtual CounterDescription       Counter( string counter )
             {
             return this.Counters.FirstOrDefault(x => x.Counter == counter );
             }
 
-        public virtual Election                 SetCounter(int counter, string name, string shortName = null, Color? color = null)
+        public virtual Election                 SetCounter( string counter, string name, string shortName = null, Color? color = null, bool? isCandidate = null )
             {
             var counterDescription = this.Counter( counter );
             if ( counterDescription != null )
@@ -36,10 +36,11 @@ namespace RussianElectionResultsScraper.Model
                 counterDescription.Color = color ?? counterDescription.Color;
                 counterDescription.Name = name ?? counterDescription.Name;
                 counterDescription.ShortName = shortName ?? counterDescription.ShortName;
+                counterDescription.IsCandidate = isCandidate ?? counterDescription.IsCandidate;
                 }
             else
                 {
-                this.Counters.Add(new CounterDescription { Election = this, Counter = counter, Name = name, ShortName = shortName } );
+                this.Counters.Add(new CounterDescription { Election = this, Counter = counter, Name = name, ShortName = shortName, IsCandidate = isCandidate.Value, Color = color.Value} );
                 }
             return this;
             }
@@ -48,7 +49,7 @@ namespace RussianElectionResultsScraper.Model
             {
             get
                 {
-                return Counters.Where( x => x.Counter >= 19 ).ToList();
+                return Counters.Where( x => x.IsCandidate ).ToList();
                 }
             }
 
@@ -56,9 +57,7 @@ namespace RussianElectionResultsScraper.Model
             {
             foreach (var c in counters)
                 {
-                this.SetCounter( c.Counter, c.Name, c.ShortName, c.Color);
-
-                    
+                this.SetCounter( c.Counter, c.Name, c.ShortName, c.Color, c.IsCandidate );
                 }
                 
             this.UpdateWithCurrentTimestamp();

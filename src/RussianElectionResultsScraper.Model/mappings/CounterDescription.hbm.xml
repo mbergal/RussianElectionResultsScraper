@@ -7,12 +7,14 @@
     <id name="Id">
       <generator class="increment"/>
     </id>
-    <property name="Counter"/>
+    <property name="Counter" length="3"/>
     <property name="Name" length="64"/>
+    <property name="IsCandidate" length="64"/>
     <property name="ShortName" length="16"/>
     <property name="HtmlColor" length="16">
       <column name="Color"/>
     </property>
+    <many-to-one name="Election" class="Election" column="ElectionId"/>
   </class>
 
 </hibernate-mapping>

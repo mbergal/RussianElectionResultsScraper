@@ -136,23 +136,22 @@ namespace RussianElectionResultsScraper
             if (!doc.IsRedirect)
             {
                 var resultsTable = doc.ResultTable;
-                this.CounterDescriptions = new Dictionary<int, CounterDescription>();
-                this.CounterValues = new Dictionary<int, int>();
+                this.CounterDescriptions = new Dictionary<string, CounterDescription>();
+                this.CounterValues = new Dictionary<string, int>();
 
                 foreach (var row in resultsTable)
                 {
                     if (row.Count > 0)
                     {
-                        int counterId = 0;
-                        int.TryParse(row[0], out counterId);
-                        if (counterId > 0)
-                        {
+                        string counterId = row[0].Trim();
+                        if ( !string.IsNullOrEmpty(counterId) )
+                            {
                             var counterName = row[1];
                             int counterValue;
                             int.TryParse(row[2], out counterValue);
                             this.CounterValues.Add(counterId, counterValue);
                             CounterDescriptions.Add(counterId, new CounterDescription() { counterSource = uri, counterName = counterName });
-                        }
+                            }
                     }
                 }
                 this.CounterDescriptions = CounterDescriptions;
@@ -179,8 +178,8 @@ namespace RussianElectionResultsScraper
             }
 
         public IList<Tuple<string, string>>         Children { get; set; }
-        public IDictionary<int, int>                CounterValues;
-        public IDictionary<int, CounterDescription> CounterDescriptions { get; set; }
+        public IDictionary<string, int>                CounterValues;
+        public IDictionary<string, CounterDescription> CounterDescriptions { get; set; }
         public IList<string>                        Hierarchy
             {
             get {
