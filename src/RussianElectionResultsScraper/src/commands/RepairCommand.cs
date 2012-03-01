@@ -21,12 +21,25 @@ namespace RussianElectionResultsScraper
             base.Run(args);
             using ( var session = _electionResultsSessionFactory.OpenSession() )
                 {
-                var q = from s in session.Query<VotingPlace>().FetchMany( x=>x.Results ) select s;
-                foreach (VotingPlace r in q )
+                const int batchSize = 10000;
+                int numOfEntities = 0;
+                int batchNumber = 0;
+                while( true )
                     {
-                    Console.WriteLine( r );
+                    var q = session.Query<VotingPlace>().Skip(batchNumber * batchSize).Take(batchSize).FetchMany(x => x.Results);
+                    bool reachedEnd = true;
+                    foreach (VotingPlace r in q )
+                        {
+                        numOfEntities++;
+                        reachedEnd = false;
+                        }
+                    batchNumber++;
+                    Console.WriteLine( numOfEntities );
+                    session.Flush();
+                    session.Clear();
+                    if (reachedEnd)
+                        break;
                     }
-                session.Flush();
                 }
             return 0;
             }
