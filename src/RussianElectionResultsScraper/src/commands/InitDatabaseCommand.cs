@@ -18,8 +18,7 @@ namespace RussianElectionResultsScraper.src.commands
             var lines = new List<string>();
 
             var schemaExport = new SchemaExport( this.BuildElectionResultsDatabaseConfiguration() );
-            schemaExport.Create(x => lines.Add(x), true);
-            schemaExport.Execute(true, false, false);
+            schemaExport.Execute(true, true, false);
             return 0;
             }
         
