@@ -20,7 +20,17 @@ namespace RussianElectionResultsScraper.Model
         public virtual Color        Color 
             { 
             get {
-                return _color.ToString() == new Color().ToString() && Counter >= 19 ? counterColors[ Counter - 19 ] : _color;
+                if ( _color.ToString() == new Color().ToString() )
+                    {
+                    if (Election != null && Election.Candidates.Contains(this))
+                        return counterColors[Election.Candidates.IndexOf(this)];
+                    else
+                        return _color;
+                    }
+                else
+                    {
+                    return _color;
+                    }
                 }
             set {
                 _color = value;
