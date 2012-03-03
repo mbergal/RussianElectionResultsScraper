@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ServiceConfiguration serviceName="WindowsAzureProject1" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceConfiguration" osFamily="1" osVersion="*">
+  <Role name="RussianElectionResultsScraper.Web">
+    <Instances count="1" />
+    <ConfigurationSettings>
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.Enabled" value="true" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" value="mbergal" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" value="MIIBnQYJKoZIhvcNAQcDoIIBjjCCAYoCAQAxggFOMIIBSgIBADAyMB4xHDAaBgNVBAMME1dpbmRvd3MgQXp1cmUgVG9vbHMCEDZCFwbYRXSzR4ORwCqNXocwDQYJKoZIhvcNAQEBBQAEggEABz5ibdzw/Qy394lRJ6cpKXtXyRRsD7Nb0uH3Y6O37HkJwxl3OKVaMQb8xW2VrVCkpB6DAEQ8f8pFPh9RJQE/lsQgjFWn8Y1Ud4V7qK8xG5Ba+tsyq6ZxNu7UKHvFUmfEa4Mg04uEhzlT/FaNVQZkoHB78FyqZfGPEm7AtNwCCKggSJQIqLSjXUuMfU/xUYqvUZQbuIn0BJRqWBMutJsp7LIbEqrJ4m/Dj37m36zlicCrGLwfmr1g/rw6PsTEU2l0G/LG/MvX47EF1UkuRd7KOX1YAdyp7xWqD4CzxW+HZHrTn0GYMLOI5mbokWqUbEFYNPDyysQxZmDafhfS/S9CSDAzBgkqhkiG9w0BBwEwFAYIKoZIhvcNAwcECFWgQvmWw9iKgBB5LZ+sB17WZg5XH9nd7VkT" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" value="2013-02-19T23:59:59.0000000-06:00" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.RemoteForwarder.Enabled" value="true" />
+      <Setting name="ConnectionString" value="Server=.;Database=erp;User ID=sa;Password=mfgsql"/>
+    </ConfigurationSettings>
+    <Certificates>
+      <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="9575A23EEC02AA75C01A6BF6C3F3E5CA0B6FA6C0" thumbprintAlgorithm="sha1" />
+    </Certificates>
+  </Role>
+</ServiceConfiguration>
