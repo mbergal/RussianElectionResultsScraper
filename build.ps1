@@ -83,6 +83,8 @@ Task Deploy {
         -StorageServiceUserId $Env:AZURESECURITYID `
     }
     
+Task FullDeploy -depends Package, Deploy {}
+
 
 function Get-LocalSqlServerConnection()
     {
