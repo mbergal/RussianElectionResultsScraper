@@ -38,6 +38,10 @@
             color:#4183C4;
             text-decoration: none;
             }
+
+        #container #voting-place-breadcrumbs a.last {
+            font-weight: bold;
+        }
             
         #container #columns {
             width: 100%;
@@ -59,6 +63,20 @@
 
                     
         table.results {
+        }
+
+        table.results th.candidate-header div.candidate-header-container {
+            
+        }
+
+        table.results th.candidate-header div.candidate-header-name {
+            
+        }
+
+        table.results th.candidate-header div.candidate-header-line 
+        {
+            margin-top: 5px;
+            height:3px;
         }
         
         table.results td 
@@ -89,6 +107,19 @@
             width:76px;
         }
         
+        table.results tr.main {
+            height: 70px;
+        }
+
+        table.results tr.main td.place {
+            padding-left: 10px;
+        }
+
+        table.results tr.child td.place {
+            padding-left: 20px;
+            white-space: normal;
+        }
+        
         tr 
             {
             vertical-align: top;
@@ -98,11 +129,13 @@
             {
             /*background-color: #dbdada;*/
             }
+            
         tr.over td
             {
             background-color: #fec072 !important;
             cursor: pointer;
             }
+            
         .main td 
             {
             font-size: 16px;
@@ -126,7 +159,6 @@
                     
     </style>
 
-<body>
     <div id="container">
         <div id="election_name">
             @Model.currentRegion.ElectionName
@@ -138,61 +170,70 @@
 
         <h2 id="voting-place-breadcrumbs">
             @foreach (var b in breadcrumbs) 
-                { 
-                <a style="" href="/@b.Id">@b.Name </a>
-                if (b != breadcrumbs.Last())
+                {
+                bool last = b == breadcrumbs.Last();
+                <a href="/election/@b.ElectionId/place/@b.Id" class="@(last ? "last" : "" )">@b.Name </a>
+                if ( !last )
                     { 
                     <span>/</span>
                     }
                 }
         </h2>
-@*        <h1>@Model.currentRegion.Name</h1>*@
         <table id="columns" >
-            <tr >
+            <tr>
                 <td id="left-column" width="100%">
                     <div class="results-decorator">
                         <table class="stripeMe results">
-                            <tr>
+                            <tr> <!-- header -->
                                 <th id="place-header">Регион</th>
                                 <th id="attendance-header">Явка</th>
                                 <th id="attendance-graph-header">Явка/<br>#УИК</th>
-                        @foreach (var candidate in candidates)
-                            {
-                            <th>@candidate.ShortName
-                                <div style="height:10px;width:30px;background-color: @ColorTranslator.ToHtml(@candidate.Color)"></div>
-                            </th>
-                            }
-                        <th style="width:76px">&nbsp;</th>
-                    </tr>
-                    <tr class="main">
-                        <td>
-                            @Model.currentRegion.Name
-                        </td>
-                        <td>
-                            <span title="@Model.currentRegion.NumberOfVotersInVoterList">@Model.currentRegion.Attendance</span>
-                        </td>
-                        <td>
-                            
-                            @foreach (var cr in @Model.currentRegion.CandidateResults)
-                                {
-                                <td style="overflow: hidden; text-overflow: ellipsis">
-                                    <div>@string.Format("{0:N2}", @cr.Percents)%</div>
-@*                                    <div>@string.Format("{0:N0}", @cr.Votes)</div>*@
+                                @foreach (var candidate in candidates )
+                                    {
+                                    <th class="candidate-header">
+                                        <div class="candidate-header-container">
+                                            <div class="candidate-header-name">@candidate.ShortName</div>
+                                            <div class="candidate-header-line" style="background-color: @ColorTranslator.ToHtml(@candidate.Color)"></div>
+                                        </div>
+                                        
+                                    </th>
+                                    }
+                                <th style="width:76px">&nbsp;</th>
+                            </tr>
+                            <tr class="main">
+                                <td class="place">
+                                    @Model.currentRegion.Name
                                 </td>
-                                }
-                        </td>
-                        <td >
-                            <a target="_blank" href="@Model.currentRegion.CECUrl">ЦИК</a>
-                        </td>
+                                <td class="attendance">
+                                    <span title="@Model.currentRegion.NumberOfVotersInVoterList">@Model.currentRegion.Attendance</span>
+                                </td>
+                                <td>
+                                    <img style="border: 1px solid black" src="/graph/polling-stations-by-attendance/@(Model.currentRegion.Id).jpg?width=60&height=50" width="60" height="50"/>
+                                </td>
 
-                    </tr>
+                                @foreach (var cr in @Model.currentRegion.CandidateResults)
+                                    {
+                                    <td style="overflow: hidden; text-overflow: ellipsis">
+                                        <div>@string.Format("{0:N2}", @cr.Percents)%</div>
+                                        @*                                    <div>@string.Format("{0:N0}", @cr.Votes)</div>*@
+                                    </td>
+                                    }
+
+                                <td>
+                                    <img style="border: 1px solid black" src="/graph/polling-station-results/@(Model.currentRegion.Id).jpg?width=60&height=50" width="60" height="50"/>
+                                </td>
+@*                                    <a target="_blank" href="@Model.currentRegion.CECUrl">ЦИК</a>*@
+@*                                </td>*@
+
+                            </tr>
+
                     @if (Model.ShowBreakdown)
                         {
                         foreach (var r in Model.regions)
                             {
                             var candidateResults = r.CandidateResults;
-                            <tr>
-                                <td  style="white-space: normal">
+                            <tr class="child">
+                                <td class="place">
                                     <a class="hastooltip" href="/election/@r.ElectionId/place/@r.Id">@r.Name</a><div class="tooltip" style="display: none">Id: @r.Id</div>
                                 </td>
                                 <td>

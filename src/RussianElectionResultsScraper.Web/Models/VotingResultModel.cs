@@ -12,6 +12,7 @@ namespace MvcApplication2.Models
         {
         public string Id;
         public string Name;
+        public string ElectionId;
         };
 
     public class Candidate
@@ -60,7 +61,12 @@ namespace MvcApplication2.Models
 
         private static IEnumerable<VotingPlaceBreadCrumb>    MakeBreadcrumbs( VotingPlace vp )
             {
-            return (vp.Parent != null ? MakeBreadcrumbs(vp.Parent) : new List<VotingPlaceBreadCrumb>()).Concat(new[] { new VotingPlaceBreadCrumb { Id = vp.Id, Name = vp.Name } });
+            return (vp.Parent != null ? MakeBreadcrumbs(vp.Parent) : new List<VotingPlaceBreadCrumb>()).Concat(new[] { new VotingPlaceBreadCrumb 
+                { 
+                Id = vp.Id, 
+                Name = vp.Name,
+                ElectionId = vp.Election.Id
+                } });
             }
 
         public VotingPlaceLine currentRegion
