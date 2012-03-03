@@ -18,6 +18,7 @@ Properties {
     $packageOutputDirectory = "$scriptDirectory\src\RussianElectionResultsScraper.Azure\bin\Debug\app.publish"
     $cloudServiceConfigurationFile = "$packageOutputDirectory\ServiceConfiguration.Cloud.cscfg" 
     $cloudServicePackage = "$packageOutputDirectory\RussianElectionResultsScraper.Azure.cspkg"
+    $timeStampFormat = "g"
     }
 
 Task Default -depends Build
@@ -77,7 +78,8 @@ Task Deploy {
         -Slot Production `
         -Package $cloudServicePackage `
         -Configuration $cloudServiceConfigurationFile `
-        -StorageServiceUserId $Env:AZURESECURITYID 
+        -StorageServiceUserId $Env:AZURESECURITYID `
+        -Upgrade $true
     }
     
 Task FullUploadDB -depends ExportDb, UploadDb, RestoreDb
@@ -221,7 +223,8 @@ function DeployToCloud( [Parameter(Mandatory=$true)][string]$certificateThumbpri
                         [Parameter(Mandatory=$true)][string]$slot,
                         [Parameter(Mandatory=$true)][string]$package,
                         [Parameter(Mandatory=$true)][string]$configuration,
-                        [Parameter(Mandatory=$true)][string]$storageServiceUserId
+                        [Parameter(Mandatory=$true)][string]$storageServiceUserId,
+                        [Parameter(Mandatory=$true)][bool]$upgrade
                         )
     {
     LoadNecessaryAssemblies
@@ -251,16 +254,45 @@ function DeployToCloud( [Parameter(Mandatory=$true)][string]$certificateThumbpri
     $getHostedService = MakeHostedServiceFactory -HostedService $service -certificate $cert -subscriptionId $subscriptionId -slot $slot -scriptDirectory $scriptDirectory
 
     $hostedService = &$getHostedService
-     
+    $needToCreateDeployment = $false;
     if ($hostedService.Status -ne $null) {
         Write-Output 'Found service:' $hostedService 
         SuspendDeployment( $hostedService )
-        DeleteDeployment( $hostedService )
+        if ( -not $upgrade )
+            {
+            DeleteDeployment( $hostedService )
+            $needToCreateDeployment = $true
+            }
         }
     else
         {
         Write-Output "Service '$service' does not exist"
+        $needToCreateDeployment = $true
         }
+    switch ( $needToCreateDeployment )
+        {
+        $false { 
+            UpgradeDeployment `
+                -Certificate $cert `
+                -SubscriptionId $subscriptionId `
+                -Service $service `
+                -Slot $slot `
+                -Package $package `
+                -Configuration $configuration `
+                -DeploymentLabel 'AAAAAA' `
+                -StorageServiceUserId $storageServiceUserId
+            }
+        $true  { CreateDeployment }
+        }
+        
+    StartDeployment( $hostedService )
+    $deployment = &$getHostedService
+    $deployment
+    }
+
+
+function CreateDeployment()
+    {
     Write-Output 'Creating new service...'
     &$getHostedService |
         New-Deployment `
@@ -272,12 +304,38 @@ function DeployToCloud( [Parameter(Mandatory=$true)][string]$certificateThumbpri
             -StorageServiceName $storageServiceUserId |
         Get-OperationStatus -WaitToComplete
     Write-Output '...done'        
-    
-    StartDeployment( $hostedService )
-    $deployment = &$getHostedService
-    $deployment
     }
+    
+function UpgradeDeployment( [Parameter(Mandatory=$true)]$certificate,
+                            [Parameter(Mandatory=$true)][string]$subscriptionId,
+                            [Parameter(Mandatory=$true)][string]$service,
+                            [Parameter(Mandatory=$true)][string]$slot,
+                            [Parameter(Mandatory=$true)][string]$package,
+                            [Parameter(Mandatory=$true)][string]$configuration,
+                            [Parameter(Mandatory=$true)][string]$deploymentLabel,
+                            [Parameter(Mandatory=$true)][string]$storageServiceUserId
+                            )
 
+    {
+	write-progress -id 3 -activity "Upgrading Deployment" -Status "In progress"
+	Write-Output "$(Get-Date –f $timeStampFormat) - Upgrading Deployment: In progress"
+
+	Update-Deployment `
+        -Certificate $certificate `
+        -SubscriptionId $subscriptionId `
+        -Slot $slot `
+        -Package $package `
+        -Configuration $configuration `
+        -label $deploymentLabel `
+        -ServiceName $service `
+        -StorageAccountName $storageServiceUserId | 
+    Get-OperationStatus -WaitToComplete
+    
+    $completeDeployment = Get-Deployment -ServiceName $service -Slot $slot -Certificate $certificate -SubscriptionId $subscriptionId
+    $completeDeploymentID = $completeDeployment.deploymentid
+	Write-Output "$(Get-Date –f $timeStampFormat) - Upgrading Deployment: Succeeded, Deployment ID: $completeDeploymentID"
+    }    
+    
 function SuspendDeployment( [Parameter(Mandatory=$true)]$deployment )
     {
     Write-Output '   Suspending deployment...'
