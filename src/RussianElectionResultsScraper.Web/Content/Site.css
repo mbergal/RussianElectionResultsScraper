@@ -4,6 +4,12 @@ body, td
     font-size: 13px;
     }
 
+a:hover,
+a:visited,
+a:link,
+a:active {
+    color: #4183C4;
+    }
 
 #content {
     margin: 20px;
@@ -12,7 +18,39 @@ body, td
     color: black;
     font-family: helvetica, arial;
     font-size: 20px;
-    padding: 10px;
+    padding-left: 20px;
+    padding-top: 5px;
+}
+
+#footer {
+    margin-top: 50px;
+    padding:10px;
+    border-top: 1px solid #D8D8D8; 
+    background-color: #F8F8F8;
+    color:gray;
+    text-shadow: 0 1px 0 white;    
+}
+
+#footer #footer-inner 
+{
+    margin-left:auto;
+    margin-right:auto;
+    margin-top: 20px;
+    width: 1056px;
+}
+
+#footer #footer-inner .footer-column {
+    float: left;
+    width: 250px;
+    margin-left:10px;  
+    }
+
+#footer #footer-inner .footer-column h4 {
+    font-weight: bold;
+    color: #636363;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #E1E1E1;
 }
 
 #elections {

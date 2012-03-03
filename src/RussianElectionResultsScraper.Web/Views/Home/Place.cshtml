@@ -28,6 +28,8 @@
             font-weight: normal;
             letter-spacing: -1px;
             text-shadow: 1px 1px 0 white;            
+            text-align: center;
+            margin-top: 10px;
             margin-bottom: 15px;
             }
 
@@ -104,7 +106,7 @@
         }
 
         table.results th#attendance-graph-header {
-            width:76px;
+            width:62px;
         }
         
         table.results tr.main {
@@ -119,6 +121,14 @@
             padding-left: 20px;
             white-space: normal;
         }
+
+        table.results tr.main td.graph,
+        table.results tr.child td.graph {
+            padding-left: 0px;
+            padding-right: 0px;
+            padding-top: 0px;
+            padding-bottom: 0px;
+            }
         
         tr 
             {
@@ -207,7 +217,7 @@
                                 <td class="attendance">
                                     <span title="@Model.currentRegion.NumberOfVotersInVoterList">@Model.currentRegion.Attendance</span>
                                 </td>
-                                <td>
+                                <td class="graph">
                                     <img style="border: 1px solid black" src="/graph/polling-stations-by-attendance/@(Model.currentRegion.Id).jpg?width=60&height=50" width="60" height="50"/>
                                 </td>
 
@@ -239,7 +249,7 @@
                                 <td>
                                     <span title="@r.NumberOfVotersInVoterList">@r.Attendance</span>
                                 </td>
-                                <td>
+                                <td class="graph">
                                     <img style="border: 1px solid silver" src="/graph/polling-stations-by-attendance/@(r.Id).jpg?width=60&height=50" width="60" height="50"/>
                                 </td>
                                 @foreach (var cr in candidateResults)
@@ -249,7 +259,7 @@
 <!--                                        <div>@string.Format("{0:N0}", @cr.Votes)</div> -->
                                     </td>
                                     }
-                                <td>
+                                <td class="graph">
                                     <img style="border: 1px solid silver" src="/graph/polling-station-results/@(r.Id).jpg?width=60&height=50" width="60" height="50"/>
                                 </td>
                             </tr>
