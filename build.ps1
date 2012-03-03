@@ -27,13 +27,10 @@ Task Build {
     }
 
 Task ExportDb {
-    LoadNecessaryAssemblies | Out-Null
-    $localSqlServerConnection = Get-LocalSqlServerConnection
-    $localSqlServerConnection.Connect()
-    
-	
-	$dacStore = New-Object -TypeName Microsoft.SqlServer.Management.Dac.DacStore $localSqlServerConnection
-	$dacStore.Export( $localDatabaseName, $dacpac )
+    ExportDbAsDataTierApplication `
+        -LocalSqlServerConnection (Get-LocalSqlServerConnection) `
+        -LocalSqlServerDatabase $localDatabaseName `
+        -OutputFile $dacpac 
 	}
 	
 Task UploadDb {
@@ -83,6 +80,7 @@ Task Deploy {
         -StorageServiceUserId $Env:AZURESECURITYID 
     }
     
+Task FullUploadDB -depends ExportDb, UploadDb, RestoreDb
 Task FullDeploy -depends Package, Deploy {}
 
 
@@ -113,7 +111,7 @@ function LoadNecessaryAssemblies()
     [Reflection.Assembly]::LoadWithPartialName( "Microsoft.SqlServer.Management.Dac, Version=11.0.0.0" )  | Out-Null
     [Reflection.Assembly]::LoadWithPartialName( "Microsoft.SqlServer.Management.Dac, Version=11.0.0.0" )  | Out-Null
     [Reflection.Assembly]::LoadWithPartialName( "Microsoft.SqlServer.ConnectionInfo, Version=11.0.0.0" )  | Out-Null
-    [Reflection.Assembly]::LoadWithPartialName( "Microsoft.SQLServer.Smo" ) 
+    [Reflection.Assembly]::LoadWithPartialName( "Microsoft.SQLServer.Smo" )  | Out-Null
     [Reflection.Assembly]::LoadWithPartialName( "System.Configuration, Version=4.0.0.0" ) | Out-Null
 #    [Reflection.Assembly]::LoadFile( "$scriptDirectory\lib\Windows Azure SDK 1.6\Microsoft.WindowsAzure.Diagnostics.dll"  ) | Out-Null
 #    [Reflection.Assembly]::LoadFile( "$scriptDirectory\lib\Windows Azure SDK 1.6\Microsoft.WindowsAzure.StorageClient.dll" ) | Out-Null
@@ -131,6 +129,18 @@ function BuildSolution( [string]$solution,
     LoadNecessaryAssemblies
     Exec { msbuild $solutionFileName /t:$target /p:Configuration=$configuration }
     }
+
+function ExportDbAsDataTierApplication( $localSqlServerConnection,
+                                        [string]$localSqlServerDatabase,
+                                        [string]$outputFile )
+    {
+    LoadNecessaryAssemblies | Out-Null
+    $localSqlServerConnection.Connect()
+	
+	$dacStore = New-Object -TypeName Microsoft.SqlServer.Management.Dac.DacStore $localSqlServerConnection
+	$dacStore.Export( $localSqlServerDatabase, $outputFile )
+    }
+        
 
 function UploadDbToCloudBlobStorage( [Parameter(Mandatory=$true)][string]$dacpac, 
                                      [Parameter(Mandatory=$true)][string]$containerName, 
