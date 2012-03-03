@@ -78,9 +78,9 @@ Task Deploy {
         -SubscriptionId $Env:AZURESUBSCRIPTIONID `
         -Service ruelectstats `
         -Slot Production `
-        -Package 'C:\Users\Misha\Stuff\RussianElectionResultsScraper\src\RussianElectionResultsScraper.Azure\bin\Debug\app.publish\RussianElectionResultsScraper.Azure.cspkg'  `
+        -Package $cloudServicePackage `
         -Configuration $cloudServiceConfigurationFile `
-        -StorageServiceUserId $Env:AZURESECURITYID `
+        -StorageServiceUserId $Env:AZURESECURITYID 
     }
     
 Task FullDeploy -depends Package, Deploy {}
