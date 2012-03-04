@@ -1,6 +1,9 @@
 ﻿@{
     Layout = null;
 }
+
+@model RussianElectionResultScraper.Web.FooterModel
+           
 <div id="footer">
     <div id="footer-inner">
         <div id="madeby" class="footer-column">
@@ -15,8 +18,11 @@
 
         <ul id="version" class="footer-column">
             <h4>Версия</h4>
-            <li>Веб сайт:</li>
-            <li>База данных:</li>
+            <li>Веб сайт: @Model.WebSiteVersion</li>
+            <li>База данных: @Model.DatabaseVersion</li>
+            
+            <li>Саму базу данных (в формате <a href="http://msdn.microsoft.com/en-us/library/ee210580.aspx">.dacpac Data-Tier Application</a>) можно скачать <a href="http://mbergal.blob.core.windows.net/backups/elections.dacpac">здесь</a>.</li>
+            </li>
         </ul>
 
         <ul id="sources" class="footer-column">
@@ -34,15 +40,12 @@
                 </tr>
                 <tr>
                     <td><a href="windowsazure.com" target="_blank">Windows Azure</a></td>
-                    <td>потому что мне нужно было "sharpen my skills"</td>
+                    <td>потому что у них бесплатный хостинг (на 3 месяца)</td>
                 </tr>
             </table>
         </div>
 
 
-        @*        <div style="float: left">*@
-@*            Not affiliated with ruelect.com*@
-@*        </div>*@
         <div style="clear: both"></div>
     </div>
 </div>

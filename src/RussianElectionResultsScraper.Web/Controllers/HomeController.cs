@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using System.Reflection;
 using System.Web.Mvc;
 using System.Linq;
 using MvcApplication2.Models;
@@ -38,7 +39,12 @@ namespace RussianElectionResultScraper.Web
 
         public ActionResult  Footer()
             {
-            return View();
+            return View( new FooterModel() 
+                { 
+                    WebSiteVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString(),
+                    DatabaseVersion = this._sessionFactory.GetCurrentSession().Query<Election>().Max(x => x.LastUpdateTimeStamp)
+                } );
             }
         }
+
     }
