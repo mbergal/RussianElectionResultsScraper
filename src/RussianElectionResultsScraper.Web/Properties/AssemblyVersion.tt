@@ -1,0 +1,13 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".cs" #>
+
+
+using System.Reflection;
+
+<#
+    DateTime now = DateTime.Now;
+    string VersionString = string.Format( "{0}.{1}.{2}.{3}", now.Year, now.Month, now.Day, now.ToString( "HHmmss" ) );
+#>
+ 
+[assembly: AssemblyVersion("<#= VersionString #>")]
+[assembly: AssemblyFileVersion("<#= VersionString #>")]
