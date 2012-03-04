@@ -104,7 +104,19 @@ namespace RussianElectionResultScraper.Web
                 chart.Series.Add(s);
                 var ca = new ChartArea() 
                     { 
-                        AxisX = { Enabled = AxisEnabled.False, IsMarginVisible = false, Interval = Double.MinValue, IntervalOffset = 0, MaximumAutoSize = 100 },
+                        AxisX =
+                            {
+                                Enabled = showGrid ?? false ? AxisEnabled.True : AxisEnabled.False, 
+                                IsMarginVisible = false, 
+                                Interval = Double.MinValue, 
+                                IntervalOffset = 0, 
+                                MaximumAutoSize = 100,
+                                Title = "Партии/Кандидаты",
+                                LabelStyle = 
+                                    {
+                                    Enabled = false
+                                    }
+                            },
                         AxisY =
                             {
                                 Enabled = showGrid ?? false ? AxisEnabled.True : AxisEnabled.False, 
@@ -142,7 +154,6 @@ namespace RussianElectionResultScraper.Web
             
 
             var chart = new Chart { Width = width ?? 600, Height = height ?? 400 };
-            chart.Legends.Add(new Legend() { Name = "aaaaaaaa", LegendStyle = LegendStyle.Table });
             var ca = new ChartArea()
                 {
                 AxisX =
@@ -161,7 +172,7 @@ namespace RussianElectionResultScraper.Web
                 AxisY =
                     {
                     Enabled = showGrid ?? false ? AxisEnabled.True : AxisEnabled.False,
-                    Title = "Отданные голоса",
+                    Title = "Отданные голоса за партию/кандидата",
                     Minimum = 0,
                     Maximum = 100,
                     Interval = 10,
