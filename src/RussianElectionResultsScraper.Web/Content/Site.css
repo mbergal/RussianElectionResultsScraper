@@ -22,6 +22,15 @@ a:active {
     padding-top: 5px;
 }
 
+#header #site-warning {
+    color:brown;
+    display: block;
+    float: right;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: bold;
+    
+}
 #footer {
     margin-top: 50px;
     padding:10px;
