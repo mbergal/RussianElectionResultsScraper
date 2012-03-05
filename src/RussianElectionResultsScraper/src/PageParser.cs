@@ -68,6 +68,8 @@ namespace RussianElectionResultsScraper
                                     var m = new MemoryStream();
                                     x.Result.CopyTo(m);
                                     m.Seek(0, SeekOrigin.Begin);
+                                    if (m.Length < 1024)
+                                        throw new Exception(string.Format("Unexpected response from server {0}", new StreamReader(m).ReadToEnd()));
                                     pageCache.Put(address, m);
                                     m.Seek(0, SeekOrigin.Begin);
                                     log.Info("Retrieved page, size " + m.Length );
