@@ -153,7 +153,7 @@
             font-weight: bold;
             }
             
-        .tooltip 
+        .tooltip
             {
             display:none;
             background:transparent url(/Content/themes/base/images/tooltip/black_arrow.png);
@@ -166,6 +166,13 @@
             
         h3 {
             text-align: center;
+        }
+
+        div.legend {
+            padding:20px;
+            display:none;
+            background-color: white;
+            -webkit-box-shadow: 0px 0px 2px 2px #ccc
         }
                     
     </style>
@@ -219,7 +226,7 @@
                                     <span title="@Model.currentRegion.NumberOfVotersInVoterList">@Model.currentRegion.Attendance</span>
                                 </td>
                                 <td class="graph">
-                                    <img style="border: 1px solid black" src="/graph/polling-stations-by-attendance/@(Model.currentRegion.Id).jpg?width=60&height=50" width="60" height="50"/>
+                                    <img style="border: 1px solid black" class="spinner-small"src="/graph/polling-stations-by-attendance/@(Model.currentRegion.Id).jpg?width=60&height=50" width="60" height="50"/>
                                 </td>
 
                                 @foreach (var cr in @Model.currentRegion.CandidateResults)
@@ -245,7 +252,7 @@
                             var candidateResults = r.CandidateResults;
                             <tr class="child">
                                 <td class="place">
-                                    <a class="hastooltip" href="/election/@r.ElectionId/place/@r.Id">@r.Name</a><div class="tooltip" style="display: none">Id: @r.Id</div>
+                                    <a href="/election/@r.ElectionId/place/@r.Id">@r.Name</a><div class="tooltip" style="display: none">Id: @r.Id</div>
                                 </td>
                                 <td>
                                     <span title="@r.NumberOfVotersInVoterList">@r.Attendance</span>
@@ -285,11 +292,38 @@
                 </td>
                 <td style="vertical-align: top" width="400" id="right-column">
                         <h3>Количество УИК по явке</h3>
-                        <img src="/graph/polling-stations-by-attendance/@(Model.currentRegion.Id).jpg?width=400&height=400&showGrid=true" width="400" height="400"></img>
+                        <img class="spinner-large" src="/graph/polling-stations-by-attendance/@(Model.currentRegion.Id).jpg?width=400&height=400&showGrid=true" width="400" height="400"></img>
                         <h3>Результаты</h3>
-                        <img src="/graph/polling-station-results/@(Model.currentRegion.Id).jpg?width=400&height=400&showGrid=true" width="400" height="400"></img>
-                        <h3>Отданные голоса за партию/кандидата по явке</h3>
-                        <img src="/graph/candidate-results-by-attendance/@(Model.currentRegion.Id).jpg?width=400&height=400&showGrid=true" width="400" height="400"></img>
+                        <img class="spinner-large has-graph-legend"  src="/graph/polling-station-results/@(Model.currentRegion.Id).jpg?width=400&height=400&showGrid=true" width="400" height="400"></img>
+                        <div class="legend">
+                            <table style="width:100%">
+                            @foreach (var c in Model.Candidates)
+                                {
+                                <tr>
+                                    <td style="padding:7px 3px">@c.ShortName</td>
+                                    <td ><div style="width:20px;height:10px;background-color: @ColorTranslator.ToHtml(@c.Color)">&nbsp;</div></td>
+                                </tr>
+                                }
+                            </table>
+                        </div>
+                   <h3>Отданные голоса за партию/кандидата по явке</h3>
+                    <img 
+                        class="spinner-large has-graph-legend" 
+                        alt="Отданные голоса за партию/кандидата по явке"
+                        src="/graph/candidate-results-by-attendance/@(Model.currentRegion.Id).jpg?width=400&height=400&showGrid=true" 
+                        width="400" 
+                        height="400"></img>
+                    <div class="legend">
+                            <table style="width:100%">
+                            @foreach (var c in Model.Candidates)
+                                {
+                                <tr>
+                                    <td style="padding:7px 3px">@c.ShortName</td>
+                                    <td ><div style="width:20px;height:10px;background-color: @ColorTranslator.ToHtml(@c.Color)">&nbsp;</div></td>
+                                </tr>
+                                }
+                            </table>
+                    </div>
                 
                 </td>
             </tr>
@@ -300,6 +334,7 @@
     <script type="text/javascript">
         $().ready(function () {
             $(".hastooltip").tooltip();
+            $(".has-graph-legend").tooltip({ position: "center left"/*, tip: "#legend", events: { def: "mouseenter,mouseout"} */});
             $('.stripeMe tr:even').addClass('alt');
             $('.stripeMe tr').mouseover(function () {
                 $(this).addClass('over');
