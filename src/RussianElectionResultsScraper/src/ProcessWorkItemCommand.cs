@@ -103,19 +103,19 @@ namespace RussianElectionResultsScraper
                     {
                     if (this._workItem.UpdateCounters)
                         {
-                        session.Update( this._election );
-                        result.CounterDescriptions.ForEach( x=>
-                                                                {
-                                                                var counterDescription = this._election.Counter( x.Key);
-                                                                this._election.SetCounter( counter: x.Key, name: x.Value.counterName);
-                                                                });
+                        session.Update(this._election);
+                        result.CounterDescriptions.ForEach(x =>
+                                                            {
+                                                            var counterDescription = this._election.Counter( x.Key);
+                                                            this._election.SetCounter( counter: x.Key, name: x.Value.counterName);
+                                                            });
                         
                         }
                     var vp = session.Get<VotingPlace>(result.Id);
                     if ( vp != null )
                         {
-                        if ( vp.Election != this._election )
-                            throw new Exception( string.Format( "Id conflict: {0} in {1} and {3}", result.Id, this._election.Id, vp.Election.Id ) );
+                        if ( vp.Election.Id != this._election.Id )
+                            throw new Exception( string.Format( "Id conflict: {0} in {1} and {2}", result.Id, this._election.Id, vp.Election.Id ) );
                         }
                     else 
                         vp = new VotingPlace();
@@ -126,8 +126,10 @@ namespace RussianElectionResultsScraper
                     vp.Parent = workItem.ParentVotingPlaceId != null
                         ? session.Get<VotingPlace>( workItem.ParentVotingPlaceId )
                         : null;
-                    if ( vp.Parent != null )
+                    if (vp.Parent != null)
                         vp.Parent.Children.Add(vp);
+                    else
+                        vp.Election.Root = vp;
                     vp.FullName = result.FullName;
                     switch ( result.Hierarchy.Count )
                         {
