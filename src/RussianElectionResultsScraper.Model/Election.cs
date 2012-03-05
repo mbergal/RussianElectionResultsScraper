@@ -40,7 +40,15 @@ namespace RussianElectionResultsScraper.Model
                 }
             else
                 {
-                this.Counters.Add(new CounterDescription { Election = this, Counter = counter, Name = name, ShortName = shortName, IsCandidate = isCandidate.Value, Color = color.Value} );
+                this.Counters.Add(new CounterDescription
+                                      {
+                                          Election = this, 
+                                          Counter = counter, 
+                                          Name = name, 
+                                          ShortName = shortName, 
+                                          IsCandidate = isCandidate.HasValue ? isCandidate.Value : false, 
+                                          Color = color.HasValue ? color.Value : new Color()
+                                      } );
                 }
             return this;
             }
