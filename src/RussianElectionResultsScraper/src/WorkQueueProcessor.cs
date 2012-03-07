@@ -20,8 +20,9 @@ namespace RussianElectionResultsScraper
         private int _numOfVotingPlaces;
         private int _numOfVotingResults;
         private readonly Election _election;
+        private readonly int _maxworkers;
 
-        public WorkQueueProcessor( Election election, WorkQueueService workQueueService, PageParser pageParser, ISessionFactory sessionFactoryFactory, IPageCache pageCache, ElectionConfig electionConfig)
+        public WorkQueueProcessor(Election election, WorkQueueService workQueueService, PageParser pageParser, ISessionFactory sessionFactoryFactory, IPageCache pageCache, ElectionConfig electionConfig, int maxworkers )
             {
             this._workQueueService = workQueueService;
             this._pageParser = pageParser;
@@ -30,6 +31,7 @@ namespace RussianElectionResultsScraper
             this._election = election;
             this._numOfVotingPlaces = 0;
             this._numOfVotingResults = 0;
+            this._maxworkers = maxworkers;
             }
 
         public void Run()
@@ -56,7 +58,7 @@ namespace RussianElectionResultsScraper
         void RunInternal()
             {
             this.Watch();
-            Parallel.ForEach( this._workQueueService.GetConsumerPartitioner(), new ParallelOptions() { MaxDegreeOfParallelism = 6 }, this.ProcessWorkItem );
+            Parallel.ForEach( this._workQueueService.GetConsumerPartitioner(), new ParallelOptions() { MaxDegreeOfParallelism = this._maxworkers }, this.ProcessWorkItem );
             }
 
         void ProcessWorkItem(WorkItem workItem)
