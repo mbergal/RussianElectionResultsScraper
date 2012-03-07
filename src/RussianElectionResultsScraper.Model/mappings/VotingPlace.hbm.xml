@@ -34,13 +34,13 @@
     <many-to-one name="Parent" class="VotingPlace" column="ParentId"/>
     <many-to-one name="Election" class="Election" column="ElectionId"/>
 
-    <set name="Children" >
+    <set name="Children" lazy="true">
       <key column="ParentId">
         <column name="ParentId" length="32"/>
       </key>
-      <one-to-many class="VotingPlace" />
+      <one-to-many class="VotingPlace"  />
     </set>
-    <set name="Results" cascade="all" lazy="false">
+    <set name="Results" cascade="all-delete-orphan" lazy="false">
       <key column="VotingPlaceId">
         <column name="VotingPlaceId" length="32"/>
       </key>
