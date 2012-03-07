@@ -126,6 +126,7 @@ namespace RussianElectionResultsScraper
                                                                         }));
                 session.Save(election);
                 transaction.Commit();
+                session.Evict( election );
                 }
             return election;
         }
