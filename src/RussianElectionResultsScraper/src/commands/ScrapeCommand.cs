@@ -16,6 +16,7 @@ namespace RussianElectionResultsScraper
         private string _root = "http://www.vybory.izbirkom.ru/region/region/izbirkom?action=show&root=1&tvd=100100028713304&vrn=100100028713299&region=0&global=1&sub_region=0&prver=0&pronetvd=null&vibid=100100028713304&type=242";
         private string _parentUrl;
         private bool   _recursive = false;
+        private int    _maxworkers = 6;
 
         public ScrapeCommand()
                 {
@@ -24,6 +25,7 @@ namespace RussianElectionResultsScraper
                 this.HasOption("p|parentUrl:", "<parent-url>", url => this._parentUrl = url);
                 this.HasConfigOption();
                 this.HasOption("r|recursive", "<config-file>", recursive => this._recursive = recursive != null);
+                this.HasOption<int>("m|maxworkers", "<maximum-number-of-workers>", maxworkers => this._maxworkers = maxworkers );
                 }
 
         public override int Run(string[] args)
@@ -40,33 +42,12 @@ namespace RussianElectionResultsScraper
             var queueService = new WorkQueueService();
             var pageParser = new PageParser(pageCache);
 
-            var wp = new WorkQueueProcessor( election, queueService, pageParser, _electionResultsSessionFactory, pageCache, configuration );
+            var wp = new WorkQueueProcessor( election, queueService, pageParser, _electionResultsSessionFactory, pageCache, configuration, this._maxworkers );
             string parentVotingPlaceId = this._parentUrl != null ? HttpUtility.ParseQueryString(this._parentUrl)["vibid"] : null;
             queueService.Add(new WorkItem() { Uri = this._root, ParentVotingPlaceId = parentVotingPlaceId, UpdateCounters = true, Recursive = this._recursive });
             Task.Factory.StartNew(wp.Run, CancellationToken.None, TaskCreationOptions.AttachedToParent, TaskScheduler.Default).Wait();
 
             return 0;
-            }
-
-        private Election SaveElection( ElectionConfig electionConfig )
-            {
-            Election election;
-            using (ISession session = this._electionResultsSessionFactory.OpenSession())
-            using (ITransaction transaction = session.BeginTransaction())
-                {
-                election = session.Get<Election>(electionConfig.Id) ?? new Election() {Id = electionConfig.Id};
-                election.Name = electionConfig.Name;
-                election.Update( electionConfig.Counters.Select(x => new Model.CounterDescription
-                                                                         {
-                                                                         Counter = x.Counter,
-                                                                         Name = x.Name,
-                                                                         ShortName = x.ShortName,
-                                                                         Color = x.Color
-                                                                         } ).ToList());
-                session.Save(election);
-                transaction.Commit();
-                }
-            return election;
             }
         }
     }
