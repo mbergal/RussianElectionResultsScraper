@@ -38,12 +38,13 @@ namespace RussianElectionResultsScraper
 
             using ( var session = _electionResultsSessionFactory.OpenSession() )
                 {
-                session.Connection.Execute( "update VotingResult set Message = null where Message is not null "); 
-                var mismatches = session.Connection.Query<ChecksumMismatch>( Assembly.GetExecutingAssembly().LoadTextResource( "RussianElectionResultsScraper.src.commands.sql.check-counters-sums.sql") ).ToList();
+                const int commandTimeout = 120;
+                session.Connection.Execute( "update VotingResult set Message = null where Message is not null ", commandTimeout: commandTimeout );
+                var mismatches = session.Connection.Query<ChecksumMismatch>(Assembly.GetExecutingAssembly().LoadTextResource("RussianElectionResultsScraper.src.commands.sql.check-counters-sums.sql"), commandTimeout: commandTimeout ).ToList();
                 UpdateMissingParentCounters( session, mismatches );
-                mismatches = session.Connection.Query<ChecksumMismatch>(Assembly.GetExecutingAssembly().LoadTextResource("RussianElectionResultsScraper.src.commands.sql.check-counters-sums.sql")).ToList();
+                mismatches = session.Connection.Query<ChecksumMismatch>(Assembly.GetExecutingAssembly().LoadTextResource("RussianElectionResultsScraper.src.commands.sql.check-counters-sums.sql"), commandTimeout: commandTimeout ).ToList();
                 MarkMissingChildCounters(session, mismatches);
-                mismatches = session.Connection.Query<ChecksumMismatch>(Assembly.GetExecutingAssembly().LoadTextResource("RussianElectionResultsScraper.src.commands.sql.check-counters-sums.sql")).ToList();
+                mismatches = session.Connection.Query<ChecksumMismatch>(Assembly.GetExecutingAssembly().LoadTextResource("RussianElectionResultsScraper.src.commands.sql.check-counters-sums.sql"), commandTimeout: commandTimeout ).ToList();
                 MarkNonMatchingParentAndChildCounters(session, mismatches);
                 }
             return 0;
