@@ -143,10 +143,10 @@ namespace RussianElectionResultsScraper
                         }
 
                     var votingResults = result.CounterValues.Select(entry => new VotingResult() { Counter = entry.Key, VotingPlace = vp, Value = entry.Value }).ToList();
-                    vp.Results.Clear();
+                    // TODO: Delete non-existing results
                     foreach (var votingResult in votingResults)
                         {
-                        vp.Results.Add( votingResult );    
+                        vp.SetCounter( votingResult.Counter, votingResult.Value );
                         }
                     
                     session.Save(vp);
