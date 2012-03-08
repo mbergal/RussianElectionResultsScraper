@@ -11,6 +11,7 @@
     <property name="FullName"/>
     <property name="Uri"/>
     <property name="Type"/>
+    <property name="_numberOfErrors" access="field" column="NumberOfErrors"/>
     <property name="NumberOfVotersInVoterList"/>
     <property name="NumberOfBallotsReceivedByElectoralComission"/>
     <property name="NumberOfBallotsIssuedToVotersWhoVotedEarly"/>
@@ -31,6 +32,7 @@
     <property name="NumberOfBallotsNotCounterUponReceiving"/>
     <property name="Attendance"/>
     <property name="Path"/>
+
     <many-to-one name="Parent" class="VotingPlace" column="ParentId"/>
     <many-to-one name="Election" class="Election" column="ElectionId"/>
 
@@ -50,15 +52,24 @@
   </class>
   <database-object>
     <create>
-      CREATE STATISTICS [_dta_stat_1161771196_1_5] ON [dbo].[VotingPlace]([Id], [Type])
-      CREATE STATISTICS [_dta_stat_1161771196_25_1_5] ON [dbo].[VotingPlace]([Path], [Id], [Type])
-      CREATE STATISTICS [_dta_stat_1097770968_4_2] ON [dbo].[VotingResult]([VotingPlaceId], [Counter])
-      CREATE NONCLUSTERED INDEX [_dta_index_VotingPlace_36_1161771196__K25_K1] ON [dbo].[VotingPlace]
+      CREATE STATISTICS [stat_1] ON [dbo].[VotingPlace]([Id], [Type])
+      CREATE STATISTICS [stat_2] ON [dbo].[VotingPlace]([Path], [Id], [Type])
+      CREATE STATISTICS [stat_3] ON [dbo].[VotingResult]([VotingPlaceId], [Counter])
+      CREATE NONCLUSTERED INDEX [index_1] ON [dbo].[VotingPlace]
       (
       [Path] ASC,
       [Id] ASC
       ) WITH ( SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF) ON [PRIMARY]
 
+      USE [erp]
+      GO
+
+      CREATE NONCLUSTERED INDEX [index_2] ON [dbo].[VotingPlace]
+        (
+        [ParentId] ASC
+        ) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+        
+      GO
     </create>
     <drop>
       

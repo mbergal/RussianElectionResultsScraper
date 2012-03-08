@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
+using RussianElectionResultScraper.Web;
 using RussianElectionResultsScraper.Model;
 using Type = RussianElectionResultsScraper.Model.Type;
 
@@ -26,11 +26,14 @@ namespace MvcApplication2.Models
         {
         private readonly IEnumerable<VotingPlace> _regions;
         private readonly VotingPlace _currentRegion;
+        public VotingResultSummaryModel Summary;
+        private readonly HomeController.Tabs _tab;
 
-        public VotingResultModel( VotingPlace currentRegion, IEnumerable<VotingPlace> children )
+        public VotingResultModel( VotingPlace currentRegion, HomeController.Tabs? tab )
             {
             _currentRegion = currentRegion;
-            _regions = children.OrderBy( x=>x.Name );
+            _regions = currentRegion.Children.OrderBy(x => x.Name);
+            this._tab = tab ?? HomeController.Tabs.summary;
             }
 
         public string                          ElectionName
@@ -56,7 +59,7 @@ namespace MvcApplication2.Models
 
         public bool                                 ShowBreakdown
             {
-            get { return this._currentRegion.Type != Type.UIK;  }
+            get { return this._currentRegion.Type != Type.UIK && this._tab != HomeController.Tabs.details;  }
             }
 
         private static IEnumerable<VotingPlaceBreadCrumb>    MakeBreadcrumbs( VotingPlace vp )
@@ -82,9 +85,13 @@ namespace MvcApplication2.Models
         public bool ShowDetails
             {
             get {
-                return this._currentRegion.Type == Type.UIK;
+                return this._currentRegion.Type == Type.UIK || this._tab == HomeController.Tabs.details;
                 }
             }
+        }
+
+    public class VotingResultSummaryModel
+        {
         }
 
     public class CounterLine
@@ -92,6 +99,7 @@ namespace MvcApplication2.Models
         public string Counter;
         public string Description;
         public string Value;
+        public string Message;
         }
 
 
@@ -135,6 +143,20 @@ namespace MvcApplication2.Models
                 }
             }
 
+        public bool ShowNumberOfErrors
+            {
+            get
+                {
+                return NumberOfErrors > 0;
+                }
+            }
+        public int NumberOfErrors
+            {
+            get
+                {
+                return this._votingPlace.NumberOfErrors;
+                }
+            }
         public IList<CounterLine>  Results
             {
             get {
@@ -142,7 +164,8 @@ namespace MvcApplication2.Models
                                                                           {
                                                                           Counter = x.Counter.ToString(), 
                                                                           Value = x.Value.ToString(), 
-                                                                          Description = this._votingPlace.Election.Counter(x.Counter).Name
+                                                                          Description = this._votingPlace.Election.Counter(x.Counter).Name,
+                                                                          Message = x.Message
                                                                           }).ToList();
                 }
             }
@@ -159,6 +182,19 @@ namespace MvcApplication2.Models
         public string ElectionName
             {
             get { return this._votingPlace.Election.Name; }
+            }
+
+        public bool ShowNumberOfErrorsInDetailsTab
+            {
+            get { return NumberOfErrorsInDetailsTab > 0; }
+            }
+
+        public int NumberOfErrorsInDetailsTab
+            {
+            get
+                {
+                return this._votingPlace.Results.Count(x => !string.IsNullOrWhiteSpace(x.Message));
+                }
             }
         }
 }

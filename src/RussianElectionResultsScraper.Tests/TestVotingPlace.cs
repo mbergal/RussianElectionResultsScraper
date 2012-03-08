@@ -36,5 +36,19 @@ namespace TestElectionResultsScraper
             Assert.AreEqual( 101, vp.Counter( "1" ) );
             Assert.AreEqual(202, vp.Counter( "2") );
             }
+        [Test]
+        public void ShouldUpdateNumberOfErrorsInParentIfOwnNumberOfErrorsChanges()
+            {
+            var vp1 = new VotingPlace();
+            var vp2 = new VotingPlace();
+            vp1.Children.Add( vp1 );
+            vp2.Parent = vp1;
+
+            Assert.AreEqual( 0, vp1.NumberOfErrors );
+            vp2.NumberOfErrors = 1;
+            Assert.AreEqual( 1, vp1.NumberOfErrors);
+            vp2.NumberOfErrors = 0;
+            Assert.AreEqual( 0, vp1.NumberOfErrors);
+            }
         }
     }

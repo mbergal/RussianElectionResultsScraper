@@ -16,6 +16,7 @@ namespace RussianElectionResultsScraper.Model
     public class VotingPlace 
         {
         private static readonly ILog log = LogManager.GetLogger( "VotingPlace" );
+        private int _numberOfErrors;
 
         public VotingPlace()
             {
@@ -27,7 +28,22 @@ namespace RussianElectionResultsScraper.Model
         public virtual string       FullName { get; set; }
         public virtual string       Uri { get; set; }
         public virtual Type         Type { get; set; }
-        public virtual string       Path
+        public virtual int          NumberOfErrors 
+            { 
+            get {
+                return this._numberOfErrors;
+                }
+            set
+                {
+                if (this.Parent != null)
+                    { 
+                    this.Parent.NumberOfErrors -= this._numberOfErrors;
+                    this.Parent.NumberOfErrors += value;
+                    }
+                this._numberOfErrors = value;
+                }
+            }
+        public virtual string Path
             {
             get { return Parent != null ? Parent.Path + Parent.Id + ":" : "";  }
             set { }
