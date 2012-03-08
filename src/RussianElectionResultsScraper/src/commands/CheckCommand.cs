@@ -40,6 +40,7 @@ namespace RussianElectionResultsScraper
                 {
                 const int commandTimeout = 120;
                 session.Connection.Execute( "update VotingResult set Message = null where Message is not null ", commandTimeout: commandTimeout );
+                session.Connection.Execute("update VotingPlace set NumberOfErrors = 0 where NumberOfErrors <> 0", commandTimeout: commandTimeout );
                 var mismatches = session.Connection.Query<ChecksumMismatch>(Assembly.GetExecutingAssembly().LoadTextResource("RussianElectionResultsScraper.src.commands.sql.check-counters-sums.sql"), commandTimeout: commandTimeout ).ToList();
                 UpdateMissingParentCounters( session, mismatches );
                 mismatches = session.Connection.Query<ChecksumMismatch>(Assembly.GetExecutingAssembly().LoadTextResource("RussianElectionResultsScraper.src.commands.sql.check-counters-sums.sql"), commandTimeout: commandTimeout ).ToList();
