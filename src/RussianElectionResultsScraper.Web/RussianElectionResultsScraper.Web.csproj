@@ -140,6 +140,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\HtmlAssetHelper.cs" />
     <Compile Include="Models\FooterModel.cs" />
     <Compile Include="Properties\AssemblyVersion.cs">
       <AutoGen>True</AutoGen>
