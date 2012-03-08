@@ -18,7 +18,7 @@ namespace RussianElectionResultsScraper.Model
                     {
                     try
                         {
-                        return (decimal)(100.00m * this.Value / (this.VotingPlace.NumberValidBallots + this.VotingPlace.NumberOfInvalidBallots));
+                        return (decimal)Math.Round( (decimal) (100.00m * this.Value / (this.VotingPlace.NumberValidBallots + this.VotingPlace.NumberOfInvalidBallots )), 2 );
                         }
                     catch (Exception e)
                         {
@@ -30,6 +30,22 @@ namespace RussianElectionResultsScraper.Model
                 }
             set {}
             }
-        public virtual string       Message { get; set; }
+
+        public virtual string       Message
+            {
+            get
+                {
+                return _message;
+                }
+            set
+                {
+                this._message = value;
+                if ( this.VotingPlace != null )
+                    this.VotingPlace.NumberOfErrors += string.IsNullOrWhiteSpace(this._message) ? -1 : 1;
+                else
+                    throw new Exception( "VotingResult has to have associated VotingPlace" );
+                }
+            }
+        private string              _message;
         }
     }

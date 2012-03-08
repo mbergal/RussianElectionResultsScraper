@@ -12,7 +12,7 @@
     <property name="Value"/>
     <property name="Percents"/>
     <many-to-one name="VotingPlace" column="VotingPlaceId"/>
-    <property name="Message" length="255"/>
+    <property name="_message" length="255" access="field" column="Message"/>
   </class>
 
   <database-object>

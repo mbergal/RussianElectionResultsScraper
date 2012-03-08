@@ -11,6 +11,11 @@ namespace RussianElectionResultScraper.Web
     {
     public class HomeController : Controller
         {
+        public enum  Tabs
+            {
+            summary = 0,
+            details = 1
+            }
         private ISessionFactory _sessionFactory;
 
         public HomeController( ISessionFactory sessionFactory )
@@ -23,18 +28,15 @@ namespace RussianElectionResultScraper.Web
             return View( new IndexModel( _sessionFactory.GetCurrentSession().Query<Election>() ) );
             }
 
-        public ActionResult  Place( string votingPlaceId )
+        public ActionResult  Place( string votingPlaceId, Tabs? tab )
             {
-            VotingPlace main;
-            if (string.IsNullOrEmpty(votingPlaceId))
-                main = _sessionFactory.GetCurrentSession().Query<VotingPlace>().Where( x => x.Parent == null).FetchMany( x=>x.Children ).ThenFetchMany( x=>x.Results ).ToArray()[0];
-            else
-                main = _sessionFactory.GetCurrentSession().Query<VotingPlace>().Where(x => x.Id == votingPlaceId).SingleOrDefault();
+            VotingPlace main = string.IsNullOrEmpty(votingPlaceId) 
+                ? _sessionFactory.GetCurrentSession().Query<VotingPlace>().Where( x => x.Parent == null).FetchMany( x=>x.Children ).ThenFetchMany( x=>x.Results ).ToArray()[0] 
+                : _sessionFactory.GetCurrentSession().Query<VotingPlace>().Where(x => x.Id == votingPlaceId).SingleOrDefault();
 
 
-            var regions = main.Children;
 
-            return View( new VotingResultModel( main, regions ) );
+            return View( new VotingResultModel( main, tab ) );
             }
 
         public ActionResult  Footer()

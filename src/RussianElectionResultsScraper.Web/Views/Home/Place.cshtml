@@ -1,11 +1,8 @@
-﻿@{
-    ViewBag.Title = string.Format( "Ruelectstats.com - {0}: {1}", @Model.ElectionName, @Model.currentRegion.Name );
-}
-
-@using System.Drawing
+﻿@using System.Drawing
+@using MvcApplication2.Infrastructure
+@using Microsoft.Web.Mvc
 @using RussianElectionResultScraper.Web
 @using MvcApplication2.Models
-
 
 @model VotingResultModel
            
@@ -13,6 +10,7 @@
     ViewBag.Title = string.Format( "Ruelectstats.com - {0}: {1}", @Model.ElectionName, @Model.currentRegion.Name );
     Html.Assets().Styles.Add("/Content/Place.css");
 }
+
     <div id="container">
         <div id="election_name">
             @Model.currentRegion.ElectionName
@@ -33,98 +31,126 @@
                     }
                 }
         </h2>
+        <div class="tabs">
+            <ul>
+                <li class="first">@(Html.ActionLink<HomeController>( x=>x.Place( @Model.currentRegion.Id, null ), "Итоги" ) )</li>
+                <li>
+                    @(Html.ActionLink<HomeController>(x => x.Place(@Model.currentRegion.Id, HomeController.Tabs.details ), "Детали")) 
+                    @if (@Model.currentRegion.ShowNumberOfErrorsInDetailsTab)
+                        {
+                        <span class="error-indicator">@Model.currentRegion.NumberOfErrorsInDetailsTab</span>
+                        }
+                </li>
+                <li><a href="@Model.currentRegion.CECUrl" class="external">Данные ЦИК</a></li>
+            </ul>
+        </div>
         <table id="columns" >
             <tr>
                 <td id="left-column" width="100%">
-                    <div class="results-decorator">
-                        <table class="stripeMe results">
-                            <tr> <!-- header -->
-                                <th id="place-header">Регион</th>
-                                <th id="attendance-header">Явка</th>
-                                <th id="attendance-graph-header">Явка/<br>#УИК</th>
-                                @foreach (var candidate in candidates )
-                                    {
-                                    <th class="candidate-header">
-                                        <div class="candidate-header-container">
-                                            <div class="candidate-header-name">@candidate.ShortName</div>
-                                            <div class="candidate-header-line" style="background-color: @ColorTranslator.ToHtml(@candidate.Color)"></div>
-                                        </div>
-                                        
-                                    </th>
-                                    }
-                                <th style="width:76px">&nbsp;</th>
-                            </tr>
-                            <tr class="main">
-                                <td class="place">
-                                    @Model.currentRegion.Name
-                                </td>
-                                <td class="attendance">
-                                    <span title="@Model.currentRegion.NumberOfVotersInVoterList">@Model.currentRegion.Attendance</span>
-                                </td>
-                                <td class="graph">
-                                    <img style="border: 1px solid black" class="spinner-small" src="/graph/polling-stations-by-attendance/@(Model.currentRegion.Id).jpg?width=60&height=50" width="60" height="50"/>
-                                </td>
-
-                                @foreach (var cr in @Model.currentRegion.CandidateResults)
-                                    {
-                                    <td style="overflow: hidden; text-overflow: ellipsis">
-                                        <div>@string.Format("{0:N2}", @cr.Percents)%</div>
-                                        @*                                    <div>@string.Format("{0:N0}", @cr.Votes)</div>*@
-                                    </td>
-                                    }
-
-                                <td>
-                                    <img style="border: 1px solid black" src="/graph/polling-station-results/@(Model.currentRegion.Id).jpg?width=60&height=50" width="60" height="50"/>
-                                </td>
-@*                                    <a target="_blank" href="@Model.currentRegion.CECUrl">ЦИК</a>*@
-@*                                </td>*@
-
-                            </tr>
-
                     @if (Model.ShowBreakdown)
-                        {
-                        foreach (var r in Model.regions)
-                            {
-                            var candidateResults = r.CandidateResults;
-                            <tr class="child">
-                                <td class="place">
-                                    <a href="/election/@r.ElectionId/place/@r.Id">@r.Name</a><div class="tooltip" style="display: none">Id: @r.Id</div>
-                                </td>
-                                <td>
-                                    <span title="@r.NumberOfVotersInVoterList">@r.Attendance</span>
-                                </td>
-                                <td class="graph">
-                                    <img style="border: 1px solid silver" src="/graph/polling-stations-by-attendance/@(r.Id).jpg?width=60&height=50" width="60" height="50"/>
-                                </td>
-                                @foreach (var cr in candidateResults)
+                    {
+                        <div class="results-decorator">
+                            <table class="stripeMe results" >
+                                <tr> <!-- header -->
+                                    <th id="place-header">Регион</th>
+                                    <th id="attendance-header">Явка</th>
+                                    <th id="attendance-graph-header">Явка/<br>#УИК</th>
+                                    @foreach (var candidate in candidates)
                                     {
-                                    <td>
-                                        <div>@string.Format("{0:N2}", @cr.Percents)%</div>
-<!--                                        <div>@string.Format("{0:N0}", @cr.Votes)</div> -->
-                                    </td>
+                                        <th class="candidate-header">
+                                            <div class="candidate-header-container">
+                                                <div class="candidate-header-name">@candidate.ShortName</div>
+                                                <div class="candidate-header-line" style="background-color: @ColorTranslator.ToHtml(@candidate.Color)"></div>
+                                            </div>
+                                        
+                                        </th>
                                     }
-                                <td class="graph">
-                                    <img style="border: 1px solid silver" src="/graph/polling-station-results/@(r.Id).jpg?width=60&height=50" width="60" height="50"/>
-                                </td>
-                            </tr>
-                            }
-                        }
-                    @if (Model.ShowDetails)
-                        {
-                        <table>
-                            @foreach (var counter in Model.currentRegion.Results)
+                                    <th style="width:76px">&nbsp;</th>
+                                </tr>
+                                <tr class="main">
+                                    <td class="place">
+                                        @Model.currentRegion.Name <span class="error-indicator">@Model.currentRegion.NumberOfErrors</span>
+                                    </td>
+                                    <td class="attendance">
+                                        <span title="@Model.currentRegion.NumberOfVotersInVoterList">@Model.currentRegion.Attendance</span>
+                                    </td>
+                                    <td class="graph">
+                                        <img style="border: 1px solid black" class="spinner-small" src="/graph/polling-stations-by-attendance/@(Model.currentRegion.Id).jpg?width=60&height=50" width="60" height="50"/>
+                                    </td>
+
+                                    @foreach (var cr in @Model.currentRegion.CandidateResults)
+                                    {
+                                        <td style="overflow: hidden; text-overflow: ellipsis">
+                                            <div>@string.Format("{0:N2}", @cr.Percents)%</div>
+                                            @*                                    <div>@string.Format("{0:N0}", @cr.Votes)</div>*@
+                                        </td>
+                                    }
+
+                                    <td>
+                                        <img style="border: 1px solid black" src="/graph/polling-station-results/@(Model.currentRegion.Id).jpg?width=60&height=50" width="60" height="50"/>
+                                    </td>
+
+                                </tr>
+
+                                @foreach (var r in Model.regions)
                                 {
-                                <tr>
-                                    <td>@counter.Counter</td>
-                                    <td>@counter.Description</td>
-                                    <td>@counter.Value</td>
+                                    var candidateResults = r.CandidateResults;
+                                    <tr class="child">
+                                        <td class="place">
+                                            <a href="/election/@r.ElectionId/place/@r.Id">@r.Name</a><div class="tooltip" style="display: none">Id: @r.Id</div> 
+                                            @if (r.ShowNumberOfErrors)
+                                            {
+                                                <span class="error-indicator">@r.NumberOfErrors</span>
+                                            }
+                                                
+                                        </td>
+                                        <td>
+                                            <span title="@r.NumberOfVotersInVoterList">@r.Attendance</span>
+                                        </td>
+                                        <td class="graph">
+                                            <img style="border: 1px solid silver" src="/graph/polling-stations-by-attendance/@(r.Id).jpg?width=60&height=50" width="60" height="50"/>
+                                        </td>
+                                        @foreach (var cr in candidateResults)
+                                        {
+                                            <td>
+                                                <div>@string.Format("{0:N2}", @cr.Percents)%</div>
+                                                <!--                                        <div>@string.Format("{0:N0}", @cr.Votes)</div> -->
+                                            </td>
+                                        }
+                                        <td class="graph">
+                                            <img style="border: 1px solid silver" src="/graph/polling-station-results/@(r.Id).jpg?width=60&height=50" width="60" height="50"/>
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                    }
+                        
+                    @if (Model.ShowDetails)
+                    {
+                        <div class="results-decorator">
+                            <table class="stripeMe results">
+                                <tr> <!-- header -->
+                                    <th id="line-number">#</th>
+                                    <th id="attendance-header">Явка</th>
+                                    <th id="value">&nbsp;</th>
+                                    <th id="message">&nbsp;</th>
                                 </tr>
                                 
+                                @foreach (var counter in Model.currentRegion.Results)
+                                {
+                                    <tr>
+                                        <td>@counter.Counter</td>
+                                        <td>@counter.Description</td>
+                                        <td class="value">@counter.Value</td>
+                                        <td>@counter.Message</td>
+                                    </tr>
+                                
                                 }
-                        </table>
-                        }
-                </table>
-                </div>
+                            </table>
+                        </div>
+                    }
+
                 </td>
                 <td style="vertical-align: top" width="400" id="right-column">
                         <h3>Количество УИК по явке</h3>
@@ -142,12 +168,12 @@
                         <div class="legend">
                             <table>
                             @foreach (var c in Model.Candidates)
-                                {
+                            {
                                 <tr>
                                     <td>@c.Name</td>
                                     <td ><div style="width:20px;height:10px;background-color: @ColorTranslator.ToHtml(@c.Color)">&nbsp;</div></td>
                                 </tr>
-                                }
+                            }
                             </table>
                         </div>
                    <h3>Отданные голоса за партию/кандидата по явке</h3>
@@ -158,15 +184,15 @@
                         width="400" 
                         height="400"></img>
                     <div class="legend">
-                            <table>
+                        <table>
                             @foreach (var c in Model.Candidates)
-                                {
-                                <tr valign="middle">
+                            {
+                                <tr>
                                     <td>@c.Name</td>
                                     <td ><div style="width:20px;height:10px;background-color: @ColorTranslator.ToHtml(@c.Color)">&nbsp;</div></td>
                                 </tr>
                                 }
-                            </table>
+                        </table>
                     </div>
                 
                 </td>

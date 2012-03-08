@@ -79,8 +79,8 @@ namespace MvcApplication2
 
             routes.MapRoute(
                 "Places", // Route name
-                "election/{electionId}/place/{votingPlaceId}", // URL with parameters
-                new { controller = "Home", action = "Place", votingPlaceId = "" } // Parameter defaults
+                "election/{electionId}/place/{votingPlaceId}/{tab}", // URL with parameters
+                new { controller = "Home", action = "Place", votingPlaceId = "", tab = "" } // Parameter defaults
                 );
 
             routes.MapRoute(
