@@ -164,6 +164,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\header2.png" />
+    <Content Include="Content\Place.css" />
     <Content Include="Content\ruelectstats.png" />
     <Content Include="Content\russian-flag.png" />
     <Content Include="Content\themes\base\images\tooltip\black.png" />
