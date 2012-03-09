@@ -9,6 +9,7 @@ using System.Web.Caching;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.DataVisualization.Charting;
+using System.Web.UI.WebControls;
 using NHibernate;
 using NHibernate.Linq;
 using RussianElectionResultsScraper.Model;
@@ -140,10 +141,10 @@ namespace RussianElectionResultScraper.Web
             {
             var vp = _sessionFactory.GetCurrentSession().Get<VotingPlace>(votingPlaceId);
             var election = vp.Election;
-            IEnumerable<CandidateResultsByAttendanceRecord> a;
+            IEnumerable<CandidateResultsByAttendanceRecord> points;
             using (var session = _sessionFactory.OpenStatelessSession())
                 {
-                a = session.Connection.Query<CandidateResultsByAttendanceRecord>("select vp.Id Id, vp.Attendance Attendance, vr.Counter, vr.Value, vr.Percents from VotingResult vr inner join VotingPlace vp on vr.VotingPlaceId = vp.Id where vp.Path like @path and vp.Type = @type and vr.Counter in ( select Counter from CounterDescription where electionId = @electionId and IsCandidate = 1 )", 
+                points = session.Connection.Query<CandidateResultsByAttendanceRecord>("select vp.Id Id, vp.Attendance Attendance, vr.Counter, vr.Value, vr.Percents from VotingResult vr inner join VotingPlace vp on vr.VotingPlaceId = vp.Id where vp.Path like @path and vp.Type = @type and vr.Counter in ( select Counter from CounterDescription where electionId = @electionId and IsCandidate = 1 )", 
                     new
                         {
                         path = vp.Path + vp.Id + ":%", 
@@ -190,14 +191,15 @@ namespace RussianElectionResultScraper.Web
                                              var series = new Series(x.ShortName)
                                                               {
                                                               MarkerColor = election.Counter(x.Counter).Color,
+                                                              MarkerSize = this.MarkerSize( chart.Width, chart.Height, points.Count() ),
                                                               ChartType = SeriesChartType.Point,
-                                                              MarkerStyle = MarkerStyle.Triangle
+                                                              MarkerStyle = MarkerStyle.Square
                                                               };
 
                                              serieses.Add( x.Counter, series );
                                              chart.Series.Add(series);
                                              } );
-            foreach (var r in a)
+            foreach (var r in points)
                 {
                 serieses[ r.Counter ].Points.AddXY( r.Attendance, r.Percents );
                 }
@@ -207,6 +209,15 @@ namespace RussianElectionResultScraper.Web
             return new FileStreamResult(m, "image/jpg");
             }
 
+        private int MarkerSize( Unit width, Unit height, int numOfPoints )
+            {
+            int s = (int) (height.Value * 10);
+            if (numOfPoints > s   ) return 1;
+            if (numOfPoints > s/2 ) return 3;
+            if (numOfPoints > s/4)  return 5;
+            if (numOfPoints > s/8) return 7;
+            else return 10;
+            }
         }
 
     public class CandidateResultsByAttendanceRecord
