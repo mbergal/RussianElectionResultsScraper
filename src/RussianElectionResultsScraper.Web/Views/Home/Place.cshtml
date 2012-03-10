@@ -66,7 +66,11 @@
                                 </tr>
                                 <tr class="main">
                                     <td class="place">
-                                        @Model.currentRegion.Name <span class="error-indicator">@Model.currentRegion.NumberOfErrors</span>
+                                        @Model.currentRegion.Name 
+                                        @if (Model.currentRegion.ShowNumberOfErrors)
+                                            {
+                                            <span class="error-indicator">@Model.currentRegion.NumberOfErrors</span>
+                                            }
                                     </td>
                                     <td class="attendance">
                                         <span title="@Model.currentRegion.NumberOfVotersInVoterList">@Model.currentRegion.Attendance</span>
