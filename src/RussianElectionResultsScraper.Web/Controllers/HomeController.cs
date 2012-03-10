@@ -1,7 +1,9 @@
-﻿using System.Configuration;
+﻿using System.Collections.Generic;
+using System.Configuration;
 using System.Reflection;
 using System.Web.Mvc;
 using System.Linq;
+using System.Web.Routing;
 using MvcApplication2.Models;
 using NHibernate;
 using NHibernate.Linq;
@@ -9,37 +11,37 @@ using RussianElectionResultsScraper.Model;
 
 namespace RussianElectionResultScraper.Web
     {
-    public class HomeController : Controller
+    public partial class HomeController : Controller
         {
         public enum  Tabs
             {
             summary = 0,
             details = 1
             }
-        private ISessionFactory _sessionFactory;
+        private readonly ISessionFactory _sessionFactory;
 
         public HomeController( ISessionFactory sessionFactory )
             {
             this._sessionFactory = sessionFactory;
             }
 
-        public ActionResult Index()
+        public virtual ActionResult Index()
             {
             return View( new IndexModel( _sessionFactory.GetCurrentSession().Query<Election>() ) );
             }
 
-        public ActionResult  Place( string votingPlaceId, Tabs? tab )
+        public virtual ActionResult Place(string votingPlaceId, Tabs? tab)
             {
             VotingPlace main = string.IsNullOrEmpty(votingPlaceId) 
                 ? _sessionFactory.GetCurrentSession().Query<VotingPlace>().Where( x => x.Parent == null).FetchMany( x=>x.Children ).ThenFetchMany( x=>x.Results ).ToArray()[0] 
                 : _sessionFactory.GetCurrentSession().Query<VotingPlace>().Where(x => x.Id == votingPlaceId).SingleOrDefault();
 
-
+        
 
             return View( new VotingResultModel( main, tab ) );
             }
 
-        public ActionResult  Footer()
+        public virtual ActionResult Footer()
             {
             return View( new FooterModel() 
                 { 

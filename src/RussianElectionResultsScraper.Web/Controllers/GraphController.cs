@@ -19,7 +19,7 @@ using log4net;
 
 namespace RussianElectionResultScraper.Web
     {
-    public class GraphController : Controller
+    public partial class GraphController : Controller
         {
         private readonly ISessionFactory _sessionFactory;
         private readonly ILog log = LogManager.GetLogger("GraphController");
@@ -33,7 +33,7 @@ namespace RussianElectionResultScraper.Web
 
 
         [OutputCache(Duration = int.MaxValue, NoStore = false, Location = OutputCacheLocation.ServerAndClient, VaryByParam = "*", VaryByCustom = "LastUpdateTimestamp") ]
-        public FileStreamResult  PollingStationsByAttendance(string region, int? width, int? height, bool? showGrid )
+        public virtual FileStreamResult PollingStationsByAttendance(string region, int? width, int? height, bool? showGrid)
             {
             log.Info( string.Format( "PollingStationsByAttendance: region={0}, width={1}, height={2}, showGrid={3}", region, width, height, showGrid ) );
             var path = _sessionFactory.GetCurrentSession().Get<VotingPlace>(region).Path + _sessionFactory.GetCurrentSession().Get<VotingPlace>(region).Id + ":";
@@ -84,7 +84,7 @@ namespace RussianElectionResultScraper.Web
             }
 
         [OutputCache(Duration = int.MaxValue, NoStore = false, Location = OutputCacheLocation.ServerAndClient, VaryByParam = "*", VaryByCustom = "LastUpdateTimestamp")]
-        public FileStreamResult PollingStationResults(string votingPlaceId, int? width, int? height, bool? showGrid)
+        public virtual FileStreamResult PollingStationResults(string votingPlaceId, int? width, int? height, bool? showGrid)
             {
                 log.Info( string.Format( "PollingStationResults: votingPlaceId={0}, width={1}, height={2}, showGrid={3}", votingPlaceId, width, height, showGrid ) );
                 var vp = _sessionFactory.GetCurrentSession().Get<VotingPlace>(votingPlaceId);
@@ -137,7 +137,7 @@ namespace RussianElectionResultScraper.Web
 
 
         [OutputCache(Duration = int.MaxValue, NoStore = false, Location = OutputCacheLocation.ServerAndClient, VaryByParam = "*", VaryByCustom = "LastUpdateTimestamp")]
-        public FileStreamResult CandidateResultsByAttendance(string votingPlaceId, int? width, int? height, bool? showGrid)
+        public virtual FileStreamResult CandidateResultsByAttendance(string votingPlaceId, int? width, int? height, bool? showGrid)
             {
             var vp = _sessionFactory.GetCurrentSession().Get<VotingPlace>(votingPlaceId);
             var election = vp.Election;
