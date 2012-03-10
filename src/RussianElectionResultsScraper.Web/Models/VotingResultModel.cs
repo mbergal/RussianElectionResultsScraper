@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Web.Mvc;
 using RussianElectionResultScraper.Web;
 using RussianElectionResultsScraper.Model;
 using Type = RussianElectionResultsScraper.Model.Type;
@@ -87,6 +89,21 @@ namespace MvcApplication2.Models
             get {
                 return this._currentRegion.Type == Type.UIK || this._tab == HomeController.Tabs.details;
                 }
+            }
+
+
+        public HomeController.Tabs Tab
+            {
+            get { return this._tab; }
+            }
+
+        public bool IsDetailsSelected
+            {
+            get { return this.Tab == HomeController.Tabs.details; }
+            }
+        public bool IsSummarySelected
+            {
+            get { return this.Tab == HomeController.Tabs.summary; }
             }
         }
 

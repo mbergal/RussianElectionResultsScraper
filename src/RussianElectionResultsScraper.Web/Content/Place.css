@@ -87,7 +87,9 @@ div.tabs {
     
 div.tabs li {
     padding: 8px 12px;
+    vertical-align: top;
     display: inline-block;
+    margin-bottom: 0px;
 } 
 
 div.tabs li .error-indicator {
@@ -100,12 +102,7 @@ div.tabs li .error-indicator {
     font-size: 10px;
 } 
 
-div.tabs li.first {
-    margin-left:50px;
-    vertical-align: top;
-    cursor: pointer;
-    color: #333; 
-    font-weight: bold;
+div.tabs li.selected {
     border-left: 1px solid #DDD;
     border-top: 1px solid #DDD;
     border-right: 1px solid #DDD;
@@ -113,6 +110,13 @@ div.tabs li.first {
     border-top-right-radius: 3px;
     background-color: white;
     margin-bottom: -1px;
+    font-weight: bold;
+}
+    
+div.tabs li.first {
+    margin-left:50px;
+    cursor: pointer;
+    color: #333; 
 }
 
 table.results td 

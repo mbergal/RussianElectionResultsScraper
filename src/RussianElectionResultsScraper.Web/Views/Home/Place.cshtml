@@ -33,9 +33,8 @@
         </h2>
         <div class="tabs">
             <ul>
-                <li class="first">@(Html.ActionLink<HomeController>( x=>x.Place( @Model.currentRegion.Id, null ), "Итоги" ) )</li>
-                <li>
-                    @(Html.ActionLink<HomeController>(x => x.Place(@Model.currentRegion.Id, HomeController.Tabs.details ), "Детали")) 
+                <li class="first @(Model.IsSummarySelected?"selected":"") " >@(Html.ActionLink( "Итоги", MVC.Home.Place( @Model.currentRegion.Id, null ) ) )</li>
+                <li class="@(Model.IsDetailsSelected?"selected":"")">@(Html.ActionLink( "Детали", MVC.Home.Place( @Model.currentRegion.Id, HomeController.Tabs.details ) ) ) 
                     @if (@Model.currentRegion.ShowNumberOfErrorsInDetailsTab)
                         {
                         <span class="error-indicator">@Model.currentRegion.NumberOfErrorsInDetailsTab</span>
