@@ -74,7 +74,7 @@
                                         <span title="@Model.currentRegion.NumberOfVotersInVoterList">@Model.currentRegion.Attendance</span>
                                     </td>
                                     <td class="graph">
-                                        <img style="border: 1px solid black" class="spinner-small" src="/graph/polling-stations-by-attendance/@(Model.currentRegion.Id).jpg?width=60&height=50" width="60" height="50"/>
+                                        <img class="small-graph" style="border: 1px solid black" src="/graph/polling-stations-by-attendance/@(Model.currentRegion.Id).jpg?width=60&height=50"/>
                                     </td>
 
                                     @foreach (var cr in @Model.currentRegion.CandidateResults)
@@ -107,7 +107,7 @@
                                             <span title="@r.NumberOfVotersInVoterList">@r.Attendance</span>
                                         </td>
                                         <td class="graph">
-                                            <img style="border: 1px solid silver" src="/graph/polling-stations-by-attendance/@(r.Id).jpg?width=60&height=50" width="60" height="50"/>
+                                            <img class="small-graph" src="/graph/polling-stations-by-attendance/@(r.Id).jpg?width=60&height=50"/>
                                         </td>
                                         @foreach (var cr in candidateResults)
                                         {
@@ -117,7 +117,7 @@
                                             </td>
                                         }
                                         <td class="graph">
-                                            <img style="border: 1px solid silver" src="/graph/polling-station-results/@(r.Id).jpg?width=60&height=50" width="60" height="50"/>
+                                            <img class="small-graph" src="/graph/polling-station-results/@(r.Id).jpg?width=60&height=50"/>
                                         </td>
                                     </tr>
                                 }
