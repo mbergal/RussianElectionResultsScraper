@@ -61,24 +61,31 @@
             }            
     </style>
 
-<div>
-                Статистика федеральных выборов Российской Федерации
-
-    <table id="elections">
+    <div>
+        <h1>Статистика федеральных выборов Российской Федерации</h1>
+                
+        <ul style="border-radius: 4px; box-shadow: rgba(0,0,0,0.3) 0 1px 3px; border-color: #E5E5E5 #DBDBDB #D2D2D2;width: 800px;margin: auto;border: 1px solid #EEE; padding: 20px;" >
         @foreach (var election in Model.Elections)
             {
-            <tr>
-                <td>
-                    <a href="/election/@election.Id/place/@election.Root.Id">@election.Name</a>
-                </td>
-                <td>
+            <li style="aborder: 1px solid #EEE; border-radius: 3px; border-bottom: 1px solid #EEE;padding:10px;margin-top: 3px;abackground: -webkit-gradient(linear,left top,left bottom,from(#FFF),color-stop(30%,#FFF), color-stop(80%,#FAFAFA),to(#EFEFEF))">
+                <div style="float:left;width:400px;background-color: white">
+                    <a style="font-size:16px;font-weight: bold" href="/election/@election.Id/place/@election.Root.Id">@election.Name</a>
+                </div>
+                <div style="float:left;margin-left:10px">
                     <img style="border:1px solid silver" src="/graph/polling-stations-by-attendance/@(election.Root.Id).jpg?height=80&width=100"/>
-                </td>
-                <td>
+                </div>
+                <div style="float:left;margin-left:10px">
                     <img style="border:1px solid silver" src="/graph/polling-station-results/@(election.Root.Id).jpg?height=80&width=100"/>
-                </td>
-            </tr>
+                </div>
+                <div style="float:left;margin-left:10px">
+                    <img style="border:1px solid silver" src="/graph/candidate-results-by-attendance/@(election.Root.Id).jpg?height=80&width=100"/>
+                </div>
+                <div style="clear: both"></div>
+            </li>
             }
+
     </table>
+        </ul>
+    </div>
 </div>
 

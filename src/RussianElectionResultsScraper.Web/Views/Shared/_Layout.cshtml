@@ -21,7 +21,9 @@
             <a href="/"><img src="/Content/header2.png"/></a> <div id="site-warning">Работа над сайтом еще не окончена! Работает еще не всё.</div>
         </div>
         <div id="content">
-            @RenderBody()
+            <div id="container">
+                @RenderBody()
+            </div>
         </div>
         <div class="footer">
             @{Html.RenderAction<HomeController>( x=>x.Footer() );}
