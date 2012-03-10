@@ -23,6 +23,7 @@ using T4MVC;
 
 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
 public static class MVC {
+    public static RussianElectionResultScraper.Web.Controllers.ErrorController Error = new RussianElectionResultScraper.Web.Controllers.T4MVC_ErrorController();
     public static RussianElectionResultScraper.Web.GraphController Graph = new RussianElectionResultScraper.Web.T4MVC_GraphController();
     public static RussianElectionResultScraper.Web.HomeController Home = new RussianElectionResultScraper.Web.T4MVC_HomeController();
     public static T4MVC.SharedController Shared = new T4MVC.SharedController();
@@ -285,22 +286,22 @@ public interface IT4MVCActionResult {
   
 
 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-public class T4MVC_FileStreamResult : System.Web.Mvc.FileStreamResult, IT4MVCActionResult {
-    public T4MVC_FileStreamResult(string area, string controller, string action): base(default(System.IO.Stream), " ")  {
-        this.InitMVCT4Result(area, controller, action);
-    }
-    
-    public string Controller { get; set; }
-    public string Action { get; set; }
-    public RouteValueDictionary RouteValueDictionary { get; set; }
-}
-[GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
 public class T4MVC_ActionResult : System.Web.Mvc.ActionResult, IT4MVCActionResult {
     public T4MVC_ActionResult(string area, string controller, string action): base()  {
         this.InitMVCT4Result(area, controller, action);
     }
      
     public override void ExecuteResult(System.Web.Mvc.ControllerContext context) { }
+    
+    public string Controller { get; set; }
+    public string Action { get; set; }
+    public RouteValueDictionary RouteValueDictionary { get; set; }
+}
+[GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+public class T4MVC_FileStreamResult : System.Web.Mvc.FileStreamResult, IT4MVCActionResult {
+    public T4MVC_FileStreamResult(string area, string controller, string action): base(default(System.IO.Stream), " ")  {
+        this.InitMVCT4Result(area, controller, action);
+    }
     
     public string Controller { get; set; }
     public string Action { get; set; }
@@ -361,6 +362,7 @@ namespace Links {
         public static string Url() { return T4MVCHelpers.ProcessVirtualPath(URLPATH); }
         public static string Url(string fileName) { return T4MVCHelpers.ProcessVirtualPath(URLPATH + "/" + fileName); }
         public static readonly string header2_png = Url("header2.png");
+        public static readonly string not_found_png = Url("not-found.png");
         public static readonly string Place_css = Url("Place.css");
         public static readonly string ruelectstats_png = Url("ruelectstats.png");
         public static readonly string russian_flag_png = Url("russian-flag.png");
