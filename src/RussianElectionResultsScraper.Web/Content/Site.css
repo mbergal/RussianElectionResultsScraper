@@ -2,9 +2,11 @@ body, td
     {
     font-family: helvetica,arial,freesans,clean,sans-serif;
     font-size: 13px;
-    background-color: #F8F8F8;
     }
 
+body {
+    background-color: #F8F8F8;
+}
 /* http://ryanfait.com/resources/footer-stick-to-bottom-of-page/ */
 html, body {
     height: 100%;
