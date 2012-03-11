@@ -8,7 +8,7 @@
       <generator class="increment"/>
     </id>
     <property name="Counter" length="3"/>
-    <property name="Name" length="64"/>
+    <property name="Name" length="128"/>
     <property name="IsCandidate" length="64"/>
     <property name="ShortName" length="16"/>
     <property name="HtmlColor" length="16">
