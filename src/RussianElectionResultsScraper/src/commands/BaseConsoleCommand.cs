@@ -18,7 +18,10 @@ using NHibernate.Linq;
 using NHibernate.SqlTypes;
 using NHibernate.Tool.hbm2ddl;
 using RussianElectionResultsScraper.Model;
+using log4net;
+using log4net.Appender;
 using log4net.Config;
+using log4net.Repository;
 using Configuration = NHibernate.Cfg.Configuration;
 
 namespace RussianElectionResultsScraper
@@ -30,7 +33,9 @@ namespace RussianElectionResultsScraper
 
         public override int Run(string[] args)
             {
-            DOMConfigurator.Configure();
+            XmlConfigurator.Configure();
+            this.SetLogDirectory( Path.Combine(Directory.GetCurrentDirectory(), "logging") );
+
 
             _pageCacheSessionFactory = ConfigurePageCacheDatabase();
             _electionResultsSessionFactory = ConfigureElectionResultsDatabase();
@@ -38,6 +43,30 @@ namespace RussianElectionResultsScraper
             return 0;
             }
 
+        //
+        // http://geekswithblogs.net/wpeck/archive/2009/10/08/setting-log4net-fileappender.file-at-runtime.aspx
+        //
+        public void SetLogDirectory(string logDirectory) 
+            { 
+            //get the current logging repository for this application 
+            ILoggerRepository repository = LogManager.GetRepository(); 
+            //get all of the appenders for the repository 
+            IAppender[] appenders = repository.GetAppenders(); 
+            //only change the file path on the 'FileAppenders' 
+            foreach (IAppender appender in (from iAppender in appenders 
+                                            where iAppender is FileAppender 
+                                            select iAppender)) 
+                { 
+                var fileAppender = appender as FileAppender; 
+                //set the path to your logDirectory using the original file name defined 
+                //in configuration 
+                fileAppender.File = Path.Combine(logDirectory, Path.GetFileName(fileAppender.File)); 
+                //make sure to call fileAppender.ActivateOptions() to notify the logging 
+                //sub system that the configuration for this appender has changed. 
+                fileAppender.ActivateOptions(); 
+                }    
+            }
+            
         public void HasConfigOption()
             {
             this.HasRequiredOption("c|config=", "<config-file>", configFile => this._configFile = configFile);
