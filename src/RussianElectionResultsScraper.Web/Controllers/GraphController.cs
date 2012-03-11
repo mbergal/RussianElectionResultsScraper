@@ -15,6 +15,7 @@ using NHibernate.Linq;
 using RussianElectionResultsScraper.Model;
 using Dapper;
 using log4net;
+using Type = RussianElectionResultsScraper.Model.Type;
 
 
 namespace RussianElectionResultScraper.Web
@@ -36,13 +37,20 @@ namespace RussianElectionResultScraper.Web
         public virtual FileStreamResult PollingStationsByAttendance(string region, int? width, int? height, bool? showGrid)
             {
             log.Info( string.Format( "PollingStationsByAttendance: region={0}, width={1}, height={2}, showGrid={3}", region, width, height, showGrid ) );
-            var path = _sessionFactory.GetCurrentSession().Get<VotingPlace>(region).Path + _sessionFactory.GetCurrentSession().Get<VotingPlace>(region).Id + ":";
-            var a = _sessionFactory.GetCurrentSession().Connection.Query<double>("select Attendance from VotingPlace where Path like @path and TYPE = 5", new { path = path + region + ":%" } );
-            var g = new List<int>();
-            for (var i = 0; i <= 100; ++i  )
-                g.Add( 0 );
+            var vp = _sessionFactory.GetCurrentSession().Get<VotingPlace>(region);
+            IEnumerable<double> attendance;
+            if (vp.Type != Type.UIK)
+                {
+                var path = vp.Path + vp.Id + ":%";
+                attendance = _sessionFactory.GetCurrentSession().Connection.Query<double>("select Attendance from VotingPlace where Path like @path and TYPE = 5", new { path = path });
+                }
+            else
+                {
+                attendance = new List<double>() { vp.Attendance ?? 0 };
+                }
 
-            a.ForEach( x=>
+            var g = new List<int>( Enumerable.Repeat( 0, 101 ) );
+            attendance.ForEach( x=>
                            {
                            g[(int)x]++;
                            } );
