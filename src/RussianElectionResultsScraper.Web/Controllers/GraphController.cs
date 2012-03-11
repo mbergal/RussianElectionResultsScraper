@@ -37,7 +37,7 @@ namespace RussianElectionResultScraper.Web
             {
             log.Info( string.Format( "PollingStationsByAttendance: region={0}, width={1}, height={2}, showGrid={3}", region, width, height, showGrid ) );
             var path = _sessionFactory.GetCurrentSession().Get<VotingPlace>(region).Path + _sessionFactory.GetCurrentSession().Get<VotingPlace>(region).Id + ":";
-            var a = _sessionFactory.GetCurrentSession().Connection.Query<double>("select Attendance from VotingPlace where Path like @path and TYPE = 5", new { path = path + '%' } );
+            var a = _sessionFactory.GetCurrentSession().Connection.Query<double>("select Attendance from VotingPlace where Path like @path and TYPE = 5", new { path = path + region + ":%" } );
             var g = new List<int>();
             for (var i = 0; i <= 100; ++i  )
                 g.Add( 0 );
@@ -125,7 +125,8 @@ namespace RussianElectionResultScraper.Web
                                 LabelStyle =
                                     {
                                     Format = "{0} %"    
-                                    }
+                                    },
+                                Maximum = 100
                             } 
                     };
                 chart.ChartAreas.Add(ca);
