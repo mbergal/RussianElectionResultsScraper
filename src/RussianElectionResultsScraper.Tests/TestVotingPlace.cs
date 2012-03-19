@@ -20,11 +20,6 @@ namespace TestElectionResultsScraper
         public void ShouldBeAbleToCalculateCountersFromCountersInChildren()
             {
             var election = new Election();
-            election.Counters.AddAll( new[]
-                                          {
-                                          new CounterDescription() { Counter = "1", Name = "Counter 1" },
-                                          new CounterDescription() { Counter = "2", Name = "Counter 2" },
-                                          } );
 
             var vp = new VotingPlace() { Election = election };
             vp.Children.AddAll( new []
@@ -36,6 +31,13 @@ namespace TestElectionResultsScraper
             Assert.AreEqual( 101, vp.Counter( "1" ) );
             Assert.AreEqual(202, vp.Counter( "2") );
             }
+
+//        [Test]
+//        public void ShouldBeAbleToPromoteCountersAInUIKtoCounterDinParent
+//            {
+//            
+//            }
+
         [Test]
         public void ShouldUpdateNumberOfErrorsInParentIfOwnNumberOfErrorsChanges()
             {
@@ -50,5 +52,18 @@ namespace TestElectionResultsScraper
             vp2.NumberOfErrors = 0;
             Assert.AreEqual( 0, vp1.NumberOfErrors);
             }
+
+        [Test]
+        public void ShouldBeAbleToDeterminePlaceType()
+            {
+            var cik = new VotingPlace();
+            var vologodskayaObl = new VotingPlace() { Name = "Вологодская область", Parent = cik }.SetCounter( "1", 1 );
+            var uik404 = new VotingPlace() { Name = "УИК №404", Parent = vologodskayaObl };
+            cik.Children.Add(vologodskayaObl);
+            Assert.AreEqual( Type.CIK, cik.Type );
+            Assert.AreEqual( Type.RIK, vologodskayaObl.Type );
+            Assert.AreEqual( Type.UIK, uik404.Type );
+            }
+
         }
     }

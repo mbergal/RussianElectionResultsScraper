@@ -51,7 +51,11 @@ namespace TestElectionResultsScraper
             Assert.AreEqual("1", pageDocument.ResultTable[0][0]);
             Assert.AreEqual("Число избирателей, внесенных в список избирателей", pageDocument.ResultTable[0][1]);
             Assert.AreEqual("109237780", pageDocument.ResultTable[0][2]);
-            Assert.AreEqual("8695522", pageDocument.ResultTable[20][2]);
+            Assert.AreEqual("8695522", pageDocument.ResultTable[18][2]);
+
+
+            pageDocument = CreatePageDocument("TestElectionResultsScraper.data.5.html");
+            Assert.AreEqual( 31, pageDocument.ResultTable.Count  );
             }
 
         public PageDocument         CreatePageDocument( string resourceName )
