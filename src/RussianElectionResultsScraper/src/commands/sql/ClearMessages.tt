@@ -1,0 +1,13 @@
+﻿<#@ template language="C#" #>
+
+update 
+		VotingResult 
+	set 
+		Message = null 
+	from
+		VotingResult vr inner join VotingPlace vp on vr.VotingPlaceId = vp.Id
+	where 
+		vp.ElectionId = @electionId
+		and Message is not null
+
+	

@@ -1,0 +1,9 @@
+﻿<#@ template language="C#" #>
+
+update 
+		VotingPlace 
+	set 
+		NumberOfErrors = 0 
+	where 
+		NumberOfErrors <> 0 and ElectionId = @electionId
+

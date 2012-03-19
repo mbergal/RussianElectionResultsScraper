@@ -1,0 +1,17 @@
+﻿<#@ template language="C#" #>
+
+with AutoCalculatedVotingResults as 
+	(
+	select 
+		vr.* 
+	from 
+		VotingResult vr
+			inner join VotingPlace vp on vr.VotingPlaceId = vp.Id
+	    where vp.ElectionId = @electionId and IsCalculated = 1
+	)			
+delete 
+	from 
+		VotingResult 
+	where 
+		Id in ( select Id from AutoCalculatedVotingResults )
+		

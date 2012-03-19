@@ -1,0 +1,50 @@
+﻿<#@ template language="C#" #>
+
+
+with 
+Children as ( 
+	select 
+			ParentId			SumVotingPlaceId, 
+			Counter				SumCounter, 
+			SUM( value )		SumValue 
+		from VotingResult vr inner join VotingPlace vp on vr.VotingPlaceId = vp.Id 
+		<# if ( !String.IsNullOrEmpty( electionId ) ) { #>
+		where vp.ElectionId = @electionId
+		<# } #>
+		group by 
+			ParentId, Counter ),
+Parents as ( 
+	select 
+			vp.Id				VotingPlaceId, 
+			vr.Id				Id, 
+			Counter				Counter, 
+			value				Value
+		from 
+			VotingResult vr inner join VotingPlace vp on vr.VotingPlaceId = vp.Id 
+		where 
+			<# if ( !String.IsNullOrEmpty( electionId ) ) { #>
+			vp.ElectionId = @electionId and
+			<# } #>
+			vp.Type <> 6 )
+select 
+		SumVotingPlaceId, 
+		SumCounter,
+		SumValue,
+		Id,
+		VotingPlaceId,
+		Counter,
+		Value
+	from 
+		Children full join Parents on Children.SumVotingPlaceId = Parents.VotingPlaceId and Children.SumCounter = Parents.Counter
+	where isnull( SumValue, 0 ) <> isnull( Value, 0 )
+	
+
+<#+
+        private string electionId;
+
+        public CheckCountersSumsSQL(string electionId)
+            {
+            this.electionId = electionId;
+            }
+
+#>
