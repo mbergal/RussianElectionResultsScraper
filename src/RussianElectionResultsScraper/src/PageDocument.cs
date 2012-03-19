@@ -13,9 +13,14 @@ namespace RussianElectionResultsScraper
         public string href;
         public string text;
         }
+
     public class PageDocument
-    {
-        private HtmlDocument htmlDocument;
+        {
+        private readonly HtmlDocument                        htmlDocument;
+        private Anchor[]                                     _history;
+        private static readonly IList<Tuple<string, string>> undefined = new List<Tuple<string, string>>();
+        private IList<Tuple<string, string>>                 _children = undefined;
+        private List<List<string>>                           _resultTable;
 
         public PageDocument(HtmlDocument htmlDocument)
         {
@@ -26,11 +31,14 @@ namespace RussianElectionResultsScraper
             {
             get
                 {
-                var nameCell = this.htmlDocument.DocumentNode.SelectSingleNode("//table[@width='100%' and @height='80%']/tr[@height='20px']/td");
-                return nameCell.SelectNodes("a").Select(x => new Anchor() { href = x.GetAttributeValue( "href", null ), text = x.InnerText } ).ToArray();
+                if (_history == null)
+                    {
+                    var nameCell = this.htmlDocument.DocumentNode.SelectSingleNode("//table[@width='100%' and @height='80%']/tr[@height='20px']/td");
+                    _history = nameCell.SelectNodes("a").Select(x => new Anchor() { href = x.GetAttributeValue("href", null), text = x.InnerText }).ToArray();
+                    }
+                return _history;
                 }
             }
-
 
         public string FullName
             {
@@ -41,24 +49,28 @@ namespace RussianElectionResultsScraper
             }
 
         public string Name
-        {
-            get
             {
+            get
+                {
                 return this.History.Select( x=> x.text ).LastOrDefault();
+                }
             }
-        }
 
         public IList<Tuple<string, string>> Children
             {
             get
                 {
-                var nodes = this.htmlDocument.DocumentNode.SelectNodes("//select[@name='gs']/option");
-                if (nodes != null)
-                    return nodes.Select(x => new Tuple<string, string>(
-                    HttpUtility.HtmlDecode(x.GetAttributeValue("value", null)),
-                    HttpUtility.HtmlDecode(x.NextSibling.InnerText).Trim())).Where(x => x.Item2 != "---").ToList();
-                else
-                    return null;
+                if (this._children == undefined )
+                    {
+                    var nodes = this.htmlDocument.DocumentNode.SelectNodes("//select[@name='gs']/option");
+                    if (nodes != null)
+                        this._children = nodes.Select(x => new Tuple<string, string>(
+                                            HttpUtility.HtmlDecode(x.GetAttributeValue("value", null)),
+                                            HttpUtility.HtmlDecode(x.NextSibling.InnerText).Trim())).Where(x => x.Item2 != "---").ToList();
+                    else
+                        this._children = null;
+                    }
+                return this._children;
                 }
             }
 
@@ -66,15 +78,19 @@ namespace RussianElectionResultsScraper
             {
             get
                 {
-                var table = new List<List<string>>();
-                var r = this.htmlDocument.DocumentNode.SelectNodes("//table[@border='0' and @bgcolor='#ffffff' and @cellpadding='2' and @cellspacing='1']/tr");
-                if (r != null)
-                    foreach (var a in r)
+                if (_resultTable == null)
+                    {
+                    var table = new List<List<string>>();
+                    var r = this.htmlDocument.DocumentNode.SelectNodes("//table[@border='0' and @bgcolor='#ffffff']/tr[count(td) = 3]");
+                    if (r != null)
+                        foreach (var a in r)
                         {
-                        var tds = a.SelectNodes("td").ToArray();
-                        table.Add(tds.Select(x => x.FirstChild != null ? x.FirstChild.InnerText : x.InnerText ).ToList());
+                            var tds = a.SelectNodes("td").ToArray();
+                            table.Add(tds.Select(x => x.FirstChild != null ? x.FirstChild.InnerText : x.InnerText).ToList());
                         }
-                return table;
+                    _resultTable = table;
+                    }
+                return _resultTable;
                 }
             }
 
