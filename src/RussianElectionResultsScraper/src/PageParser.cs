@@ -179,15 +179,14 @@ namespace RussianElectionResultsScraper
                 }
             }
 
-        public IList<Tuple<string, string>>         Children { get; set; }
-        public IDictionary<string, int>                CounterValues;
-        public IDictionary<string, CounterDescription> CounterDescriptions { get; set; }
-        public IList<string>                        Hierarchy
+        public IList<Tuple<string, string>>             Children { get; set; }
+        public IDictionary<string, int>                 CounterValues;
+        public IDictionary<string, CounterDescription>  CounterDescriptions { get; set; }
+        public IList<string>                            Hierarchy
             {
             get {
                 var h = this._doc.History.Select(x => x.text).ToList();
-                if ( h[0] != "ЦИК России" )
-                    h.Insert(0, "ЦИК России" );
+
                 return h;    
                 }
             }
