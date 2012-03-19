@@ -113,6 +113,7 @@ namespace RussianElectionResultsScraper
                 .Database(MsSqlCeConfiguration
                         .Standard
                         .Driver<FixedSqlServerCeDriver>()
+                        .IsolationLevel( IsolationLevel.Snapshot )
                         .ConnectionString(connString) )
                 .BuildConfiguration();
 
