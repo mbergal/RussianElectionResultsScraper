@@ -76,6 +76,9 @@
     <Reference Include="NHibernate.Caches.SysCache2">
       <HintPath>..\..\lib\SysCache2\NHibernate.Caches.SysCache2.dll</HintPath>
     </Reference>
+    <Reference Include="PowerShellFormat">
+      <HintPath>..\..\lib\PowerShellFormat\PowerShellFormat.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -86,6 +89,9 @@
       <HintPath>..\..\packages\SqlServerCompact.4.0.8482.1\lib\System.Data.SqlServerCe.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management.Automation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\WindowsPowerShell\v1.0\System.Management.Automation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Transactions" />
@@ -104,6 +110,26 @@
     <Compile Include="src\commands\InitDatabaseCommand.cs" />
     <Compile Include="src\commands\RepairCommand.cs" />
     <Compile Include="src\commands\ScrapeCommand.cs" />
+    <Compile Include="src\commands\sql\CheckCountersSumsSQL.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CheckCountersSumsSQL.tt</DependentUpon>
+    </Compile>
+    <Compile Include="src\commands\sql\ClearMessages.cs">
+      <DependentUpon>ClearMessages.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="src\commands\sql\ResetNumberOfErrors.cs">
+      <DependentUpon>ResetNumberOfErrors.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="src\commands\sql\DeleteAutocalculatedResults.cs">
+      <DependentUpon>DeleteAutocalculatedResults.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="src\commands\UpdateConfigCommand.cs" />
     <Compile Include="src\ElectionConfig.cs" />
     <Compile Include="src\Model.cs" />
@@ -121,6 +147,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="src\utils\NullPageCache.cs" />
     <Compile Include="src\utils\PageCache.cs" />
     <Compile Include="src\utils\ReadResource.cs" />
     <Compile Include="src\utils\TaskEx.cs" />
@@ -136,9 +163,22 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="src\commands\sql\ClearMessages.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>ClearMessages.cs</LastGenOutput>
+    </None>
+    <None Include="src\commands\sql\DeleteAutocalculatedResults.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>DeleteAutocalculatedResults.cs</LastGenOutput>
+    </None>
+    <None Include="src\commands\sql\ResetNumberOfErrors.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>ResetNumberOfErrors.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="src\commands\sql\check-counters-sums.sql" />
@@ -156,6 +196,12 @@
       <Project>{9B63118E-2711-4F95-B9FF-47E3142CC986}</Project>
       <Name>RussianElectionResultsScraper.Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\commands\sql\CheckCountersSumsSQL.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>CheckCountersSumsSQL.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
