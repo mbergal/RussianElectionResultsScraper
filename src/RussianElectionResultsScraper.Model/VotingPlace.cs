@@ -6,7 +6,7 @@ using log4net;
 
 namespace RussianElectionResultsScraper.Model
     {
-    public enum Type { CIK = 1, Region = 2, TIK = 3, OIK = 4, UIK = 5 };
+    public enum Type { CIK = 1, Region = 2, RIK = 3, TIK = 4, OIK = 5, UIK = 6 };
 
     public class CandidateResult
         {
@@ -23,11 +23,42 @@ namespace RussianElectionResultsScraper.Model
             Results = new HashedSet<VotingResult>();
             Children  = new HashedSet<VotingPlace>();
             }
+
         public virtual string       Id { get; set; }
         public virtual string       Name { get; set; }
         public virtual string       FullName { get; set; }
         public virtual string       Uri { get; set; }
-        public virtual Type         Type { get; set; }
+        public virtual Type         Type
+            {
+            get {
+                if ( this.Parent != null )
+                    {
+                    if ( this.Name.StartsWith("УИК") ) 
+                        return Type.UIK;
+                    else
+                        switch( this.Parent.Type )
+                            {
+                            case Type.CIK:
+                                    {
+                                    return this.Results.Any(x => !x.IsCalculated) 
+                                        ? Type.RIK
+                                        : Type.Region;
+                                    }
+                            case Type.Region:   return Type.TIK;
+                            case Type.RIK:      return Type.TIK;
+                            case Type.TIK:      return Type.OIK;
+                            case Type.OIK:      return Type.UIK;
+                            case Type.UIK:
+                                throw new Exception("UIK cannot be a parent of anything");
+                            default:
+                                throw new Exception("Unknown type of parent");
+                            }
+                    }
+                else
+                    return Type.CIK;
+                }
+            set {}
+            }
         public virtual int          NumberOfErrors 
             { 
             get {
@@ -43,7 +74,7 @@ namespace RussianElectionResultsScraper.Model
                 this._numberOfErrors = value;
                 }
             }
-        public virtual string Path
+        public virtual string       Path
             {
             get { return Parent != null ? Parent.Path + Parent.Id + ":" : "";  }
             set { }
@@ -59,16 +90,23 @@ namespace RussianElectionResultsScraper.Model
             return counter != null ? counter.Value : (int?) null;
             }
 
-       public virtual VotingPlace          SetCounter( string counter, int value, string message = null )
+        public virtual void                 RemoveCounter( string counter )
+            {
+            var result = this.Results.FirstOrDefault(x => x.Counter == counter);
+            this.Results.Remove(result);
+            }
+
+       public virtual VotingPlace          SetCounter( string counter, int value, string message = null, bool isCalculated = false )
             {
             var votingResult = this.Results.FirstOrDefault(x => x.Counter == counter );
             if (votingResult != null)
                 {
                 votingResult.Value = value;
                 votingResult.Message = message;
+                votingResult.IsCalculated = isCalculated;
                 }
             else
-                this.Results.Add(new VotingResult() { Counter = counter, Value = value, Message = message });
+                this.Results.Add(new VotingResult() { VotingPlace = this, Counter = counter, Value = value, Message = message } );
             return this;
             }
 
@@ -283,7 +321,9 @@ namespace RussianElectionResultsScraper.Model
             get {
                 try
                     {
-                    return (double)(100.00 * (this.NumberOfBallotsIssuedToVotersWhoVotedEarly + this.NumberOfBallotsIssuedToVoterAtPollStation + this.NumberOfBallotsIssuedToVotersOutsideOfPollStation ) / this.NumberOfVotersInVoterList);
+                    return this.NumberOfVotersInVoterList != 0 
+                        ? (double)(100.00 * (this.NumberOfBallotsIssuedToVotersWhoVotedEarly + this.NumberOfBallotsIssuedToVoterAtPollStation + this.NumberOfBallotsIssuedToVotersOutsideOfPollStation ) / this.NumberOfVotersInVoterList)
+                        : 0.0;
                     }
                 catch (Exception e)
                     {
@@ -308,12 +348,24 @@ namespace RussianElectionResultsScraper.Model
                 }
             }
 
-        public virtual void UpdateCountersFromChildren()
+        // TODO
+        // Needs test
+
+        public virtual void UpdateCountersFromChildren( )
             {
-            this.Election.Counters.ToList().ForEach(x =>
-                {
-                this.SetCounter(x.Counter, (int) this.Children.Select( y=>y.Counter(x.Counter)).Sum(), "Missing in original data"  );
-                });
+            this.Results.RemoveAll(this.Results.Where(x => x.IsCalculated).ToList() );
+            var counterList = this.Children.SelectMany( c => c.Results.Select(x => x.Counter)).Distinct().ToList();
+            counterList.ForEach( x => this.SetCounter( 
+                                            counter:  x, 
+                                            value:    (int) this.Children.Select( y=>y.Counter(x)).Sum(), 
+                isCalculated: true
+                ));
+            }
+
+        public virtual void Check()
+            {
+            foreach( var c in this.Children )
+                c.Check();
             }
 
         }
