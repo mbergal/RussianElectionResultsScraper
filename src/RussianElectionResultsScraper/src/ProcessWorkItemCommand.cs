@@ -19,6 +19,7 @@ namespace RussianElectionResultsScraper
         private readonly IPageCache         _pageCache;
         private readonly WorkQueueService   _workQueue;
         private readonly Election           _election;
+        private static   object             _transactionLock = new object();
 
         public ProcessWorkItemCommand( Election election, WorkItem workItem, PageParser pageParser, ISessionFactory sessionFactory, IPageCache pageCache, WorkQueueService workQueue )
             {
@@ -99,58 +100,43 @@ namespace RussianElectionResultsScraper
             log.Info("ProcessResultPage:", () =>
                 {
                 using( ISession session = this._sessionFactory.OpenSession() )
-                using( ITransaction transaction = session.BeginTransaction() )
                     {
-                    if (this._workItem.UpdateCounters)
-                        {
-                        session.Update(this._election);
+//                    if (this._workItem.UpdateCounters)
+//                        {
+                        var election = session.Get<Election>(this._election.Id);
                         result.CounterDescriptions.ForEach(x =>
                                                             {
                                                             var counterDescription = this._election.Counter( x.Key);
-                                                            this._election.SetCounter( counter: x.Key, name: x.Value.counterName);
+                                                            election.SetCounter(counter: x.Key, name: x.Value.counterName);
                                                             });
                         
-                        }
+//                        }
                     var vp = session.Get<VotingPlace>(result.Id);
                     if ( vp != null )
                         {
-                        if ( vp.Election.Id != this._election.Id )
-                            throw new Exception( string.Format( "Id conflict: {0} in {1} and {2}", result.Id, this._election.Id, vp.Election.Id ) );
+                        if ( vp.Election.Id != election.Id )
+                            throw new Exception(string.Format("Id conflict: {0} in {1} and {2}", result.Id, election.Id, vp.Election.Id));
                         }
                     else 
                         vp = new VotingPlace();
-                    vp.Election = this._election;
-                    vp.Id = result.Id;
-                    vp.Name = result.Name;
-                    vp.Uri = result.Uri;
-                    vp.Parent = workItem.ParentVotingPlaceId != null
-                        ? session.Get<VotingPlace>( workItem.ParentVotingPlaceId )
-                        : null;
-                    if (vp.Parent != null)
-                        vp.Parent.Children.Add(vp);
-                    else
-                        vp.Election.Root = vp;
-                    vp.FullName = result.FullName;
-                    switch ( result.Hierarchy.Count )
-                        {
-                        case 1: vp.Type = Type.CIK; break;
-                        case 2: vp.Type = Type.Region; break;
-                        case 3: vp.Type = Type.TIK; break;
-                        case 4: 
-                        case 5: 
-                            vp.Type = result.Children != null ? Type.OIK : Type.UIK; 
-                            break;    
-                        }
 
-                    var votingResults = result.CounterValues.Select(entry => new VotingResult() { Counter = entry.Key, VotingPlace = vp, Value = entry.Value }).ToList();
-                    // TODO: Delete non-existing results
-                    foreach (var votingResult in votingResults)
-                        {
-                        vp.SetCounter( votingResult.Counter, votingResult.Value );
-                        }
-                    
+                    vp.Election = election;
+
+                    vp.UpdateFrom( 
+                        resultPage: result, 
+                        parent:     workItem.ParentVotingPlaceId != null
+                                        ? session.Get<VotingPlace>(workItem.ParentVotingPlaceId)
+                                        : null );
+
                     session.Save(vp);
-                    transaction.Commit();
+                    if ( session.IsDirty() )
+                        lock ( _transactionLock )
+                        using (ITransaction transaction = session.BeginTransaction())
+                            {
+                            transaction.Commit();    
+                            }
+
+                    
 
 //                    Interlocked.Increment(ref _numOfVotingPlaces);
 //                    Interlocked.Add(ref _numOfVotingResults, vp.Results.Count());
@@ -170,7 +156,33 @@ namespace RussianElectionResultsScraper
                 this._workQueue.Add(new WorkItem() { Uri = result.RedirectsTo, ParentVotingPlaceId = workItem.ParentVotingPlaceId, Recursive = workItem.Recursive } );
                 });
             }
+    }
 
-    }    
+    public static class VotingPlaceEx
+        {
+        public static void UpdateFrom( this VotingPlace votingPlace, ResultPage resultPage, VotingPlace parent )
+            {
+            var vp = votingPlace;
+            var result = resultPage;
+            vp.Id = result.Id;
+            vp.Name = result.Name;
+            vp.Uri = result.Uri;
+            vp.Parent = parent;
+            if (vp.Parent != null)
+                vp.Parent.Children.Add(vp);
+            else
+                vp.Election.Root = vp;
+            vp.FullName = result.FullName;
 
+            var votingResults = result.CounterValues.Select(entry => new VotingResult() { Counter = entry.Key, VotingPlace = vp, Value = entry.Value }).ToList();
+
+            var newCounters = votingResults.Select(x => x.Counter);
+            var existingCounters = vp.Results.Select(x => x.Counter);
+            var countersToDelete = existingCounters.Except( newCounters ).ToList();
+            countersToDelete.ForEach( vp.RemoveCounter );
+            votingResults.ForEach( x=>vp.SetCounter(x.Counter, x.Value) );
+
+            }
+        }
+    
     }
