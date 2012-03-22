@@ -39,13 +39,27 @@ namespace RussianElectionResultsScraper.Model
                 }
             set
                 {
+                var prevMessage = this._message;
                 this._message = value;
-                if ( this.VotingPlace != null )
-                    this.VotingPlace.NumberOfErrors += string.IsNullOrWhiteSpace(this._message) ? -1 : 1;
+                if (this.VotingPlace != null)
+                    {
+                    if ( string.IsNullOrWhiteSpace(this._message) && !string.IsNullOrWhiteSpace(prevMessage) )
+                        this.VotingPlace.NumberOfErrors--;
+                    else if ( !string.IsNullOrWhiteSpace(this._message) && string.IsNullOrWhiteSpace(prevMessage))
+                        this.VotingPlace.NumberOfErrors++;
+                    }
+                    
                 else
-                    throw new Exception( "VotingResult has to have associated VotingPlace" );
+                    throw new Exception("VotingResult has to have associated VotingPlace");
                 }
             }
+
+        public virtual  bool        IsCalculated
+            {
+            get;
+            set;
+            }
+
         private string              _message;
         }
     }
