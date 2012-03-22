@@ -6,7 +6,7 @@ using log4net;
 
 namespace RussianElectionResultsScraper.Model
     {
-    public enum Type { CIK = 1, Region = 2, RIK = 3, TIK = 4, OIK = 5, UIK = 6 };
+    public enum Type { CIK = 1, Summary = 2, RIK = 3, TIK = 4, OIK = 5, UIK = 6 };
 
     public class CandidateResult
         {
@@ -33,26 +33,26 @@ namespace RussianElectionResultsScraper.Model
             get {
                 if ( this.Parent != null )
                     {
-                    if ( this.Name.StartsWith("УИК") ) 
+                    if (this.Name.StartsWith("УИК"))
                         return Type.UIK;
+                    if ( this.Results.All( x => x.IsCalculated ) )
+                        return Type.Summary;
                     else
-                        switch( this.Parent.Type )
+                        {
+                        var parentType = this.Parent.Type != Type.Summary ? this.Parent.Type : this.Parent.Parent.Type;
+
+                        switch (parentType)
                             {
-                            case Type.CIK:
-                                    {
-                                    return this.Results.Any(x => !x.IsCalculated) 
-                                        ? Type.RIK
-                                        : Type.Region;
-                                    }
-                            case Type.Region:   return Type.TIK;
-                            case Type.RIK:      return Type.TIK;
-                            case Type.TIK:      return Type.OIK;
-                            case Type.OIK:      return Type.UIK;
+                            case Type.CIK: return Type.RIK;
+                            case Type.RIK: return Type.TIK;
+                            case Type.TIK: return Type.OIK;
+                            case Type.OIK: return Type.UIK;
                             case Type.UIK:
                                 throw new Exception("UIK cannot be a parent of anything");
                             default:
                                 throw new Exception("Unknown type of parent");
                             }
+                        }
                     }
                 else
                     return Type.CIK;
@@ -106,7 +106,7 @@ namespace RussianElectionResultsScraper.Model
                 votingResult.IsCalculated = isCalculated;
                 }
             else
-                this.Results.Add(new VotingResult() { VotingPlace = this, Counter = counter, Value = value, Message = message } );
+                this.Results.Add(new VotingResult() { VotingPlace = this, Counter = counter, Value = value, Message = message, IsCalculated = isCalculated } );
             return this;
             }
 
