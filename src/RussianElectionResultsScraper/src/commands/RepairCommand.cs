@@ -14,6 +14,7 @@ namespace RussianElectionResultsScraper
         public RepairCommand()
             {
             this.IsCommand("repair", "Repair scraped data");
+            this.HasElectionOption();
             }
 
         public override int Run(string[] args)
@@ -26,7 +27,7 @@ namespace RussianElectionResultsScraper
                 int batchNumber = 0;
                 while( true )
                     {
-                    var q = session.Query<VotingPlace>().Skip(batchNumber * batchSize).Take(batchSize).FetchMany(x => x.Results);
+                    var q = session.Query<VotingPlace>().Where( x=>x.Election.Id == this._electionId ).OrderBy( x=>x.Id).Skip(batchNumber * batchSize).Take(batchSize).FetchMany(x => x.Results);
                     bool reachedEnd = true;
                     foreach (VotingPlace r in q )
                         {
