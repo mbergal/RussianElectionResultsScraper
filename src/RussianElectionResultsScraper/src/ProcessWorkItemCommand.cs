@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using NHibernate;
 using RussianElectionResultsScraper.Model;
 using log4net;
-using Type = RussianElectionResultsScraper.Model.Type;
 using NHibernate.Linq;
 
 namespace RussianElectionResultsScraper
@@ -19,9 +18,10 @@ namespace RussianElectionResultsScraper
         private readonly IPageCache         _pageCache;
         private readonly WorkQueueService   _workQueue;
         private readonly Election           _election;
-        private static   object             _transactionLock = new object();
+        private static readonly object      _transactionLock = new object();
+        private Action<VotingPlace>         _completionCallback;
 
-        public ProcessWorkItemCommand( Election election, WorkItem workItem, PageParser pageParser, ISessionFactory sessionFactory, IPageCache pageCache, WorkQueueService workQueue )
+        public ProcessWorkItemCommand( Election election, WorkItem workItem, PageParser pageParser, ISessionFactory sessionFactory, IPageCache pageCache, WorkQueueService workQueue, Action<VotingPlace> completionCallback )
             {
             this._workItem = workItem;
             this._pageParser = pageParser;
@@ -29,6 +29,7 @@ namespace RussianElectionResultsScraper
             this._pageCache = pageCache;
             this._workQueue = workQueue;
             this._election = election;
+            this._completionCallback = completionCallback;
             }
 
         public void Execute()
@@ -74,7 +75,6 @@ namespace RussianElectionResultsScraper
                                 {
                                 log.Error( string.Format( "Could not process uri \"{0}\"", this._workItem.Uri ), e );
                                 break;
-                                System.Diagnostics.Debugger.Break();
                                 }
                                 
                             }
@@ -136,11 +136,9 @@ namespace RussianElectionResultsScraper
                             transaction.Commit();    
                             }
 
-                    
 
-//                    Interlocked.Increment(ref _numOfVotingPlaces);
-//                    Interlocked.Add(ref _numOfVotingResults, vp.Results.Count());
-
+                    _completionCallback( vp );
+                
                     if (workItem.Recursive && result.Children != null)
                         foreach (var a in result.Children)
                             this._workQueue.Add(new WorkItem() { Uri = a.Item1, ParentVotingPlaceId = vp.Id, Recursive = workItem.Recursive });
