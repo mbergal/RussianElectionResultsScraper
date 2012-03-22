@@ -30,6 +30,7 @@ namespace RussianElectionResultsScraper
     public abstract class BaseConsoleCommand : ConsoleCommand
         {
         protected string _configFile;
+        protected string _electionId;
 
         public override int Run(string[] args)
             {
@@ -71,7 +72,11 @@ namespace RussianElectionResultsScraper
             {
             this.HasRequiredOption("c|config=", "<config-file>", configFile => this._configFile = configFile);
             }
-                
+
+        public void HasElectionOption()
+            {
+            this.HasRequiredOption("e|election=", "<election-id>", electionId => this._electionId = electionId );
+            }
 
         private ISessionFactory ConfigurePageCacheDatabase()
             {
