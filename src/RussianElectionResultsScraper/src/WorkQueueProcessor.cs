@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using NHibernate;
@@ -17,10 +18,9 @@ namespace RussianElectionResultsScraper
         private readonly PageParser _pageParser;
         private readonly ISessionFactory _sessionFactory;
         private readonly IPageCache      _pageCache;
-        private int _numOfVotingPlaces;
-        private int _numOfVotingResults;
         private readonly Election _election;
         private readonly int _maxworkers;
+        private Progress _progress;
 
         public WorkQueueProcessor(Election election, WorkQueueService workQueueService, PageParser pageParser, ISessionFactory sessionFactoryFactory, IPageCache pageCache, ElectionConfig electionConfig, int maxworkers )
             {
@@ -29,9 +29,8 @@ namespace RussianElectionResultsScraper
             this._sessionFactory = sessionFactoryFactory;
             this._pageCache = pageCache;
             this._election = election;
-            this._numOfVotingPlaces = 0;
-            this._numOfVotingResults = 0;
             this._maxworkers = maxworkers;
+            this._progress = new Progress();
             }
 
         public void Run()
@@ -46,8 +45,8 @@ namespace RussianElectionResultsScraper
                 using (ISession session = this._sessionFactory.OpenSession())
                     {
                     Console.WriteLine("Queue: {0}", this._workQueueService.Count());
-                    Console.WriteLine("Voting Places:  {0}", this._numOfVotingPlaces );
-                    Console.WriteLine("Voting Results: {0}", this._numOfVotingResults );
+                    Console.WriteLine("Voting Places:  {0}", this._progress.ProcessedVotingPlaces );
+                    Console.WriteLine("Voting Results: {0}", this._progress.ProcessedVotingResults );
                     Console.WriteLine();
                     TaskEx.Delay( 5000, CancellationToken.None ).ContinueWith( t => this.Watch() );
                     }
@@ -63,10 +62,45 @@ namespace RussianElectionResultsScraper
 
         void ProcessWorkItem(WorkItem workItem)
             {
-            new ProcessWorkItemCommand( _election, workItem, _pageParser, _sessionFactory, _pageCache, _workQueueService ).Execute();
+            new ProcessWorkItemCommand( 
+                    _election, 
+                    workItem, 
+                    _pageParser, 
+                    _sessionFactory, 
+                    _pageCache, 
+                    _workQueueService, 
+                    place => this._progress.Processed( place ) ).Execute();
             }
 
     }
 
+    public class Progress
+        {
+        private int _processedVotingPlaces;
+        private int _processedVotingResults;
+
+        public Progress()
+            {
+            }
+
+        public int ProcessedVotingPlaces
+            {
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            get { return this._processedVotingPlaces;  }
+            }
+
+        public int ProcessedVotingResults
+            {
+            [MethodImpl(MethodImplOptions.Synchronized)]
+            get { return this._processedVotingResults;  }
+            }
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public void Processed( VotingPlace vp )
+            {
+            this._processedVotingPlaces += 1;
+            this._processedVotingResults += vp.Results.Count;
+            }
+        }
 
 }
