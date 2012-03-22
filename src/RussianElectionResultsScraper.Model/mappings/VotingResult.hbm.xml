@@ -11,24 +11,34 @@
     <property name="Counter" length="3"/>
     <property name="Value"/>
     <property name="Percents"/>
+    <property name="IsCalculated"/>
     <many-to-one name="VotingPlace" column="VotingPlaceId"/>
     <property name="_message" length="255" access="field" column="Message"/>
   </class>
 
   <database-object>
     <create>
-      CREATE NONCLUSTERED INDEX [_dta_index_VotingResult_36_557245040__K4_1_2_3] ON [dbo].[VotingResult]
-        ( [VotingPlaceId] ASC )
+      CREATE NONCLUSTERED INDEX [IX_VotingResult_VotingPlaceId] ON [dbo].[VotingResult]
+      (
+      [VotingPlaceId] ASC
+      )
       INCLUDE ( [Id],
       [Counter],
-      [Value]) WITH (SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF) ON [PRIMARY]
-      CREATE NONCLUSTERED INDEX index3
-      ON [dbo].[VotingResult] ([Counter],[VotingPlaceId])
-      INCLUDE ([Value])
+      [Value]) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+      GO
+
+
+
+      CREATE NONCLUSTERED INDEX [IX_VotingResult_Counter_VotingPlaceId] ON [dbo].[VotingResult]
+      (
+      [Counter] ASC,
+      [VotingPlaceId] ASC
+      )
+      INCLUDE ( [Value]) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
+
 
     </create>
     <drop>
-      DROP INDEX [_dta_index_VotingResult_36_557245040__K4_1_2_3] ON [dbo].[VotingResult]
     </drop>
     <dialect-scope name="NHibernate.Dialect.MsSql2000Dialect"/>
     <dialect-scope name="NHibernate.Dialect.MsSql2005Dialect"/>

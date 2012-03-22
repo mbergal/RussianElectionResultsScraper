@@ -2,8 +2,7 @@
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
     namespace="RussianElectionResultsScraper.Model" assembly="RussianElectionResultsScraper.Model">
 
-  <class name="VotingPlace" table="VotingPlace">
-
+  <class name="VotingPlace" table="VotingPlace" dynamic-update="true">
     <id name="Id" column="Id">
       <column name="Id" length="32"/>
     </id>
@@ -52,21 +51,22 @@
   </class>
   <database-object>
     <create>
-      CREATE STATISTICS [stat_1] ON [dbo].[VotingPlace]([Id], [Type])
-      CREATE STATISTICS [stat_2] ON [dbo].[VotingPlace]([Path], [Id], [Type])
-      CREATE STATISTICS [stat_3] ON [dbo].[VotingResult]([VotingPlaceId], [Counter])
-      CREATE NONCLUSTERED INDEX [index_1] ON [dbo].[VotingPlace]
-      (
-      [Path] ASC,
-      [Id] ASC
-      ) WITH ( SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF) ON [PRIMARY]
+      CREATE STATISTICS [ST_VotingPlace_Id_Type] ON [dbo].[VotingPlace]([Id], [Type])
+      CREATE STATISTICS [ST_VotingPlace_Path_Id_Type] ON [dbo].[VotingPlace]([Path], [Id], [Type])
+      CREATE STATISTICS [ST VotingResult_VotingPlaceId_Counter] ON [dbo].[VotingResult]([VotingPlaceId], [Counter])
+      CREATE NONCLUSTERED INDEX [IX_VotingPlace_Path_Id] ON [dbo].[VotingPlace]
+        (
+        [Path] ASC,
+        [Id] ASC
+        ) WITH ( SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF) ON [PRIMARY]
 
       USE [erp]
       GO
 
-      CREATE NONCLUSTERED INDEX [index_2] ON [dbo].[VotingPlace]
+      CREATE CLUSTERED INDEX [IX_VotingPlace_ParentId_Id] ON [dbo].[VotingPlace]
         (
-        [ParentId] ASC
+        [ParentId] ASC,
+        [Id]
         ) WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
         
       GO
