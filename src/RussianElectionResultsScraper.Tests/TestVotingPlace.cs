@@ -17,7 +17,7 @@ namespace TestElectionResultsScraper
             }
 
         [Test]
-        public void ShouldBeAbleToCalculateCountersFromCountersInChildren()
+        public void Should_be_able_to_calculate_counters_from_counters_in_children()
             {
             var election = new Election();
 
@@ -31,12 +31,6 @@ namespace TestElectionResultsScraper
             Assert.AreEqual( 101, vp.Counter( "1" ) );
             Assert.AreEqual(202, vp.Counter( "2") );
             }
-
-//        [Test]
-//        public void ShouldBeAbleToPromoteCountersAInUIKtoCounterDinParent
-//            {
-//            
-//            }
 
         [Test]
         public void ShouldUpdateNumberOfErrorsInParentIfOwnNumberOfErrorsChanges()
@@ -54,16 +48,43 @@ namespace TestElectionResultsScraper
             }
 
         [Test]
-        public void ShouldBeAbleToDeterminePlaceType()
+        public void Should_be_able_to_determine_place_type_for_CIK()
             {
             var cik = new VotingPlace();
-            var vologodskayaObl = new VotingPlace() { Name = "Вологодская область", Parent = cik }.SetCounter( "1", 1 );
-            var uik404 = new VotingPlace() { Name = "УИК №404", Parent = vologodskayaObl };
-            cik.Children.Add(vologodskayaObl);
-            Assert.AreEqual( Type.CIK, cik.Type );
-            Assert.AreEqual( Type.RIK, vologodskayaObl.Type );
-            Assert.AreEqual( Type.UIK, uik404.Type );
+            Assert.AreEqual(Type.CIK, cik.Type);
             }
+
+        [Test]
+        public void Should_be_able_to_determine_place_type_for_Region_under_CIK()
+            {
+            var cik = new VotingPlace() { Name = "ЦИК России" };
+            var region = new VotingPlace() { Parent = cik, Name = "Город Санкт-Петербург" }.SetCounter("1", 1);
+            Assert.AreEqual(Type.RIK, region.Type);
+            }
+
+        [Test]
+        public void Should_be_able_to_determine_place_type_for_summary_under_CIK()
+            {
+            var cik = new VotingPlace() { Name = "ЦИК России" };
+            var region = new VotingPlace() { Parent = cik, Name = "Город Санкт-Петербург" };
+            Assert.AreEqual(Type.Summary, region.Type);            
+            }
+
+        [Test]
+        public void Should_be_able_to_determine_place_type_for_subregion_under_CIK_and_region_summary()
+            {
+            var cik = new VotingPlace() { Name = "ЦИК России" };
+            var region = new VotingPlace() { Parent = cik, Name = "Город Санкт-Петербург" };
+            var subregion = new VotingPlace() { Parent = region, Name = "subregion" }.SetCounter("1", 1);
+            Assert.AreEqual( Type.RIK, subregion.Type );
+            }
+
+//            var vologodskayaObl = new VotingPlace() { Name = "Вологодская область", Parent = cik }.SetCounter( "1", 1 );
+//            var uik404 = new VotingPlace() { Name = "УИК №404", Parent = vologodskayaObl };
+//            cik.Children.Add(vologodskayaObl);
+//            Assert.AreEqual( Type.RIK, vologodskayaObl.Type );
+//            Assert.AreEqual( Type.UIK, uik404.Type );
+//            }
 
         }
     }
