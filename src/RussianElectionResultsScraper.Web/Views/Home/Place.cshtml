@@ -2,6 +2,7 @@
 @using MvcApplication2.Infrastructure
 @using RussianElectionResultScraper.Web
 @using MvcApplication2.Models
+@using RussianElectionResultScraper.Web.Infrastructure
 
 @model VotingResultModel
            
@@ -28,6 +29,8 @@
                     <span>/</span>
                     }
                 }
+                
+            ( @Model.currentRegion.Type )
         </h2>
         <div class="tabs">
             <ul>
@@ -119,7 +122,7 @@
                                             </td>
                                         }
                                         <td class="graph">
-                                            <img class="small-graph" src="/graph/polling-station-results/@(r.Id).jpg?width=60&height=50"/>
+                                            <img class="small-graph" alt="" src="/graph/polling-station-results/@(r.Id).jpg?width=60&height=50"/>
                                         </td>
                                     </tr>
                                 }
@@ -139,15 +142,14 @@
                                 </tr>
                                 
                                 @foreach (var counter in Model.currentRegion.Results)
-                                {
+                                    {
                                     <tr>
                                         <td>@counter.Counter</td>
                                         <td>@counter.Description</td>
                                         <td class="value">@counter.Value</td>
-                                        <td>@counter.Message</td>
+                                        <td>@Html.CounterMessage( counter.Message )</td>
                                     </tr>
-                                
-                                }
+                                    }
                             </table>
                         </div>
                     }

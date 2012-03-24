@@ -38,7 +38,7 @@ namespace RussianElectionResultScraper.Web
 
         
 
-            return View( new VotingResultModel( main, tab ) );
+            return View( new VotingResultModel( main, tab, s1=> this._sessionFactory.GetCurrentSession().Get<VotingPlace>( s1 ) ) );
             }
 
         public virtual ActionResult Footer()

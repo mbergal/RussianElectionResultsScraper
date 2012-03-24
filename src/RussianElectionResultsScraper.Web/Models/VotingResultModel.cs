@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Web.Mvc;
 using RussianElectionResultScraper.Web;
+using RussianElectionResultScraper.Web.Infrastructure;
 using RussianElectionResultsScraper.Model;
 using Type = RussianElectionResultsScraper.Model.Type;
 
@@ -30,11 +29,13 @@ namespace MvcApplication2.Models
         private readonly VotingPlace _currentRegion;
         public VotingResultSummaryModel Summary;
         private readonly HomeController.Tabs _tab;
+        private Func<string, VotingPlace> _votingPlaceFactory;
 
-        public VotingResultModel( VotingPlace currentRegion, HomeController.Tabs? tab )
+        public VotingResultModel( VotingPlace currentRegion, HomeController.Tabs? tab, Func<string,VotingPlace> votingPlaceFactory  )
             {
             _currentRegion = currentRegion;
             _regions = currentRegion.Children.OrderBy(x => x.Name);
+            _votingPlaceFactory = votingPlaceFactory;
             this._tab = tab ?? HomeController.Tabs.summary;
             }
 
@@ -76,12 +77,12 @@ namespace MvcApplication2.Models
 
         public VotingPlaceLine currentRegion
             {
-            get { return new VotingPlaceLine( _currentRegion ); }
+            get { return new VotingPlaceLine( _currentRegion, _votingPlaceFactory ); }
             }
 
         public IEnumerable<VotingPlaceLine> regions
             {
-            get { return _regions.Select( x=>new VotingPlaceLine( x ) ); }
+            get { return _regions.Select( x=>new VotingPlaceLine( x, _votingPlaceFactory ) ); }
             }
 
         public bool ShowDetails
@@ -111,22 +112,25 @@ namespace MvcApplication2.Models
         {
         }
 
+
     public class CounterLine
         {
-        public string Counter;
-        public string Description;
-        public string Value;
-        public string Message;
+        public string               Counter;
+        public string               Description;
+        public string               Value;
+        public ParameterizedString  Message;
         }
 
 
     public class VotingPlaceLine
         {
-        private readonly VotingPlace _votingPlace;
+        private readonly VotingPlace        _votingPlace;
+        private readonly MessageParser      _messageParser;
 
-        public VotingPlaceLine( VotingPlace votingPlace )
+        public VotingPlaceLine( VotingPlace votingPlace, Func<string,VotingPlace> votingPlaceFactory )
             {
             this._votingPlace = votingPlace;
+            this._messageParser = new MessageParser( votingPlaceFactory );
             }
 
         public string Name
@@ -182,10 +186,11 @@ namespace MvcApplication2.Models
                                                                           Counter = x.Counter.ToString(), 
                                                                           Value = x.Value.ToString(), 
                                                                           Description = this._votingPlace.Election.Counter(x.Counter).Name,
-                                                                          Message = x.Message
+                                                                          Message = _messageParser.ParseMessage( x.Message )
                                                                           }).ToList();
                 }
             }
+
         public IEnumerable<CandidateResult> CandidateResults
             {
             get { return this._votingPlace.CandidateResults; }
@@ -212,6 +217,23 @@ namespace MvcApplication2.Models
                 {
                 return this._votingPlace.Results.Count(x => !string.IsNullOrWhiteSpace(x.Message));
                 }
+            }
+
+        public string Type
+            {
+                get { 
+                    switch( this._votingPlace.Type )
+                        {
+                        case RussianElectionResultsScraper.Model.Type.CIK: return "";
+                        case RussianElectionResultsScraper.Model.Type.Summary: return "избирательная комиссия";
+                        case RussianElectionResultsScraper.Model.Type.RIK: return "избирательная комиссия";
+                        case RussianElectionResultsScraper.Model.Type.TIK: return "Территориальная избирательная комиссия";
+                        case RussianElectionResultsScraper.Model.Type.OIK: return "Территориальная избирательная комиссия";
+                        case RussianElectionResultsScraper.Model.Type.UIK: return "Участковая избирательная комиссия";
+                        default:
+                            throw new Exception( "Unknown VotingPlace.Type");
+                        }
+                    }
             }
         }
 }
