@@ -10,15 +10,15 @@ namespace RussianElectionResultsScraper.src.commands
         {
         public InitDatabaseCommand()
             {
-            this.IsCommand("init-database", "Create/recreate necessary objects in database");
+            this.IsCommand("database:init", "Create/recreate necessary objects in database");
+            this.HasConnectionOption();
+            this.HasProviderOption();
             }
 
         public override int Run(string[] args)
             {
-            var lines = new List<string>();
-
-            var schemaExport = new SchemaExport( this.BuildElectionResultsDatabaseConfiguration() );
-            schemaExport.Execute(true, true, false);
+            var runner = new RussianElectionResultsScraper.MigrationRunner.MigrationRunner( this._providerName );
+            runner.MigrateUp( this._connectionString );
             return 0;
             }
         
