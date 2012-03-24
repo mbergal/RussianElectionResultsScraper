@@ -34,6 +34,11 @@ namespace RussianElectionResultScraper.Web.Controllers {
             return RedirectToRoute(callInfo.RouteValueDictionary);
         }
 
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.ActionResult HttpError500() {
+            return new T4MVC_ActionResult(Area, Name, ActionNames.HttpError500);
+        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ErrorController Actions { get { return MVC.Error; } }
@@ -48,6 +53,7 @@ namespace RussianElectionResultScraper.Web.Controllers {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass {
             public readonly string PageNotFound = "PageNotFound";
+            public readonly string HttpError500 = "HttpError500";
         }
 
 
@@ -56,6 +62,7 @@ namespace RussianElectionResultScraper.Web.Controllers {
         public ViewNames Views { get { return s_views; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ViewNames {
+            public readonly string HttpError500 = "~/Views/Error/HttpError500.cshtml";
             public readonly string PageNotFound = "~/Views/Error/PageNotFound.cshtml";
         }
     }
@@ -66,6 +73,12 @@ namespace RussianElectionResultScraper.Web.Controllers {
 
         public override System.Web.Mvc.ActionResult PageNotFound() {
             var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.PageNotFound);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.ActionResult HttpError500(System.Exception error) {
+            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.HttpError500);
+            callInfo.RouteValueDictionary.Add("error", error);
             return callInfo;
         }
 

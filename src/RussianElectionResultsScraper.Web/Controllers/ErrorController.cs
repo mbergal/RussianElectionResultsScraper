@@ -15,5 +15,10 @@ namespace RussianElectionResultScraper.Web.Controllers
             {
             return View();
             }
+
+        public virtual ActionResult HttpError500( Exception error )
+            {
+            return View( new ErrorModel( error ));
+            }
         }
 }
