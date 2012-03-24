@@ -1,44 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using RussianElectionResultsScraper.Model;
-using RussianElectionResultsScraper.Model.Validation;
-using Type = RussianElectionResultsScraper.Model.Type;
-
+﻿
 namespace TestElectionResultsScraper
-{
+    {
+    using System.Collections.Generic;
+    using System.Linq;
+    using NUnit.Framework;
+    using RussianElectionResultsScraper.Model;
+    using RussianElectionResultsScraper.Model.Validation;
+    using Type = RussianElectionResultsScraper.Model.Type;
+
     [TestFixture]
-    class TestValidationVotingPlace
+    public class TestValidationVotingPlace
         {
-        [Test]
-        public void ShouldIdentifyProblemWhenParentCountersDoNotMatchChildCounters()
-            {
-            var parent = Factory.MakeVotingPlace( counters: new [] { Factory.MakeVotingResult( "1", 3 ) } );
-            Factory.MakeVotingPlace( parent: parent, counters: new [] { Factory.MakeVotingResult( "1", 1 ) } );
-            Factory.MakeVotingPlace( parent: parent, counters: new[] { Factory.MakeVotingResult("1", 1) });
-
-            var problems = parent.Check().ToList();
-            Assert.That( 1, Is.EqualTo(problems.Count()) );
-            Assert.That( problems[0], Is.InstanceOf<ParentChildrenSumMismatch>() );
-
-            Factory.MakeVotingPlace(parent: parent, counters: new[] { Factory.MakeVotingResult("1", 1) });
-            problems = parent.Check().ToList();
-            Assert.That( 0, Is.EqualTo(problems.Count()));
-            }
-
-        [Test]
-        public void Should_identify_problem_when_parent_counter_does_not_exist()
-            {
-            var parent = Factory.MakeVotingPlace();
-            Factory.MakeVotingPlace(parent: parent, counters: new[] { Factory.MakeVotingResult("1", 1) });
-            Factory.MakeVotingPlace(parent: parent, counters: new[] { Factory.MakeVotingResult("1", 1) });
-
-            var problems = parent.Check().ToList();
-            Assert.That(problems.Count, Is.EqualTo( 2 ));
-            Assert.That(problems[0], Is.InstanceOf<ChildCounterIsMissingInParent>());
-            }
 
         [Test]
         public void Should_correctly_determine_child_counter_name_for_CIK()
@@ -68,20 +40,20 @@ namespace TestElectionResultsScraper
         public void Should_correctly_determine_child_counter_name_for_RIK()
             {
             var cik = new ValidationVotingPlace() { Type = Type.RIK };
-            Assert.AreEqual( Counters.А, cik.ChildCounter( Counters.Д ) );
-            Assert.AreEqual( Counters.Б, cik.ChildCounter( Counters.Е ) );
-            Assert.AreEqual( Counters.В, cik.ChildCounter( Counters.Ж ) );
-            Assert.AreEqual( Counters.Г, cik.ChildCounter( Counters.З ) );
+            Assert.AreEqual( Counters.а, cik.ChildCounter( Counters.д ) );
+            Assert.AreEqual( Counters.б, cik.ChildCounter( Counters.е ) );
+            Assert.AreEqual( Counters.в, cik.ChildCounter( Counters.ж ) );
+            Assert.AreEqual( Counters.г, cik.ChildCounter( Counters.з ) );
             }
 
         [Test]
         public void Should_correctly_determine_child_counter_name_for_TIK()
             {
             var cik = new ValidationVotingPlace() { Type = Type.TIK };
-            Assert.AreEqual( null, cik.ChildCounter( Counters.А ) );
-            Assert.AreEqual( null, cik.ChildCounter( Counters.Б ) );
-            Assert.AreEqual( null, cik.ChildCounter( Counters.В ) );
-            Assert.AreEqual( null, cik.ChildCounter( Counters.Г ) );
+            Assert.AreEqual( null, cik.ChildCounter( Counters.а ) );
+            Assert.AreEqual( null, cik.ChildCounter( Counters.б ) );
+            Assert.AreEqual( null, cik.ChildCounter( Counters.в ) );
+            Assert.AreEqual( null, cik.ChildCounter( Counters.г ) );
             }
 
         }
@@ -90,7 +62,9 @@ namespace TestElectionResultsScraper
     public partial class Factory
         {
         public static ValidationVotingPlace MakeVotingPlace( ValidationVotingPlace               parent = null, 
-                                                             IEnumerable<ValidationVotingResult> counters = null )
+                                                             Type?                               type = null,
+                                                             IEnumerable<ValidationVotingResult> counters = null,
+                                                             ValidationVotingPlace[]             children = null )
             {
             var vp = new ValidationVotingPlace();
             if (parent != null)
@@ -98,6 +72,11 @@ namespace TestElectionResultsScraper
             if ( counters != null )
                 foreach (var c in counters)
                     vp.Results.Add( c.Counter, c );
+            if ( type != null )
+                vp.Type = type.Value;
+            if ( children != null )
+                foreach ( var c in children )
+                    c.Parent = vp;
             return vp;
             }
 
@@ -108,4 +87,4 @@ namespace TestElectionResultsScraper
             }
 
         }
-}
+    }
