@@ -52,8 +52,10 @@
     <Compile Include="Counters.cs" />
     <Compile Include="Election.cs" />
     <Compile Include="CounterDescription.cs" />
-    <Compile Include="ValidationVotingPlace.cs" />
-    <Compile Include="ValidationVotingResult.cs" />
+    <Compile Include="Validation\AbsenteeBallotsCountersMismatch.cs" />
+    <Compile Include="Validation\AbsenteeBallotsCountersMismatchRule .cs" />
+    <Compile Include="Validation\ValidationVotingPlace.cs" />
+    <Compile Include="Validation\ValidationVotingResult.cs" />
     <Compile Include="Validation\ChildCounterIsMissing.cs" />
     <Compile Include="Validation\ChildCounterIsMissingInParent.cs" />
     <Compile Include="Validation\ChildCounterIsMissingInParentRule.cs" />
