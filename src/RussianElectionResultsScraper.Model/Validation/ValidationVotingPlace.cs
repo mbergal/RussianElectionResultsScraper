@@ -8,9 +8,12 @@ namespace RussianElectionResultsScraper.Model
 
     public class ValidationVotingPlace
         {
-        public string                   Id;
-        public string                   ParentId;
-        public Model.Type               Type;
+        public string                                     Id;
+        public string                                     ParentId;
+        public Model.Type                                 Type;
+        public Dictionary<string, ValidationVotingResult> Results = new Dictionary<string, ValidationVotingResult>();
+        public List<ValidationVotingPlace>                Children = new List<ValidationVotingPlace>();
+        private ValidationVotingPlace                     _parent;
 
 
         public ValidationVotingPlace    Parent
@@ -19,14 +22,11 @@ namespace RussianElectionResultsScraper.Model
                 return _parent;
                 }
             set {
-                if (_parent != null) _parent.Children.Remove( this );
-                _parent = value;
-                if (_parent != null) _parent.Children.Add( this );
+                if ( this._parent != null) this._parent.Children.Remove( this );
+                this._parent = value;
+                if ( this._parent != null) this._parent.Children.Add( this );
                 }
             }
-        private ValidationVotingPlace   _parent;
-        public Dictionary<string, ValidationVotingResult> Results = new Dictionary<string, ValidationVotingResult>();
-        public List<ValidationVotingPlace>                Children = new List<ValidationVotingPlace>();
 
         public IList<ValidationRule>                        GetCheckRules()
             {
@@ -35,6 +35,7 @@ namespace RussianElectionResultsScraper.Model
                        new ChildCounterIsMissingRule( this ),
                        new ChildCounterIsMissingInParentRule( this ),
                        new ParentChildrenSumMismatchRule( this ),
+                       new AbsenteeBallotsCountersMismatchRule( this )
                        };
             }
 
@@ -105,38 +106,38 @@ namespace RussianElectionResultsScraper.Model
                                                     {
                                                         { Type.CIK, new Dictionary<string,string>()
                                                                         {
-                                                                        { Counters.И, Counters.Д },
-                                                                        { Counters.К, Counters.Е },
-                                                                        { Counters.Л, Counters.Ж },
-                                                                        { Counters.М, Counters.З }
+                                                                        { Counters.И, Counters.д },
+                                                                        { Counters.К, Counters.е },
+                                                                        { Counters.Л, Counters.ж },
+                                                                        { Counters.М, Counters.з }
                                                                         }
                                                         },
                                                         { Type.Summary, new Dictionary<string,string>()
                                                                         {
-                                                                        { Counters.А, Counters.А },
-                                                                        { Counters.Б, Counters.Б },
-                                                                        { Counters.В, Counters.В },
-                                                                        { Counters.Г, Counters.Г },
-                                                                        { Counters.Д, Counters.Д },
-                                                                        { Counters.Е, Counters.Е },
-                                                                        { Counters.Ж, Counters.Ж },
-                                                                        { Counters.З, Counters.З }
+                                                                        { Counters.а, Counters.а },
+                                                                        { Counters.б, Counters.б },
+                                                                        { Counters.в, Counters.в },
+                                                                        { Counters.г, Counters.г },
+                                                                        { Counters.д, Counters.д },
+                                                                        { Counters.е, Counters.е },
+                                                                        { Counters.ж, Counters.ж },
+                                                                        { Counters.з, Counters.з }
                                                                         }
                                                         },
                                                         { Type.RIK, new Dictionary<string,string>()
                                                                         {
-                                                                        { Counters.Д, Counters.А },
-                                                                        { Counters.Е, Counters.Б },
-                                                                        { Counters.Ж, Counters.В },
-                                                                        { Counters.З, Counters.Г }
+                                                                        { Counters.д, Counters.а },
+                                                                        { Counters.е, Counters.б },
+                                                                        { Counters.ж, Counters.в },
+                                                                        { Counters.з, Counters.г }
                                                                         }
                                                             },
                                                         { Type.TIK, new Dictionary<string,string>()
                                                                         {
-                                                                        { Counters.А, null },
-                                                                        { Counters.Б, null },
-                                                                        { Counters.В, null },
-                                                                        { Counters.Г, null }
+                                                                        { Counters.а, null },
+                                                                        { Counters.б, null },
+                                                                        { Counters.в, null },
+                                                                        { Counters.г, null }
                                                                         }
                                                         }
                                                     };
