@@ -151,6 +151,10 @@
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\HtmlAssetHelper.cs" />
+    <Compile Include="Infrastructure\HtmlCounterMessageHelper.cs" />
+    <Compile Include="Infrastructure\MessageParser.cs" />
+    <Compile Include="Infrastructure\ParameterizedString.cs" />
+    <Compile Include="Models\ErrorModel.cs" />
     <Compile Include="Models\FooterModel.cs" />
     <Compile Include="Properties\AssemblyVersion.cs">
       <AutoGen>True</AutoGen>
@@ -276,10 +280,10 @@
     <Content Include="Views\Home\Place.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\AssemblyVersion.tt">
+    <Content Include="Properties\AssemblyVersion.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>AssemblyVersion.cs</LastGenOutput>
-    </None>
+    </Content>
     <Compile Include="SharedController.generated.cs">
       <DependentUpon>T4MVC.tt</DependentUpon>
     </Compile>
@@ -294,7 +298,9 @@
     </None>
     <None Include="T4MVC.tt.settings.t4" />
     <Content Include="Views\Error\PageNotFound.cshtml" />
+    <Content Include="Views\Error\HttpError500.cshtml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <PropertyGroup>
