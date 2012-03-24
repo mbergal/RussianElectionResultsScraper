@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Web;
-using System.Web.Caching;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.DataVisualization.Charting;
@@ -42,7 +38,7 @@ namespace RussianElectionResultScraper.Web
             if (vp.Type != Type.UIK)
                 {
                 var path = vp.Path + vp.Id + ":%";
-                attendance = _sessionFactory.GetCurrentSession().Connection.Query<double>("select Attendance from VotingPlace where Path like @path and TYPE = 5", new { path = path });
+                attendance = _sessionFactory.GetCurrentSession().Connection.Query<double>("select Attendance from VotingPlace where Path like @path and TYPE = @type", new { path = path, type=Type.UIK });
                 }
             else
                 {
@@ -90,6 +86,64 @@ namespace RussianElectionResultScraper.Web
             m.Seek( 0, SeekOrigin.Begin) ;
             return new FileStreamResult( m, "image/jpg");
             }
+
+        [OutputCache(Duration = int.MaxValue, NoStore = false, Location = OutputCacheLocation.ServerAndClient, VaryByParam = "*", VaryByCustom = "LastUpdateTimestamp")]
+        public virtual FileStreamResult VotersByAttendance(string region, int? width, int? height, bool? showGrid)
+        {
+            log.Info(string.Format("VotersByAttendance: region={0}, width={1}, height={2}, showGrid={3}", region, width, height, showGrid));
+            var vp = _sessionFactory.GetCurrentSession().Get<VotingPlace>(region);
+            IEnumerable<int> attendance;
+            if (vp.Type != Type.UIK)
+                {
+                var path = vp.Path + vp.Id + ":%";
+                attendance = _sessionFactory.GetCurrentSession().Connection.Query<int>("select Attendance, NumberOfBallotsIssuedToVotersWhoVotedEarly + NumberOfBallotsIssuedToVoterAtPollStation + NumberOfBallotsIssuedToVotersOutsideOfPollStation from VotingPlace where Path like @path and TYPE = @type", new { path = path, type = (int)vp.Type });
+                }
+            else
+                {
+                attendance = new List<int>() { vp.NumberOfBallotsIssuedToVotersWhoVotedEarly + vp.NumberOfBallotsIssuedToVoterAtPollStation + vp.NumberOfBallotsIssuedToVotersOutsideOfPollStation ?? 0 };
+                }
+
+            var g = new List<int>(Enumerable.Repeat(0, 101));
+            attendance.ForEach(x =>
+            {
+                g[(int)x]++;
+            });
+            var m = new MemoryStream();
+            var chart = new System.Web.UI.DataVisualization.Charting.Chart();
+            chart.Width = width ?? 600;
+            chart.Height = height ?? 400;
+            var s = new Series("aaaa");
+            s.ChartType = SeriesChartType.Column;
+            for (int i = 0; i <= 100; ++i)
+                s.Points.AddXY(i, g[i]);
+            chart.Series.Add(s);
+            var ca = new ChartArea
+            {
+                AxisX =
+                {
+                    IsStartedFromZero = true,
+                    Minimum = 0,
+                    Maximum = 100,
+                    Interval = 10,
+                    Title = "Явка",
+                    Enabled = showGrid ?? false ? AxisEnabled.True : AxisEnabled.False,
+                    LabelStyle =
+                    {
+                        Format = "{0} %"
+                    }
+                },
+                AxisY =
+                {
+                    Enabled = showGrid ?? false ? AxisEnabled.True : AxisEnabled.False,
+                    Title = "Количество progolosovavshih"
+                }
+            };
+            chart.ChartAreas.Add(ca);
+
+            chart.SaveImage(m);
+            m.Seek(0, SeekOrigin.Begin);
+            return new FileStreamResult(m, "image/jpg");
+        }
 
         [OutputCache(Duration = int.MaxValue, NoStore = false, Location = OutputCacheLocation.ServerAndClient, VaryByParam = "*", VaryByCustom = "LastUpdateTimestamp")]
         public virtual FileStreamResult PollingStationResults(string votingPlaceId, int? width, int? height, bool? showGrid)

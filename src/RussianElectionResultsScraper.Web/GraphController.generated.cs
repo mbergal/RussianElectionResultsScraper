@@ -38,6 +38,11 @@ namespace RussianElectionResultScraper.Web {
         }
         [NonAction]
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
+        public System.Web.Mvc.FileStreamResult VotersByAttendance() {
+            return new T4MVC_FileStreamResult(Area, Name, ActionNames.VotersByAttendance);
+        }
+        [NonAction]
+        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public System.Web.Mvc.FileStreamResult PollingStationResults() {
             return new T4MVC_FileStreamResult(Area, Name, ActionNames.PollingStationResults);
         }
@@ -60,6 +65,7 @@ namespace RussianElectionResultScraper.Web {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass {
             public readonly string PollingStationsByAttendance = "PollingStationsByAttendance";
+            public readonly string VotersByAttendance = "VotersByAttendance";
             public readonly string PollingStationResults = "PollingStationResults";
             public readonly string CandidateResultsByAttendance = "CandidateResultsByAttendance";
         }
@@ -79,6 +85,15 @@ namespace RussianElectionResultScraper.Web {
 
         public override System.Web.Mvc.FileStreamResult PollingStationsByAttendance(string region, int? width, int? height, bool? showGrid) {
             var callInfo = new T4MVC_FileStreamResult(Area, Name, ActionNames.PollingStationsByAttendance);
+            callInfo.RouteValueDictionary.Add("region", region);
+            callInfo.RouteValueDictionary.Add("width", width);
+            callInfo.RouteValueDictionary.Add("height", height);
+            callInfo.RouteValueDictionary.Add("showGrid", showGrid);
+            return callInfo;
+        }
+
+        public override System.Web.Mvc.FileStreamResult VotersByAttendance(string region, int? width, int? height, bool? showGrid) {
+            var callInfo = new T4MVC_FileStreamResult(Area, Name, ActionNames.VotersByAttendance);
             callInfo.RouteValueDictionary.Add("region", region);
             callInfo.RouteValueDictionary.Add("width", width);
             callInfo.RouteValueDictionary.Add("height", height);
