@@ -59,9 +59,9 @@ namespace RussianElectionResultsScraper.Model
                     {
                     ValidationVotingResult counter1 = counter;
                     bool foundProblems = false;
-                    foreach (var rule in GetCheckRules() )
+                    foreach ( var rule in this.GetCheckRules() )
                         {
-                        foreach( var r in rule.Check(counter1) )
+                        foreach ( var r in rule.Check(counter1) )
                             {
                             yield return r;
                             foundProblems = true;
