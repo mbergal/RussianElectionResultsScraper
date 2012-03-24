@@ -181,9 +181,6 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="src\commands\sql\check-counters-sums.sql" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="src\mappings\pagecache\CachedPage.hbm.xml">
       <SubType>Designer</SubType>
     </EmbeddedResource>
