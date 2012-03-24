@@ -8,6 +8,6 @@ namespace RussianElectionResultsScraper.Model.Validation
     public interface IValidationRule
         {
         IEnumerable<ValidationProblem> Check();
-        IEnumerable<ValidationProblem> Check(ValidationVotingResult votingResult);
+        IEnumerable<ValidationProblem> Check( ValidationVotingResult votingResult );
         };
 }

@@ -1,8 +1,7 @@
-﻿
-using System.Collections.Generic;
-
-namespace RussianElectionResultsScraper.Model.Validation
+﻿namespace RussianElectionResultsScraper.Model.Validation
 {
+    using System.Collections.Generic;
+
     public class ValidationRule : IValidationRule
     {
         protected ValidationVotingPlace _votingPlace;
@@ -14,12 +13,12 @@ namespace RussianElectionResultsScraper.Model.Validation
 
         public virtual IEnumerable<ValidationProblem> Check()
             {
-            return new ValidationProblem[] {};
+            return new ValidationProblem[]{};
             }
 
         public virtual IEnumerable<ValidationProblem> Check(ValidationVotingResult votingResult)
             {
-            return new ValidationProblem[] { };
+            return new ValidationProblem[]{};
             }
     }
 }
