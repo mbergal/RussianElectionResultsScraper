@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RussianElectionResultsScraper.Model.Validation
 {
-    class ParentChildrenSumMismatchRule : ValidationRule
+    public class ParentChildrenSumMismatchRule : ValidationRule
         {
         public ParentChildrenSumMismatchRule(ValidationVotingPlace votingPlace ) 
             : base(votingPlace)
@@ -14,15 +14,17 @@ namespace RussianElectionResultsScraper.Model.Validation
 
         public override IEnumerable<ValidationProblem> Check(ValidationVotingResult votingResult)
             {
-            var childCounter = this._votingPlace.ChildCounter( votingResult.Counter );
-            if ( childCounter != null )
+            if (!Counters.Hierarchical.Contains(votingResult.Counter))
                 {
-                int sumOfChildCounters = this._votingPlace.Children.Select( x =>
-                                                                    {
-                                                                    return x.GetCounter( childCounter ).Value;
-                                                                    } ).Sum();
-                if (sumOfChildCounters != votingResult.Value)
-                    yield return new ParentChildrenSumMismatch(this._votingPlace, votingResult, sumOfChildCounters);
+                var childCounter = this._votingPlace.ChildCounter( votingResult.Counter );
+                if ( childCounter != null )
+                    {
+                    int sumOfChildCounters = this._votingPlace.Children.Select( x => x.GetCounter( childCounter ).HasValue 
+                                                                                         ? x.GetCounter( childCounter ).Value 
+                                                                                         : 0 ).Sum();
+                    if (sumOfChildCounters != votingResult.Value)
+                        yield return new ParentChildrenSumMismatch(this._votingPlace, votingResult, sumOfChildCounters);
+                    }
                 }
             }
         }
