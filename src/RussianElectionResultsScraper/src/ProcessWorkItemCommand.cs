@@ -2,10 +2,11 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NHibernate;
-using RussianElectionResultsScraper.Model;
 using log4net;
+using NHibernate;
 using NHibernate.Linq;
+using RussianElectionResultsScraper.Commons;
+using RussianElectionResultsScraper.Model;
 
 namespace RussianElectionResultsScraper
     {
@@ -97,20 +98,16 @@ namespace RussianElectionResultsScraper
 
         private void ProcessResultPage(WorkItem workItem, ResultPage result)
             {
-            log.Info("ProcessResultPage:", () =>
+            log.Info( "ProcessResultPage:", () =>
                 {
-                using( ISession session = this._sessionFactory.OpenSession() )
+                using ( ISession session = this._sessionFactory.OpenSession() )
                     {
-//                    if (this._workItem.UpdateCounters)
-//                        {
-                        var election = session.Get<Election>(this._election.Id);
-                        result.CounterDescriptions.ForEach(x =>
-                                                            {
-                                                            var counterDescription = this._election.Counter( x.Key);
-                                                            election.SetCounter(counter: x.Key, name: x.Value.counterName);
-                                                            });
-                        
-//                        }
+                    var election = session.Get<Election>( this._election.Id );
+                    foreach ( var x in result.CounterDescriptions )
+                        {
+                        var counterDescription = this._election.Counter( x.Key);
+                        election.SetCounter(counter: x.Key, name: x.Value.counterName);
+                        };
                     var vp = session.Get<VotingPlace>(result.Id);
                     if ( vp != null )
                         {

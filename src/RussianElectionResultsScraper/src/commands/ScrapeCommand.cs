@@ -1,14 +1,12 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
-using HtmlAgilityPack;
-using NHibernate;
+using log4net;
 using NHibernate.Linq;
+using RussianElectionResultsScraper.Commons;
 using RussianElectionResultsScraper.Model;
 using RussianElectionResultsScraper.src.utils;
-using log4net;
-using System.Linq;
 
 namespace RussianElectionResultsScraper
     {

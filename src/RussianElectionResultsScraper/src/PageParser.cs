@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 using System.Web;
 using HtmlAgilityPack;
 using log4net;
-using System.Linq;
+using RussianElectionResultsScraper.Commons;
 
 namespace RussianElectionResultsScraper
 {
@@ -180,8 +181,11 @@ namespace RussianElectionResultsScraper
             }
 
         public IList<Tuple<string, string>>             Children { get; set; }
+
         public IDictionary<string, int>                 CounterValues;
+
         public IDictionary<string, CounterDescription>  CounterDescriptions { get; set; }
+
         public IList<string>                            Hierarchy
             {
             get {
@@ -196,6 +200,7 @@ namespace RussianElectionResultsScraper
             get;
             set;
             }
+
         public string                               RedirectsTo
             {
             get;

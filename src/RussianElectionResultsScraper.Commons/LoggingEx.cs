@@ -6,9 +6,9 @@ using log4net.Core;
 using log4net.Layout.Pattern;
 using log4net.Util;
 
-namespace RussianElectionResultsScraper
+namespace RussianElectionResultsScraper.Commons
 {
-    static class LoggingExtensions
+    public static class LoggingExtensions
         {
         public static void Info(this ILog log, string message, Action block)
             {
