@@ -21,9 +21,9 @@ using System.Web.Mvc.Html;
 using System.Web.Routing;
 using T4MVC;
 namespace RussianElectionResultScraper.Web.Controllers {
-    public partial class HomeController {
+    public partial class DatabaseController {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        protected HomeController(Dummy d) { }
+        protected DatabaseController(Dummy d) { }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         protected RedirectToRouteResult RedirectToAction(ActionResult result) {
@@ -31,27 +31,22 @@ namespace RussianElectionResultScraper.Web.Controllers {
             return RedirectToRoute(callInfo.RouteValueDictionary);
         }
 
-        [NonAction]
-        [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public System.Web.Mvc.ActionResult Place() {
-            return new T4MVC_ActionResult(Area, Name, ActionNames.Place);
-        }
 
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-        public HomeController Actions { get { return MVC.Home; } }
+        public DatabaseController Actions { get { return MVC.Database; } }
         [GeneratedCode("T4MVC", "2.0")]
         public readonly string Area = "";
         [GeneratedCode("T4MVC", "2.0")]
-        public readonly string Name = "Home";
+        public readonly string Name = "Database";
 
         static readonly ActionNamesClass s_actions = new ActionNamesClass();
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public ActionNamesClass ActionNames { get { return s_actions; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ActionNamesClass {
-            public readonly string Index = "Index";
-            public readonly string Place = "Place";
-            public readonly string Footer = "Footer";
+            public readonly string BeginReceiving = "BeginReceiving";
+            public readonly string EndReceiving = "EndReceiving";
+            public readonly string ReceiveBlock = "ReceiveBlock";
         }
 
 
@@ -60,31 +55,25 @@ namespace RussianElectionResultScraper.Web.Controllers {
         public ViewNames Views { get { return s_views; } }
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         public class ViewNames {
-            public readonly string Footer = "~/Views/Home/Footer.cshtml";
-            public readonly string Index = "~/Views/Home/Index.cshtml";
-            public readonly string Place = "~/Views/Home/Place.cshtml";
-            public readonly string Regions = "~/Views/Home/Regions.cshtml";
         }
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_HomeController: RussianElectionResultScraper.Web.Controllers.HomeController {
-        public T4MVC_HomeController() : base(Dummy.Instance) { }
+    public class T4MVC_DatabaseController: RussianElectionResultScraper.Web.Controllers.DatabaseController {
+        public T4MVC_DatabaseController() : base(Dummy.Instance) { }
 
-        public override System.Web.Mvc.ActionResult Index() {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Index);
+        public override System.Web.Mvc.ActionResult BeginReceiving() {
+            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.BeginReceiving);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult Place(string votingPlaceId, RussianElectionResultScraper.Web.Controllers.HomeController.Tabs? tab) {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Place);
-            callInfo.RouteValueDictionary.Add("votingPlaceId", votingPlaceId);
-            callInfo.RouteValueDictionary.Add("tab", tab);
+        public override System.Web.Mvc.ActionResult EndReceiving() {
+            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.EndReceiving);
             return callInfo;
         }
 
-        public override System.Web.Mvc.ActionResult Footer() {
-            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.Footer);
+        public override System.Web.Mvc.ActionResult ReceiveBlock() {
+            var callInfo = new T4MVC_ActionResult(Area, Name, ActionNames.ReceiveBlock);
             return callInfo;
         }
 

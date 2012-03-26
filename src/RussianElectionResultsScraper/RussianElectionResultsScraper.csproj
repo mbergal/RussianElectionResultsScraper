@@ -120,6 +120,7 @@
     <Compile Include="src\commands\database\CleanDatabaseCommand.cs" />
     <Compile Include="src\commands\database\GenerateSchemaCommand.cs" />
     <Compile Include="src\commands\database\InitDatabaseCommand.cs" />
+    <Compile Include="src\commands\database\SendDatabaseDataCommand.cs" />
     <Compile Include="src\commands\RepairCommand.cs" />
     <Compile Include="src\commands\ScrapeCommand.cs" />
     <Compile Include="src\commands\sql\CheckCountersSumsSQL.cs">
@@ -152,7 +153,6 @@
     <Compile Include="src\utils\BlockingCollectionEx.cs" />
     <Compile Include="src\utils\ConnectionThrottling.cs" />
     <Compile Include="src\utils\FixedSqlServerCeDriver.cs" />
-    <Compile Include="src\utils\Logging.cs" />
     <Compile Include="src\PageDocument.cs" />
     <Compile Include="src\PageParser.cs" />
     <Compile Include="src\Program.cs" />
@@ -204,6 +204,14 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BulkCopy\RussianElectionResultsScraper.BulkCopy.csproj">
+      <Project>{D9BC3128-53AB-4E72-9742-6A6223D180F9}</Project>
+      <Name>RussianElectionResultsScraper.BulkCopy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RussianElectionResultsScraper.Commons\RussianElectionResultsScraper.Commons.csproj">
+      <Project>{F69BB0F1-8B79-404F-BF32-F5EDC0273353}</Project>
+      <Name>RussianElectionResultsScraper.Commons</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RussianElectionResultsScraper.Migrations\RussianElectionResultsScraper.Migrations.csproj">
       <Project>{A58B05C5-52EE-4E7F-970E-CBC95FD4533D}</Project>
       <Name>RussianElectionResultsScraper.Migrations</Name>

@@ -23,9 +23,10 @@ using T4MVC;
 
 [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
 public static class MVC {
+    public static RussianElectionResultScraper.Web.Controllers.DatabaseController Database = new RussianElectionResultScraper.Web.Controllers.T4MVC_DatabaseController();
     public static RussianElectionResultScraper.Web.Controllers.ErrorController Error = new RussianElectionResultScraper.Web.Controllers.T4MVC_ErrorController();
-    public static RussianElectionResultScraper.Web.GraphController Graph = new RussianElectionResultScraper.Web.T4MVC_GraphController();
-    public static RussianElectionResultScraper.Web.HomeController Home = new RussianElectionResultScraper.Web.T4MVC_HomeController();
+    public static RussianElectionResultScraper.Web.Controllers.GraphController Graph = new RussianElectionResultScraper.Web.Controllers.T4MVC_GraphController();
+    public static RussianElectionResultScraper.Web.Controllers.HomeController Home = new RussianElectionResultScraper.Web.Controllers.T4MVC_HomeController();
     public static T4MVC.SharedController Shared = new T4MVC.SharedController();
 }
 

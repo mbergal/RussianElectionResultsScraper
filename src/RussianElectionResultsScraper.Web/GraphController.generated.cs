@@ -20,7 +20,7 @@ using System.Web.Mvc.Ajax;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using T4MVC;
-namespace RussianElectionResultScraper.Web {
+namespace RussianElectionResultScraper.Web.Controllers {
     public partial class GraphController {
         [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
         protected GraphController(Dummy d) { }
@@ -80,7 +80,7 @@ namespace RussianElectionResultScraper.Web {
     }
 
     [GeneratedCode("T4MVC", "2.0"), DebuggerNonUserCode]
-    public class T4MVC_GraphController: RussianElectionResultScraper.Web.GraphController {
+    public class T4MVC_GraphController: RussianElectionResultScraper.Web.Controllers.GraphController {
         public T4MVC_GraphController() : base(Dummy.Instance) { }
 
         public override System.Web.Mvc.FileStreamResult PollingStationsByAttendance(string region, int? width, int? height, bool? showGrid) {
