@@ -1,15 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
-using System.Linq;
-using System.Web.Routing;
 using MvcApplication2.Models;
 using NHibernate;
 using NHibernate.Linq;
 using RussianElectionResultsScraper.Model;
 
-namespace RussianElectionResultScraper.Web
+namespace RussianElectionResultScraper.Web.Controllers
     {
     public partial class HomeController : Controller
         {

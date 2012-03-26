@@ -14,7 +14,7 @@ using log4net;
 using Type = RussianElectionResultsScraper.Model.Type;
 
 
-namespace RussianElectionResultScraper.Web
+namespace RussianElectionResultScraper.Web.Controllers
     {
     public partial class GraphController : Controller
         {

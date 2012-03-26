@@ -2,6 +2,7 @@ using System.Web.Mvc;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
+using RussianElectionResultScraper.Web.Controllers;
 
 
 namespace RussianElectionResultScraper.Web.Infrastructure.Installers

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using RussianElectionResultScraper.Web;
+using RussianElectionResultScraper.Web.Controllers;
 using RussianElectionResultScraper.Web.Infrastructure;
 using RussianElectionResultsScraper.Model;
 using Type = RussianElectionResultsScraper.Model.Type;
@@ -29,7 +29,7 @@ namespace MvcApplication2.Models
         private readonly VotingPlace _currentRegion;
         public VotingResultSummaryModel Summary;
         private readonly HomeController.Tabs _tab;
-        private Func<string, VotingPlace> _votingPlaceFactory;
+        private readonly Func<string, VotingPlace> _votingPlaceFactory;
 
         public VotingResultModel( VotingPlace currentRegion, HomeController.Tabs? tab, Func<string,VotingPlace> votingPlaceFactory  )
             {
