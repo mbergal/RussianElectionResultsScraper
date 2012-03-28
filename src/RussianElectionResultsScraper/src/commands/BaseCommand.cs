@@ -8,11 +8,6 @@ using System.Reflection;
 using System.Xml;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
-using log4net;
-using log4net.Appender;
-using log4net.Config;
-using log4net.Repository;
-using ManyConsole;
 using NHibernate;
 using NHibernate.Caches.SysCache2;
 using NHibernate.Dialect;
@@ -24,8 +19,7 @@ using Configuration = NHibernate.Cfg.Configuration;
 
 namespace RussianElectionResultsScraper
     {
-    
-    public abstract class BaseConsoleCommand : ConsoleCommand
+    public abstract class BaseCommand 
         {
         protected string            _configFile;
         protected string            _electionId;
@@ -34,63 +28,18 @@ namespace RussianElectionResultsScraper
         protected string            _connectionString;
         protected string            _providerName;
 
-        public override int Run(string[] args)
+        public BaseCommand( string electionid = null, string configFile = null, string connectionString = null, string providerName = null )
             {
-            XmlConfigurator.Configure();
-            this.SetLogDirectory( Path.Combine(Directory.GetCurrentDirectory(), "logging") );
-
+            this._configFile = configFile;
+            this._electionId = electionid;
+            this._connectionString = connectionString;
+            this._providerName = providerName;
 
             this._pageCacheSessionFactory = this.ConfigurePageCacheDatabase();
             this._electionResultsSessionFactory = this.ConfigureElectionResultsDatabase();
-
-            return 0;
             }
 
-        //
-        // http://geekswithblogs.net/wpeck/archive/2009/10/08/setting-log4net-fileappender.file-at-runtime.aspx
-        //
-        public void SetLogDirectory(string logDirectory) 
-            {
-            // get the current logging repository for this application 
-            ILoggerRepository repository = LogManager.GetRepository(); 
-
-            // get all of the appenders for the repository 
-            IAppender[] appenders = repository.GetAppenders(); 
-
-            // only change the file path on the 'FileAppenders' 
-            foreach (IAppender appender in (from iAppender in appenders 
-                                            where iAppender is FileAppender 
-                                            select iAppender)) 
-                { 
-                var fileAppender = appender as FileAppender; 
-                // set the path to your logDirectory using the original file name defined 
-                // in configuration 
-                fileAppender.File = Path.Combine(logDirectory, Path.GetFileName(fileAppender.File)); 
-                // make sure to call fileAppender.ActivateOptions() to notify the logging 
-                // sub system that the configuration for this appender has changed. 
-                fileAppender.ActivateOptions(); 
-                }    
-            }
-            
-        public void HasConfigOption()
-            {
-            this.HasRequiredOption("c|config=", "<config-file>", configFile => this._configFile = configFile);
-            }
-
-        public void HasElectionOption()
-            {
-            this.HasRequiredOption("e|election=", "<election-id>", electionId => this._electionId = electionId );
-            }
-
-        public void HasConnectionOption()
-            {
-            this.HasRequiredOption("c|connection|connectionString=", "<connection-string>", connectionString => this._connectionString = connectionString );
-            }
-
-        public void HasProviderOption()
-            {
-            this.HasRequiredOption("p|provider=", "<provider-name>", providerName => this._providerName = providerName );
-            }
+        public abstract int Execute();
 
         private ISessionFactory ConfigurePageCacheDatabase()
             {
@@ -155,7 +104,6 @@ namespace RussianElectionResultsScraper
             configuration.Validate();
             return configuration;
             }
-
 
         public Election SaveElection(ElectionConfig electionConfig)
             {

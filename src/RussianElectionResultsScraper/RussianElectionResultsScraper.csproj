@@ -70,16 +70,11 @@
     <Reference Include="log4net">
       <HintPath>..\..\packages\log4net.1.2.11\lib\net40-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="ManyConsole">
-      <HintPath>..\..\packages\ManyConsole.0.4.2.0\lib\ManyConsole.dll</HintPath>
-    </Reference>
+    <Reference Include="ManyConsole, Version=0.4.2.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.SqlServer.ConnectionInfo, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.SqlServer.Management.Sdk.Sfc, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.SqlServer.Smo, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\..\lib\SQLServerSDK\Microsoft.SqlServer.Smo.dll</HintPath>
-    </Reference>
-    <Reference Include="NDesk.Options">
-      <HintPath>..\..\packages\NDesk.Options.0.2.1\lib\NDesk.Options.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate">
       <HintPath>..\..\packages\NHibernate.3.2.0.4000\lib\Net35\NHibernate.dll</HintPath>
@@ -115,7 +110,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\commands\BaseConsoleCommand.cs" />
+    <Compile Include="src\commands\BaseCommand.cs" />
     <Compile Include="src\commands\CheckCommand.cs" />
     <Compile Include="src\commands\database\CleanDatabaseCommand.cs" />
     <Compile Include="src\commands\database\GenerateSchemaCommand.cs" />

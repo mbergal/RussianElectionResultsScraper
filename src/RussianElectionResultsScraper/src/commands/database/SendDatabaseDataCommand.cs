@@ -9,22 +9,21 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using Microsoft.SqlServer.Management.Common;
 using Microsoft.SqlServer.Management.Smo;
+using RussianElectionResultsScraper.BulkCopy;
 
-namespace RussianElectionResultsScraper.BulkCopy
+namespace RussianElectionResultsScraper.Commands.Database
     {
-    public class SendDatabaseDataCommand : BaseConsoleCommand
+    public class SendDatabaseDataCommand : BaseCommand
         {
-        private string _destination;
+        private readonly string _destination;
 
-        public SendDatabaseDataCommand()
+        public SendDatabaseDataCommand( string destination )
+            : base()
             {
-            this.IsCommand( "database:send-data", "Send database data" );
-            this.HasConnectionOption();
-            this.HasProviderOption();
-            this.HasRequiredOption("d|destination=", "connection string or url", destination => this._destination = destination );            
+            this._destination = destination;
             }
 
-        public override int Run(string[] args)
+        public override int Execute()
             {
             var connection = new ServerConnection { ConnectionString = this._connectionString };
             connection.Connect();

@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NHibernate.Tool.hbm2ddl;
-
-namespace RussianElectionResultsScraper.src.commands
+﻿namespace RussianElectionResultsScraper.Commands.Database
 {
-    public class InitDatabaseCommand : BaseConsoleCommand
+    public class InitDatabaseCommand : BaseCommand
         {
-        public InitDatabaseCommand()
+        public InitDatabaseCommand( string connectionString )
+            : base( connectionString: connectionString )
             {
-            this.IsCommand("database:init", "Create/recreate necessary objects in database");
-            this.HasConnectionOption();
-            this.HasProviderOption();
             }
 
-        public override int Run(string[] args)
+        public override int Execute()
             {
             var runner = new RussianElectionResultsScraper.MigrationRunner.MigrationRunner( this._providerName );
             runner.MigrateUp( this._connectionString );

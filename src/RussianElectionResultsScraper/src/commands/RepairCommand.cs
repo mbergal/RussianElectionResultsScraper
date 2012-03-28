@@ -7,25 +7,22 @@ using Type = RussianElectionResultsScraper.Model.Type;
 
 namespace RussianElectionResultsScraper
 {
-    public class RepairCommand : BaseConsoleCommand
-    {
+    public class RepairCommand : BaseCommand
+       {
         private static readonly ILog log = LogManager.GetLogger(typeof(Program));
+        const int batchSize = 10000;
 
-        public RepairCommand()
+        public RepairCommand( string connectionString )
             {
-            this.IsCommand("repair", "Repair scraped data");
-            this.HasElectionOption();
             }
 
-        public override int Run(string[] args)
+        public override int Execute()
             {
-            base.Run(args);
             using ( var session = _electionResultsSessionFactory.OpenSession() )
                 {
-                const int batchSize = 10000;
                 int numOfEntities = 0;
                 int batchNumber = 0;
-                while( true )
+                while ( true )
                     {
                     var q = session.Query<VotingPlace>().Where( x=>x.Election.Id == this._electionId ).OrderBy( x=>x.Id).Skip(batchNumber * batchSize).Take(batchSize).FetchMany(x => x.Results);
                     bool reachedEnd = true;
@@ -42,6 +39,7 @@ namespace RussianElectionResultsScraper
                         break;
                     }
                 }
+
             return 0;
             }
     }

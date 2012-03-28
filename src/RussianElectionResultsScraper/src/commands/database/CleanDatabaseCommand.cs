@@ -4,16 +4,14 @@ using Microsoft.SqlServer.Management.Smo;
 
 namespace RussianElectionResultsScraper.Commands.Database
     {
-    public class CleanDatabaseCommand : BaseConsoleCommand
+    public class CleanDatabaseCommand : BaseCommand
         {
-        public CleanDatabaseCommand()
+        public CleanDatabaseCommand( string connectionString )
+            : base( connectionString: connectionString )
             {
-            this.IsCommand( "database:clean", "Clean database" );
-            this.HasConnectionOption();
-            this.HasProviderOption();
             }
 
-        public override int Run(string[] args)
+        public override int Execute()
             {
             var connection = new ServerConnection { ConnectionString = this._connectionString };
             connection.Connect();
@@ -44,6 +42,5 @@ namespace RussianElectionResultsScraper.Commands.Database
             
             return 0;
             }
-
         }
     }

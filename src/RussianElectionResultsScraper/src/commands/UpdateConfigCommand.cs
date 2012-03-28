@@ -1,19 +1,16 @@
-﻿namespace RussianElectionResultsScraper
+﻿namespace RussianElectionResultsScraper.Commands
 {
-    public class UpdateConfigCommand : BaseConsoleCommand
+    public class UpdateConfigCommand : BaseCommand
         {
-        public UpdateConfigCommand()
+        public UpdateConfigCommand( string configFile, string connectionString )
+            : base( configFile: configFile, connectionString: connectionString )
             {
-            this.IsCommand( "update-config", "Update Configuration" );
-            this.HasConfigOption();
             }
 
-        public override int Run(string[] args)
+        public override int Execute()
             {
-            base.Run(args);
-            SaveElection(LoadConfiguration());
+            SaveElection( LoadConfiguration() );
             return 0;
             }
-
         }
 }

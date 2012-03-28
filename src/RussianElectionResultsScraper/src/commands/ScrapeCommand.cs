@@ -10,29 +10,27 @@ using RussianElectionResultsScraper.src.utils;
 
 namespace RussianElectionResultsScraper
     {
-    public class ScrapeCommand : BaseConsoleCommand
+    public class ScrapeCommand : BaseCommand
         {
         private static readonly ILog log = LogManager.GetLogger( "ScrapeParser" );
         private static readonly ILog errorLog = LogManager.GetLogger("ScrapeParser.Errors");
-        private string _root;
-        private bool   _recursive = false;
-        private int    _maxworkers = 6;
-        private bool   _useCache = false;
+        private readonly string _root;
+        private readonly bool   _recursive = false;
+        private readonly int    _maxworkers = 6;
+        private readonly bool   _useCache = false;
 
-        public ScrapeCommand()
-                {
-                this.IsCommand("scrape", "Run scraper");
-                this.HasOption("u|url:", "<root-url>", url => this._root = url);
-                this.HasConfigOption();
-                this.HasOption("r|recursive", "<config-file>", recursive => this._recursive = recursive != null);
-                this.HasOption<int>("m|maxworkers", "<maximum-number-of-workers>", maxworkers => this._maxworkers = maxworkers );
-                this.HasOption( "cache", "<use-cache>", useCache => this._useCache = useCache != null );
-                }
-
-        public override int Run(string[] args)
+        public ScrapeCommand( string connectionString, string root, string configFile, bool recursive, bool useCache, int maxWorkers )
+            : base( connectionString: connectionString, configFile: configFile )
             {
-            base.Run(args);
-            return log.Info(string.Format("Scraping {0}", this._root), () =>
+            this._root = root;
+            this._recursive = recursive;
+            this._useCache = useCache;
+            this._maxworkers = maxWorkers;
+            }
+
+        public override int Execute()
+            {
+            return log.Info( string.Format( "Scraping {0}", this._root ), () =>
                 {
                 var configuration = LoadConfiguration();
 

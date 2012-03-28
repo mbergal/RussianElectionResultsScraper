@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RussianElectionResultsScrap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RussianElectionResultsScraper.Commons", "src\RussianElectionResultsScraper.Commons\RussianElectionResultsScraper.Commons.csproj", "{F69BB0F1-8B79-404F-BF32-F5EDC0273353}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RussianElectionResultsScraper.Console", "src\RussianElectionResultsScraper.Console\RussianElectionResultsScraper.Console.csproj", "{91F54B42-C3B7-4847-87EC-9DD4135E212E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -158,6 +160,21 @@ Global
 		{F69BB0F1-8B79-404F-BF32-F5EDC0273353}.Web|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{F69BB0F1-8B79-404F-BF32-F5EDC0273353}.Web|Mixed Platforms.Build.0 = Release|Any CPU
 		{F69BB0F1-8B79-404F-BF32-F5EDC0273353}.Web|x86.ActiveCfg = Release|Any CPU
+		{91F54B42-C3B7-4847-87EC-9DD4135E212E}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{91F54B42-C3B7-4847-87EC-9DD4135E212E}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{91F54B42-C3B7-4847-87EC-9DD4135E212E}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{91F54B42-C3B7-4847-87EC-9DD4135E212E}.Debug|x86.ActiveCfg = Debug|x86
+		{91F54B42-C3B7-4847-87EC-9DD4135E212E}.Debug|x86.Build.0 = Debug|x86
+		{91F54B42-C3B7-4847-87EC-9DD4135E212E}.Release|Any CPU.ActiveCfg = Release|x86
+		{91F54B42-C3B7-4847-87EC-9DD4135E212E}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{91F54B42-C3B7-4847-87EC-9DD4135E212E}.Release|Mixed Platforms.Build.0 = Release|x86
+		{91F54B42-C3B7-4847-87EC-9DD4135E212E}.Release|x86.ActiveCfg = Release|x86
+		{91F54B42-C3B7-4847-87EC-9DD4135E212E}.Release|x86.Build.0 = Release|x86
+		{91F54B42-C3B7-4847-87EC-9DD4135E212E}.Web|Any CPU.ActiveCfg = Release|x86
+		{91F54B42-C3B7-4847-87EC-9DD4135E212E}.Web|Mixed Platforms.ActiveCfg = Release|x86
+		{91F54B42-C3B7-4847-87EC-9DD4135E212E}.Web|Mixed Platforms.Build.0 = Release|x86
+		{91F54B42-C3B7-4847-87EC-9DD4135E212E}.Web|x86.ActiveCfg = Release|x86
+		{91F54B42-C3B7-4847-87EC-9DD4135E212E}.Web|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

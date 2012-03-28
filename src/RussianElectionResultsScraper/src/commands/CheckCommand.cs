@@ -1,27 +1,24 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using Dapper;
+using log4net;
 using NHibernate;
 using NHibernate.Linq;
 using RussianElectionResultsScraper.Model;
 using RussianElectionResultsScraper.Model.Validation;
 using RussianElectionResultsScraper.src.commands.sql;
-using log4net;
-using System.Linq;
-using Dapper;
-using PowerShellFormat;
 
 namespace RussianElectionResultsScraper
 {
-    public class CheckCommand : BaseConsoleCommand
+    public class CheckCommand : BaseCommand
     {
         private static readonly ILog log = LogManager.GetLogger("CheckCommand");
         private string _electionId;
         const int commandTimeout = 120;
 
         public CheckCommand()
-        {
-            this.IsCommand("check", "Check data integrity");
-            this.HasOption("e|election=", "<election-id>", election => this._electionId = election);
-        }
+            {
+            }
 
         public class ChecksumMismatch
         {
@@ -34,12 +31,9 @@ namespace RussianElectionResultsScraper
             public int Value;
         }
 
-        public override int Run(string[] args)
-        {
-            base.Run(args);
-
-
-            using (var session = _electionResultsSessionFactory.OpenSession())
+        public override int Execute()
+           {
+           using (var session = _electionResultsSessionFactory.OpenSession())
             {
                 log.Info("Clearing out existing messages in VotingResults.");
                 session.Connection.Execute(new ClearMessages().TransformText(), commandTimeout: commandTimeout, param: new { electionId = this._electionId });
