@@ -14,7 +14,7 @@ namespace RussianElectionResultsScraper
     public class WorkQueueProcessor
        {
         private readonly WorkQueueService _workQueueService;
-        private static readonly ILog log = LogManager.GetLogger(typeof(Program));
+        private static readonly ILog log = LogManager.GetLogger("WorkQueueProcessor");
         private readonly PageParser _pageParser;
         private readonly ISessionFactory _sessionFactory;
         private readonly IPageCache      _pageCache;

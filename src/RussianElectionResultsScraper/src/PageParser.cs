@@ -14,9 +14,16 @@ using RussianElectionResultsScraper.Commons;
 
 namespace RussianElectionResultsScraper
 {
+
+    public class CounterDescription
+        {
+        public string counterSource;
+        public string counterName;
+        }
+
     public class PageParser
         {
-        private static readonly ILog log = LogManager.GetLogger(typeof(Program));
+        private static readonly ILog log = LogManager.GetLogger("PageParser");
         private readonly IPageCache _pageCache;
 
         public PageParser( IPageCache pageCache )

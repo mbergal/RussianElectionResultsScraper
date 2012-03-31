@@ -1,4 +1,6 @@
-﻿namespace RussianElectionResultsScraper.Console
+﻿using RussianElectionResultsScraper.Commands;
+
+namespace RussianElectionResultsScraper.Console
     {
     public class ScrapeConsoleCommand : BaseConsoleCommand
         {
@@ -10,7 +12,8 @@
         public ScrapeConsoleCommand()
                 {
                 this.IsCommand("scrape", "Run scraper");
-                this.HasOption("u|url:", "<root-url>", url => this._root = url);
+                this.HasConnectionOption();
+                this.HasRequiredOption("u|url=", "<root-url>", url => this._root = url);
                 this.HasConfigOption();
                 this.HasOption("r|recursive", "<config-file>", recursive => this._recursive = recursive != null);
                 this.HasOption<int>("m|maxworkers", "<maximum-number-of-workers>", maxworkers => this._maxworkers = maxworkers );
@@ -19,7 +22,7 @@
 
         public override int Run(string[] args)
             {
-            return new ScrapeCommand(  connectionString: this._connectionString, 
+            return new ScrapeCommand( connectionString: this._connectionString, 
                                 root: this._root, 
                                 configFile: this._configFile,
                                 recursive: this._recursive, 

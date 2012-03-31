@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Configuration;
 using System.Data;
-using System.Data.SqlServerCe;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -13,7 +11,6 @@ using NHibernate.Caches.SysCache2;
 using NHibernate.Dialect;
 using NHibernate.Driver;
 using NHibernate.SqlTypes;
-using NHibernate.Tool.hbm2ddl;
 using RussianElectionResultsScraper.Model;
 using Configuration = NHibernate.Cfg.Configuration;
 
@@ -23,7 +20,6 @@ namespace RussianElectionResultsScraper
         {
         protected string            _configFile;
         protected string            _electionId;
-        protected ISessionFactory   _pageCacheSessionFactory;
         protected ISessionFactory   _electionResultsSessionFactory;
         protected string            _connectionString;
         protected string            _providerName;
@@ -35,16 +31,10 @@ namespace RussianElectionResultsScraper
             this._connectionString = connectionString;
             this._providerName = providerName;
 
-            this._pageCacheSessionFactory = this.ConfigurePageCacheDatabase();
             this._electionResultsSessionFactory = this.ConfigureElectionResultsDatabase();
             }
 
         public abstract int Execute();
-
-        private ISessionFactory ConfigurePageCacheDatabase()
-            {
-            return this.ConfigureDatabase("pagecache.sdf", typeof( CachedPage ).Assembly, recreate: false );
-            }
 
         public Configuration BuildElectionResultsDatabaseConfiguration()
             {
@@ -66,37 +56,6 @@ namespace RussianElectionResultsScraper
             return configuration.BuildSessionFactory();
             }
 
-        private ISessionFactory     ConfigureDatabase( string path, Assembly containingAssembly, bool recreate )
-            {
-            string connString = string.Format( "Data Source='{0}';Max Database Size=4000;", path );
-            bool newDatabase = false;
-            if ( !File.Exists(path) )
-                {
-                var engine = new SqlCeEngine(connString);
-                engine.CreateDatabase();
-                newDatabase = true;
-                }
-
-            var configuration = Fluently.Configure()
-                .Database(MsSqlCeConfiguration
-                        .Standard
-                        .Driver<FixedSqlServerCeDriver>()
-                        .IsolationLevel( IsolationLevel.Snapshot )
-                        .ConnectionString(connString) )
-                .BuildConfiguration();
-
-            configuration.AddAssembly( containingAssembly );
-
-            if (newDatabase || recreate)
-                {
-                var lines = new List<string>();
-
-                var schemaExport = new SchemaExport(configuration);
-                schemaExport.Create(lines.Add, true);
-                schemaExport.Execute(true, false, false);
-                }
-            return configuration.BuildSessionFactory();
-            }
 
         public ElectionConfig LoadConfiguration()
             {

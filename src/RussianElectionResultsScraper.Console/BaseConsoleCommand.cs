@@ -17,7 +17,7 @@ namespace RussianElectionResultsScraper
 
         public void HasConfigOption()
             {
-            this.HasRequiredOption("c|config=", "<config-file>", configFile => this._configFile = configFile);
+            this.HasRequiredOption("config=", "<config-file>", configFile => this._configFile = configFile);
             }
 
         public void HasElectionOption()
@@ -27,7 +27,7 @@ namespace RussianElectionResultsScraper
 
         public void HasConnectionOption()
             {
-            this.HasRequiredOption("c|connection|connectionString=", "<connection-string>", connectionString => this._connectionString = connectionString );
+            this.HasRequiredOption("connection|connectionString=", "<connection-string>", connectionString => this._connectionString = connectionString );
             }
 
         public void HasProviderOption()

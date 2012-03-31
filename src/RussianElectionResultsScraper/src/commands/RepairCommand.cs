@@ -9,7 +9,7 @@ namespace RussianElectionResultsScraper
 {
     public class RepairCommand : BaseCommand
        {
-        private static readonly ILog log = LogManager.GetLogger(typeof(Program));
+        private static readonly ILog log = LogManager.GetLogger("RepairCommand");
         const int batchSize = 10000;
 
         public RepairCommand( string connectionString )
