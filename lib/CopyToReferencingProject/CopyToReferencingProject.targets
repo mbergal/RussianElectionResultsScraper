@@ -1,0 +1,118 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+
+    <!--<PropertyGroup>-->
+    <!--<BuildDependsOn>-->
+    <!--BeforeBuild;-->
+    <!--CoreBuild;-->
+    <!--AfterBuild-->
+    <!--</BuildDependsOn>-->
+    <!--</PropertyGroup>-->
+
+    <Target Name="BeforeCopyToParent">
+    </Target>
+
+    <Target
+      Name="CopyToParent"
+      DependsOnTargets="BeforeCopyToParent"
+      Outputs="@(AllCopyToParent)">
+        
+        <Message Text="CopyToParent: @(CopyToParent)" Importance="Low" />
+        
+        <CreateItem
+          Include="@(CopyToParent)"
+          AdditionalMetadata="ProjectDirectory=$(MSBuildProjectDirectory)"
+          PreserveExistingMetadata="true">
+            
+            <Output
+              TaskParameter="Include"
+              ItemName="ThisProjectCopyToParent"/>
+            
+        </CreateItem>
+
+        <Message Text="ThisProjectCopyToParent: @(ThisProjectCopyToParent->'%(ProjectDirectory)')" Importance="Low" />
+
+        <Message Text="Referenced Projects: @(ProjectReference)" Importance="High" />
+
+        <!-- Get what needs to be copied to this project from referenced projects -->
+
+        <AssignProjectConfiguration
+            ProjectReferences="@(ProjectReference)"
+            CurrentProjectConfiguration="$(Configuration)"
+            CurrentProjectPlatform="$(Platform)"
+            OutputType="$(OutputType)"
+            ResolveConfigurationPlatformUsingMappings="false"
+            SolutionConfigurationContents="$(CurrentSolutionConfigurationContents)"
+            OnlyReferenceAndBuildProjectsEnabledInSolutionConfiguration = "$(OnlyReferenceAndBuildProjectsEnabledInSolutionConfiguration)"
+            ShouldUnsetParentConfigurationAndPlatform = "false" >
+
+            <Output TaskParameter="AssignedProjects" ItemName="ProjectReferenceWithConfiguration"/>
+        </AssignProjectConfiguration>
+
+        <MSBuild
+            Projects="@(ProjectReferenceWithConfiguration)"
+            Targets="CopyToParent"
+            Properties="%(ProjectReferenceWithConfiguration.SetConfiguration); %(ProjectReferenceWithConfiguration.SetPlatform)">
+
+            <Output TaskParameter="TargetOutputs" ItemName="SubprojectsCopyToParent"/>
+
+        </MSBuild>
+
+        <!-- @SourceFiles -->
+        <CreateItem 
+            Include="@(SubprojectsCopyToParent->'%(ProjectDirectory)/%(Identity)')">
+
+            <Output
+                TaskParameter="Include"
+                ItemName="SourceFiles"/>
+            
+        </CreateItem>
+
+
+        <!-- @DestinationFiles -->
+        <CreateItem
+            Include="@(SubprojectsCopyToParent->'$(MSBuildProjectDirectory)/%(Identity)')">
+
+            <Output
+                TaskParameter="Include"
+                ItemName="DestinationFiles"/>
+
+        </CreateItem>
+
+
+        <Message Text="SubprojectsCopyToParent: @(SubprojectsCopyToParent)" Importance="Low" />
+        <Message Text="Source Files: @(SourceFiles)" Importance="Low" />
+        <Message Text="Destination Files: @(DestinationFiles)" Importance="Low" />
+
+
+        <!-- Copy stuff from referenced projects -->
+        <Copy
+            SourceFiles="@(SourceFiles)"
+            DestinationFiles="@(DestinationFiles)"
+            SkipUnchangedFiles="true"/>
+
+        <CreateItem 
+            Include="@(ThisProjectCopyToParent)">
+            
+            <Output 
+                TaskParameter="Include" 
+                ItemName="AllCopyToParent"/>
+            
+        </CreateItem>
+
+        <CreateItem 
+            Include="@(SubprojectsCopyToParent)">
+            
+            <Output 
+                TaskParameter="Include" 
+                ItemName="AllCopyToParent"/>
+            
+        </CreateItem>
+
+        <Message Text="CopyToParent: @(AllCopyToParent)" Importance="High" />
+
+    </Target>
+
+  <Target Name="AfterBuild" DependsOnTargets="CopyToParent">
+  </Target>
+
+</Project>
