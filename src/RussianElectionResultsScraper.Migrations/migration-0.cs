@@ -7,7 +7,7 @@ namespace RussianElectionResultsScraper.Migrations
         {
         public override void Up()
             {
-            Execute.Script( "0\\up.sql" );
+            Execute.Script( "migration-scripts\\0\\up.sql" );
             }
 
         public override void Down()
