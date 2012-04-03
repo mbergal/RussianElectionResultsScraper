@@ -1,42 +1,69 @@
-﻿function global:RunApplicationProject( [Parameter(Mandatory=$true)][string] $projectName,
-                                [Parameter(Mandatory=$true)][string]        $commandLine,
-                                [bool]                                      $underDebugger
-                                )
+﻿$global:projectName = "RussianElectionResultsScraper.Console"
+$global:webProjectName = "RussianElectionResultsScraper.Web"
+$global:connectionString = '"Data Source=localhost;Initial Catalog=erp;Trusted_Connection=true"'
+$global:connectionString2 = '"Data Source=localhost;Initial Catalog=erp2;Trusted_Connection=true"'
+$global:url2 = '"http://localhost:62457/database"'
+
+    
+function global:Check( [string]$electionId )
     {
-    $projects = $dte.ActiveSolutionProjects
-    $startupProjectProperty = $dte.Solution.Properties.Item("StartupProject")
-    Write-Host( "Current startup project: " + $startupProjectProperty.Value )
-    
-    #$project 
-    
-    $project = Get-Project $projectName 
-    if ( $project -ne $null )
-        {
-        $startupProjectProperty.Value = $projectName
-        $project.ConfigurationManager.ActiveConfiguration.Properties.Item( "StartArguments" ).Value = $commandLine
-        #DTE.ExecuteCommand("Debug.StartWithoutDebugging")
-        $dte.ExecuteCommand("Debug.Start")
-        }
-    else
-        {
-        Write-Error "Project '$projectName' is not found in solution"
-        }
+    RunApplicationProject `
+        -ProjectName $projectName `
+        -CommandLine "check --connectionString=$connectionString --election=$electionId"
     }
     
-function global:rcdpres2008()
+function global:Scrape( [string]$electionId )
     {
-    $private:projectName = "RussianElectionResultsScraper.Console"
-    $private:connectionString = '"Data Source=localhost;Initial Catalog=erp;Trusted_Connection=true"'
-    $private:configDir = Split-Path -Parent ( ( Get-Project $projectName ).FullName )
-    
-    $private:config = '"' + ( Join-Path $configDir "pres2008.config" )  + '"'
-    
-    $private:url = '"http://www.vybory.izbirkom.ru/region/region/izbirkom?action=show&root=1&tvd=100100022249920&vrn=100100022176412&region=0&global=1&sub_region=0&prver=0&pronetvd=null&vibid=100100022249920&type=226"'
+    $private:url = Get-ElectionRootUrl( $electionId )
+    $private:config = Get-Config( $electionId )
     
     RunApplicationProject `
         -ProjectName $projectName `
         -CommandLine "scrape --connectionString=$connectionString --config=$config --url=$url --recursive --cache"
     }
 
+function global:Upgrade()
+    {
+    RunApplicationProject `
+        -ProjectName $projectName `
+        -CommandLine "database:init --connectionString=$connectionString2 --provider SqlServer2008"
+    }
+
+function global:UpdateConfig( [string]$electionId )
+    {
+    $private:config = Get-Config( $electionId )
+    
+    RunApplicationProject `
+        -ProjectName $projectName `
+        -CommandLine "update-config --connectionString=$connectionString2 --config=$config"
+    }
+    
+function global:Web( [bool]$underDebugger )
+    {
+    RunWebApplicationProject `
+        -ProjectName $webProjectName `
+    }
+    
+function global:SendData()
+    {
+    RunApplicationProject `
+        -ProjectName $projectName `
+        -CommandLine "database:send-data --connectionString=$connectionString --destination=$url2"
+    }
+    
+function global:Get-Config( [Parameter(Mandatory=$true)][string] $electionId )
+    {
+    $private:configDir = Split-Path -Parent ( ( Get-Project $projectName ).FullName )
+    return '"' + ( Join-Path $configDir "$electionId.config" )  + '"'
+    }
+    
+function global:Get-ElectionRootUrl( [Parameter(Mandatory=$true)][string] $electionId )
+    {
+    switch ( $electionId.ToLower() )
+        {
+        "pres2008" { return '"http://www.vybory.izbirkom.ru/region/region/izbirkom?action=show&root=1&tvd=100100022249920&vrn=100100022176412&region=0&global=1&sub_region=0&prver=0&pronetvd=null&vibid=100100022249920&type=226"' }
+        "pres2012" { return '"http://www.vybory.izbirkom.ru/region/region/izbirkom?action=show&root=1&tvd=100100031793509&vrn=100100031793505&region=0&global=1&sub_region=0&prver=0&pronetvd=null&vibid=100100031793509&type=226"' }
+        }
+    }
 
     
