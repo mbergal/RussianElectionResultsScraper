@@ -13,10 +13,10 @@ namespace RussianElectionResultsScraper
     public class CheckCommand : BaseCommand
     {
         private static readonly ILog log = LogManager.GetLogger("CheckCommand");
-        private string _electionId;
         const int commandTimeout = 120;
 
-        public CheckCommand()
+        public CheckCommand( string connectionString, string electionId )
+            : base( connectionString: connectionString, electionid: electionId )
             {
             }
 
@@ -67,25 +67,8 @@ namespace RussianElectionResultsScraper
                 var problems = root.Check();
                 log.Info("Identified problems: ");
                 problems.ForEach(x => log.Info("   " + x.ToString()));
-                MarkProblems( problems );
+                this.MarkProblems( problems );
             }
-            //
-
-            //                var election = session.Get<Election>( this._election );
-            //                session.Query<VotingPlace>().Where(x => x.Election == election).Fetch( x=>x.Results ).ToArray();
-            //                election.Root.Check();
-            //                var mismatches = GetMismatches( _election );
-            //                LogMismatches( "?", mismatches );
-            //
-            //                UpdateMissingParentCounters( session, mismatches );
-            //                mismatches = GetMismatches( _election );
-            //                LogMismatches("?", mismatches);
-            //
-            //                MarkMissingChildCounters(session, mismatches);
-            //                mismatches = GetMismatches(_election);
-            //                LogMismatches("?", mismatches);
-            //
-            //                MarkNonMatchingParentAndChildCounters(session, mismatches);
 
             return 0;
         }
