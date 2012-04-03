@@ -167,7 +167,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="bin\Debug\x86\Microsoft.VC90.CRT\Microsoft.VC90.CRT.manifest" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -249,13 +251,13 @@ xcopy /s /y "$(SolutionDir)packages\SqlServerCompact.4.0.8482.1\NativeBinaries\a
   -->
   <Target Name="BeforeCopyToParent">
     <CreateItem Include="bin\Debug\x86\**\*.*">
-      <Output TaskParameter="Include" ItemName="OwnCopyToParent" />
+      <Output TaskParameter="Include" ItemName="CopyToParent" />
     </CreateItem>
     <CreateItem Include="bin\Debug\amd64\**\*.*">
-      <Output TaskParameter="Include" ItemName="OwnCopyToParent" />
+      <Output TaskParameter="Include" ItemName="CopyToParent" />
     </CreateItem>
     <CreateItem Include="bin\Debug\System.Data.SqlServerCe.dll">
-      <Output TaskParameter="Include" ItemName="OwnCopyToParent" />
+      <Output TaskParameter="Include" ItemName="CopyToParent" />
     </CreateItem>
   </Target>
 </Project>
