@@ -10,14 +10,13 @@ namespace RussianElectionResultsScraper.Console
             {
             this.IsCommand( "database:send-data", "Send database data" );
             this.HasConnectionOption();
-            this.HasProviderOption();
             this.HasRequiredOption( "d|destination=", "connection string or url",
                                     destination => this._destination = destination );
             }
 
         public override int Run( string[] args )
             {
-            return new SendDatabaseDataCommand( destination: this._destination ).Execute();
+            return new SendDatabaseDataCommand( connectionString: this._connectionString, destination: this._destination ).Execute();
             }
 
         }

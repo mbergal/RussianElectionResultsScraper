@@ -8,6 +8,7 @@ namespace RussianElectionResultsScraper.Console
             {
             this.IsCommand( "update-config", "Update Configuration" );
             this.HasConfigOption();
+            this.HasConnectionOption();
             }
 
         public override int Run(string[] args)

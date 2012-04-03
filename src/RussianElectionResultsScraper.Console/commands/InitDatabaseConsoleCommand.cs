@@ -13,7 +13,7 @@ namespace RussianElectionResultsScraper.Console
 
         public override int Run(string[] args)
             {
-            return new InitDatabaseCommand( this._connectionString ).Execute();
+            return new InitDatabaseCommand( this._connectionString, this._providerName ).Execute();
             }
         
         }

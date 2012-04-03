@@ -5,12 +5,13 @@
         public CheckConsoleCommand()
             {
             this.IsCommand("check", "Check data integrity");
-            this.HasOption("e|election=", "<election-id>", election => this._electionId = election);
+            this.HasElectionOption();
+            this.HasConnectionOption();
             }
 
         public override int Run(string[] args)
             {
-            return new CheckCommand().Execute();
+            return new CheckCommand( connectionString: this._connectionString, electionId: this._electionId).Execute();
             }
         }
 

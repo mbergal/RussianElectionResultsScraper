@@ -68,23 +68,26 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseConsoleCommand.cs" />
-    <Compile Include="CheckConsoleCommand.cs" />
-    <Compile Include="CleanDatabaseConsoleCommand.cs" />
-    <Compile Include="GenerateSchemaConsoleCommand.cs" />
-    <Compile Include="InitDatabaseConsoleCommand.cs" />
+    <Compile Include="commands\BaseConsoleCommand.cs" />
+    <Compile Include="commands\CheckConsoleCommand.cs" />
+    <Compile Include="commands\CleanDatabaseConsoleCommand.cs" />
+    <Compile Include="commands\GenerateSchemaConsoleCommand.cs" />
+    <Compile Include="commands\InitDatabaseConsoleCommand.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RepairConsoleCommand.cs" />
-    <Compile Include="ScrapeConsoleCommand.cs" />
-    <Compile Include="SendDatabaseDataCommand.cs" />
-    <Compile Include="UpdateConfigConsoleCommand.cs" />
+    <Compile Include="commands\RepairConsoleCommand.cs" />
+    <Compile Include="commands\ScrapeConsoleCommand.cs" />
+    <Compile Include="commands\SendDatabaseDataCommand.cs" />
+    <Compile Include="commands\UpdateConfigConsoleCommand.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="duma2011.config" />
     <None Include="packages.config" />
+    <None Include="pres2008.config" />
+    <None Include="pres2012.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RussianElectionResultsScraper.Model\RussianElectionResultsScraper.Model.csproj">
