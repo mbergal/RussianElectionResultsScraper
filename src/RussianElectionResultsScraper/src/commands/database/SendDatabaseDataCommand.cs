@@ -17,8 +17,8 @@ namespace RussianElectionResultsScraper.Commands.Database
         {
         private readonly string _destination;
 
-        public SendDatabaseDataCommand( string destination )
-            : base()
+        public SendDatabaseDataCommand( string connectionString, string destination )
+            : base( connectionString: connectionString )
             {
             this._destination = destination;
             }
