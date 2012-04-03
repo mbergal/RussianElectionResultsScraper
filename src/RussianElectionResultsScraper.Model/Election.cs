@@ -13,11 +13,22 @@ namespace RussianElectionResultsScraper.Model
             {
             this.Counters = new HashedSet<Model.CounterDescription>();
             }
+
         public virtual string                   Id { get; set; }
+
         public virtual string                   Name { get; set; }
+
+        public virtual DateTime                 Date
+            {
+            get; set;
+            }
+
         public virtual DateTime                 LastUpdateTimeStamp { get; set; }
+
         public virtual VotingPlace              Root { get; set; }
+
         public virtual Iesi.Collections.Generic.ISet<CounterDescription> Counters { get; set; }
+
         public virtual void                     UpdateWithCurrentTimestamp()
             {
             this.LastUpdateTimeStamp = DateTime.Now;
@@ -60,6 +71,7 @@ namespace RussianElectionResultsScraper.Model
                 return Counters.Where( x => x.IsCandidate ).ToList();
                 }
             }
+
 
         public virtual void Update( IEnumerable<CounterDescription> counters )
             {

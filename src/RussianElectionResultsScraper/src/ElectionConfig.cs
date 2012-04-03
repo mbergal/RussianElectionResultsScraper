@@ -12,8 +12,11 @@ namespace RussianElectionResultsScraper
         [XmlElement("id")]
         public string Id;
 
-        [XmlElement( "name") ]
+        [XmlElement( "name" )]
         public string Name;
+
+        [XmlElement( "date" )]
+        public DateTime Date;
 
         [XmlArray( "counters")]
         [XmlArrayItem("counter")]

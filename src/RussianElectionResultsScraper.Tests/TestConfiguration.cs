@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.IO;
 using System.Xml;
 using System.Xml.Linq;
@@ -18,6 +19,7 @@ namespace TestElectionResultsScraper
             var x = new XDocument( 
                 new XElement( "configuration",
                     new XElement( "name", "Some Name" ),
+                    new XElement( "date", "2008-03-02" ),
                     new XElement( "counters",
                         new XElement("counter", new XAttribute("counter", "1"), new XAttribute("name", "counter name"), new XAttribute("shortname", "counter short name" ), new XAttribute( "color", "#EEEEEE"), new XAttribute( "candidate", "true" )))));
             var sw=new StringWriter();
@@ -38,6 +40,7 @@ namespace TestElectionResultsScraper
             new XmlSerializer(typeof(ElectionConfig)).Serialize(sw, c);
             var cc = ElectionConfig.Load( new XmlNodeReader( x.ToXmlDocument() ) );
             Assert.AreEqual( "Some Name", cc.Name );
+            Assert.AreEqual( new DateTime( 2008, 03, 02 ), cc.Date );
             Assert.AreEqual( 1, cc.Counters.Length );
             Assert.AreEqual( "1", cc.Counters[0].Counter );
             Assert.AreEqual( "counter name", cc.Counters[0].Name );

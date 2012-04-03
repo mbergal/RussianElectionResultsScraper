@@ -72,6 +72,7 @@ namespace RussianElectionResultsScraper
                 {
                 election = session.Get<Election>(electionConfig.Id) ?? new Election() { Id = electionConfig.Id };
                 election.Name = electionConfig.Name;
+                election.Date = electionConfig.Date;
                 election.Update(electionConfig.Counters.Select( x=>new Model.CounterDescription
                                                                        { 
                                                                         Color = x.Color,

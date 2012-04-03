@@ -6,6 +6,7 @@
       <column name="Id" length="32"/>
     </id>
     <property name="Name"/>
+    <property name="Date"/>
     <property name="LastUpdateTimeStamp"/>
     <many-to-one name="Root" class="VotingPlace" column="RootId" unique="true"/>
     <set name="Counters" cascade="all">
